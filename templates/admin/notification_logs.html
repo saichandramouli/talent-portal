@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Email Notification Audit Logs - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Email Notification Audit Logs</h1>
+            <p class="text-muted mb-0">Track history of candidate selection notifications sent to clients.</p>
+        </div>
+    </div>
+
+    <div class="card card-premium shadow-sm overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Recipient Client</th>
+                        <th>Associated Candidate</th>
+                        <th>Email Dispatch Subject</th>
+                        <th>Date & Time Sent</th>
+                        <th>Delivery Status</th>
+                        <th class="text-end">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ log.client.full_name|default:"Unknown Client" }}</div>
+                                <div class="text-muted small">{{ log.email_sent_to }}</div>
+                            </td>
+                            <td>
+                                {% if log.candidate %}
+                                    <div class="fw-semibold">{{ log.candidate.full_name }}</div>
+                                    <div class="text-muted small">Recruiter: {{ log.candidate.recruiter.full_name }}</div>
+                                {% else %}
+                                    <span class="text-muted">Deleted Candidate</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ log.subject }}</td>
+                            <td>{{ log.created_at|date:"Y-m-d H:i:s" }}</td>
+                            <td>
+                                {% if log.status == 'success' %}
+                                    <span class="badge bg-success px-3 py-2"><i class="fa-solid fa-circle-check me-1"></i>Delivered</span>
+                                {% else %}
+                                    <span class="badge bg-danger px-3 py-2"><i class="fa-solid fa-circle-exclamation me-1"></i>Failed</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#logModal{{ log.id }}">
+                                    <i class="fa-solid fa-file-lines me-1"></i>View Message
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Modal to show detailed email content -->
+                        <div class="modal fade" id="logModal{{ log.id }}" tabindex="-1" aria-labelledby="logModalLabel{{ log.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold" id="logModalLabel{{ log.id }}">Audit Email Message ID: {{ log.id }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <strong>Recipient:</strong> {{ log.email_sent_to }}
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Subject:</strong> {{ log.subject }}
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Timestamp:</strong> {{ log.created_at }}
+                                        </div>
+                                        <div>
+                                            <strong>Message Content:</strong>
+                                            <pre class="bg-light p-3 border rounded mt-2" style="white-space: pre-wrap; font-family: monospace;">{{ log.message }}</pre>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-target="#logModal{{ log.id }}" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-envelope-open-text fa-3x mb-3"></i>
+                                <p class="mb-0">No email notification logs found in database.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Register Client - Talent Portal{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center py-4">
+    <div class="auth-card shadow-lg border" style="max-width: 550px;">
+        <div class="text-center mb-4">
+            <i class="fa-solid fa-users fa-3x text-secondary mb-3"></i>
+            <h2 class="h3 fw-bold">Client Registration</h2>
+            <p class="text-muted">Register to browse, search and hire top tech candidates</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="form-text text-muted">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary-custom w-100 mt-2 mb-3">
+                <i class="fa-solid fa-user-plus me-2"></i>Register Client
+            </button>
+        </form>
+
+        <div class="text-center mt-3 border-top pt-3">
+            <span class="text-muted">Already have an account? <a href="{% url 'login' %}" class="text-primary text-decoration-none">Sign In</a></span>
+        </div>
+    </div>
+</div>
+{% endblock %}

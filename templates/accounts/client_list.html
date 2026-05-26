@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Manage Clients - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Clients</h1>
+            <p class="text-muted mb-0">List of registered clients browsing candidate directory.</p>
+        </div>
+    </div>
+
+    <div class="card card-premium shadow-sm overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Email</th>
+                        <th>Company Name</th>
+                        <th>Phone</th>
+                        <th>Registered Date</th>
+                        <th>Active Carts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle-sm bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; font-weight: 600;">
+                                        {{ client.full_name|slice:":2"|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ client.full_name }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.company_name|default:"-" }}</td>
+                            <td>{{ client.phone|default:"-" }}</td>
+                            <td>{{ client.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <span class="badge bg-secondary px-3 py-2">
+                                    <i class="fa-solid fa-shopping-cart me-1"></i>{{ client.cart_items.count }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-users fa-3x mb-3"></i>
+                                <p class="mb-0">No clients registered yet.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

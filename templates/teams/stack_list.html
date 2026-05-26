@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Manage Tech Stacks - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Technology Stacks</h1>
+            <p class="text-muted mb-0">Create and manage skill options for candidate catalog tags.</p>
+        </div>
+        <a href="{% url 'stack_create' %}" class="btn btn-primary-custom">
+            <i class="fa-solid fa-plus me-1"></i>Add Stack
+        </a>
+    </div>
+
+    <div class="card card-premium shadow-sm overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Stack Name</th>
+                        <th>Description</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stack in stacks %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ stack.name }}</div>
+                            </td>
+                            <td>{{ stack.description|default:"No description provided" }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'stack_edit' stack.id %}" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fa-solid fa-pen me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'stack_delete' stack.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fa-solid fa-trash me-1"></i>Delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-layer-group fa-3x mb-3"></i>
+                                <p class="mb-0">No technology stacks created yet. Click "Add Stack" to get started.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

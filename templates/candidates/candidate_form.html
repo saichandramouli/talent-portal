@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Talent Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-4">
+        {% if user.role == 'admin' %}
+            <a href="{% url 'admin_candidate_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+                <i class="fa-solid fa-arrow-left me-1"></i>Back to Candidates
+            </a>
+        {% else %}
+            <a href="{% url 'recruiter_dashboard' %}" class="btn btn-sm btn-secondary-custom mb-3">
+                <i class="fa-solid fa-arrow-left me-1"></i>Back to Dashboard
+            </a>
+        {% endif %}
+        <h1 class="h3">{{ title }}</h1>
+        <p class="text-muted">Fill out candidate details. Note: Recruiters can only select stacks assigned to their team.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-xl-7">
+            <div class="form-container">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_full_name" class="form-label">Full Name</label>
+                        {{ form.full_name }}
+                        {% if form.full_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.full_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_years_of_experience" class="form-label">Years of Experience</label>
+                            {{ form.years_of_experience }}
+                            {% if form.years_of_experience.errors %}
+                                <div class="text-danger small mt-1">{{ form.years_of_experience.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_rate_card" class="form-label">Rate Card ($/hour)</label>
+                            {{ form.rate_card }}
+                            {% if form.rate_card.errors %}
+                                <div class="text-danger small mt-1">{{ form.rate_card.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_location" class="form-label">Location</label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                                <div class="text-danger small mt-1">{{ form.location.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_availability" class="form-label">Availability</label>
+                            {{ form.availability }}
+                            {% if form.availability.errors %}
+                                <div class="text-danger small mt-1">{{ form.availability.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_profile_photo" class="form-label">Profile Photo (Optional)</label>
+                        {% if candidate.profile_photo %}
+                            <div class="mb-2">
+                                <img src="{{ candidate.profile_photo.url }}" alt="current photo" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                            </div>
+                        {% endif %}
+                        {{ form.profile_photo }}
+                        <div class="form-text text-muted">Supports JPG, PNG, WEBP. Maximum file size: 5MB.</div>
+                        {% if form.profile_photo.errors %}
+                            <div class="text-danger small mt-1">{{ form.profile_photo.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_summary" class="form-label">Candidate Summary / Notes</label>
+                        {{ form.summary }}
+                        {% if form.summary.errors %}
+                            <div class="text-danger small mt-1">{{ form.summary.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Technical Stack (Select allowed stacks)</label>
+                        <div class="django-select-multiple-checkboxes">
+                            {% for checkbox in form.technical_stack %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted mb-0 small">No allowed tech stacks found. Please assign team stack or verify team association.</p>
+                            {% endfor %}
+                        </div>
+                        {% if form.technical_stack.errors %}
+                            <div class="text-danger small mt-1">{{ form.technical_stack.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom w-100">
+                        <i class="fa-solid fa-cloud-arrow-up me-2"></i>Save Candidate Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

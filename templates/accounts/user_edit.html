@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Edit Recruiter - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-4">
+        <a href="{% url 'recruiter_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Recruiters
+        </a>
+        <h1 class="h3">Edit Recruiter: {{ user_obj.full_name }}</h1>
+        <p class="text-muted">Modify recruiter profiles or assign them to a team.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_full_name" class="form-label">Full Name</label>
+                            {{ form.full_name }}
+                            {{ form.full_name.errors }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email (Read-only)</label>
+                            <input type="text" class="form-control" value="{{ user_obj.email }}" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_company_name" class="form-label">Company Name</label>
+                            {{ form.company_name }}
+                            {{ form.company_name.errors }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_phone" class="form-label">Phone Number</label>
+                            {{ form.phone }}
+                            {{ form.phone.errors }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_team" class="form-label">Assign Team</label>
+                        {{ form.team }}
+                        <div class="form-text text-muted">Assigning a team allows this recruiter to upload candidates belonging to the team's tech stack.</div>
+                        {{ form.team.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.is_active }}
+                            <label for="id_is_active" class="form-check-label fw-semibold">Active User Account</label>
+                        </div>
+                        <div class="form-text text-muted">Deactivated users cannot log in.</div>
+                        {{ form.is_active.errors }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fa-solid fa-floppy-disk me-2"></i>Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

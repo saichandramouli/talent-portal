@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-4">
+        <a href="{% url 'team_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Teams
+        </a>
+        <h1 class="h3">{{ title }}</h1>
+        <p class="text-muted">Teams grouping recruiters. Assigned technology stacks dictate what candidates recruiters can upload.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-container">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label">Team Name</label>
+                        {{ form.name }}
+                        {{ form.name.errors }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Description</label>
+                        {{ form.description }}
+                        {{ form.description.errors }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Assigned Technology Stacks</label>
+                        <div class="django-select-multiple-checkboxes">
+                            {% for checkbox in form.technology_stacks %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted mb-0 small">No technology stacks created yet. <a href="{% url 'stack_create' %}" class="text-primary text-decoration-none">Add stack here</a></p>
+                            {% endfor %}
+                        </div>
+                        {{ form.technology_stacks.errors }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fa-solid fa-floppy-disk me-2"></i>Save Team
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
