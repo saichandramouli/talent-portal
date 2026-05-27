@@ -11,13 +11,14 @@
         </div>
         <div class="d-flex gap-2">
             {% if user.team %}
-                <a href="{% url 'candidate_create' %}" class="btn btn-primary-custom">
-                    <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
-                </a>
+            <a href="{% url 'candidate_create' %}" class="btn btn-primary-custom">
+                <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
+            </a>
             {% else %}
-                <button class="btn btn-primary-custom" disabled title="You must be assigned to a team before you can upload candidates.">
-                    <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
-                </button>
+            <button class="btn btn-primary-custom" disabled
+                title="You must be assigned to a team before you can upload candidates.">
+                <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
+            </button>
             {% endif %}
         </div>
     </div>
@@ -36,14 +37,17 @@
 
         <div class="col-md-6 col-lg-8">
             <div class="card card-premium p-4">
-                <h6 class="text-muted uppercase text-xs mb-2">Allowed Tech Stacks (Based on Team: {{ user.team.name|default:"Unassigned" }})</h6>
+                <h6 class="text-muted uppercase text-xs mb-2">Allowed Tech Stacks (Based on Team: {{
+                    user.team.name|default:"Unassigned" }})</h6>
                 <div class="mt-2">
                     {% for stack in allowed_stacks %}
-                        <span class="badge bg-primary fs-6 px-3 py-2 me-2 mb-2"><i class="fa-solid fa-tag me-1"></i>{{ stack.name }}</span>
+                    <span class="badge bg-primary fs-6 px-3 py-2 me-2 mb-2"><i class="fa-solid fa-tag me-1"></i>{{
+                        stack.name }}</span>
                     {% empty %}
-                        <div class="text-warning small py-1">
-                            <i class="fa-solid fa-triangle-exclamation me-1"></i> No tech stacks permitted. Please ask your administrator to assign you to a team.
-                        </div>
+                    <div class="text-warning small py-1">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> No tech stacks permitted. Please ask your
+                        administrator to assign you to a team.
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -70,50 +74,55 @@
                 </thead>
                 <tbody>
                     {% for candidate in candidates %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    {% if candidate.profile_photo %}
-                                        <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-card-avatar me-3">
-                                    {% else %}
-                                        <div class="avatar-circle-sm bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px; font-weight: 600;">
-                                            {{ candidate.full_name|slice:":2"|upper }}
-                                        </div>
-                                    {% endif %}
-                                    <div>
-                                        <div class="fw-semibold">{{ candidate.full_name }}</div>
-                                        <div class="text-muted small">Uploaded: {{ candidate.created_at|date:"Y-m-d" }}</div>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if candidate.profile_photo %}
+                                <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}"
+                                    class="candidate-card-avatar me-3">
+                                {% else %}
+                                <div class="avatar-circle-sm bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                    style="width: 42px; height: 42px; font-weight: 600;">
+                                    {{ candidate.full_name|slice:":2"|upper }}
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <div class="fw-semibold">{{ candidate.full_name }}</div>
+                                    <div class="text-muted small">Uploaded: {{ candidate.created_at|date:"Y-m-d" }}
                                     </div>
                                 </div>
-                            </td>
-                            <td>{{ candidate.years_of_experience }} years</td>
-                            <td>${{ candidate.rate_card }}/hr</td>
-                            <td>{{ candidate.location }}</td>
-                            <td><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
-                            <td>
-                                {% for stack in candidate.technical_stack.all %}
-                                    <span class="badge-chip">{{ stack.name }}</span>
-                                {% endfor %}
-                            </td>
-                            <td class="text-end">
-                                <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-secondary me-2">
-                                    <i class="fa-solid fa-eye me-1"></i>View
-                                </a>
-                                <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-sm btn-outline-primary me-2">
-                                    <i class="fa-solid fa-pen me-1"></i>Edit
-                                </a>
-                                <a href="{% url 'candidate_delete' candidate.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="fa-solid fa-trash me-1"></i>Delete
-                                </a>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                        <td>{{ candidate.years_of_experience }} years</td>
+                        <td>${{ candidate.rate_card }}/hr</td>
+                        <td>{{ candidate.location }}</td>
+                        <td><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
+                        <td>
+                            {% for stack in candidate.technical_stack.all %}
+                            <span class="badge-chip">{{ stack.name }}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'candidate_detail' candidate.id %}"
+                                class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="fa-solid fa-eye me-1"></i>View
+                            </a>
+                            <a href="{% url 'candidate_edit' candidate.id %}"
+                                class="btn btn-sm btn-outline-primary me-2">
+                                <i class="fa-solid fa-pen me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'candidate_delete' candidate.id %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fa-solid fa-trash me-1"></i>Delete
+                            </a>
+                        </td>
+                    </tr>
                     {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-user-group fa-3x mb-3"></i>
-                                <p class="mb-0">You have not uploaded any candidates yet.</p>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-user-group fa-3x mb-3"></i>
+                            <p class="mb-0">You have not uploaded any candidates yet.</p>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

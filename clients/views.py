@@ -88,9 +88,9 @@ def add_to_cart(request, candidate_id):
     cart_item, created = Cart.objects.get_or_create(client=client, candidate=candidate)
     
     if created:
-        # Trigger email notification to the client
+        # Trigger email notification to the recruiter
         send_cart_notification(client, candidate)
-        messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. A confirmation email was sent to {client.email}.")
+        messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. A notification email was sent to their recruiter, {candidate.recruiter.full_name}.")
     else:
         messages.warning(request, f"Candidate {candidate.full_name} is already in your cart.")
         

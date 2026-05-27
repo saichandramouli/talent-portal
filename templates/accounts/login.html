@@ -12,14 +12,14 @@
 
         <form method="POST">
             {% csrf_token %}
-            
+
             <div class="mb-3">
                 <label for="id_username" class="form-label">Email Address</label>
                 {{ form.username }}
                 {% if form.username.errors %}
-                    <div class="text-danger small mt-1">
-                        {{ form.username.errors }}
-                    </div>
+                <div class="text-danger small mt-1">
+                    {{ form.username.errors }}
+                </div>
                 {% endif %}
             </div>
 
@@ -27,9 +27,9 @@
                 <label for="id_password" class="form-label">Password</label>
                 {{ form.password }}
                 {% if form.password.errors %}
-                    <div class="text-danger small mt-1">
-                        {{ form.password.errors }}
-                    </div>
+                <div class="text-danger small mt-1">
+                    {{ form.password.errors }}
+                </div>
                 {% endif %}
             </div>
 
@@ -41,7 +41,8 @@
         <div class="text-center mt-3 border-top pt-3">
             <span class="text-muted">Don't have an account?</span>
             <div class="mt-2">
-                <a href="{% url 'register_recruiter' %}" class="btn btn-sm btn-outline-primary me-2">Recruiter Register</a>
+                <a href="{% url 'register_recruiter' %}" class="btn btn-sm btn-outline-primary me-2">Recruiter
+                    Register</a>
                 <a href="{% url 'register_client' %}" class="btn btn-sm btn-outline-secondary">Client Register</a>
             </div>
         </div>

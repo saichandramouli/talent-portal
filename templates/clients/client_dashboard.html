@@ -43,27 +43,32 @@
                     <div class="mb-3">
                         <label class="form-label">Years of Experience</label>
                         <div class="d-flex gap-2">
-                            <input type="number" name="min_exp" class="form-control" placeholder="Min" min="0" value="{{ min_exp }}">
-                            <input type="number" name="max_exp" class="form-control" placeholder="Max" min="0" value="{{ max_exp }}">
+                            <input type="number" name="min_exp" class="form-control" placeholder="Min" min="0"
+                                value="{{ min_exp }}">
+                            <input type="number" name="max_exp" class="form-control" placeholder="Max" min="0"
+                                value="{{ max_exp }}">
                         </div>
                     </div>
 
                     <!-- Rate Card Max -->
                     <div class="mb-3">
                         <label for="rate_filter" class="form-label">Max Rate ($/hour)</label>
-                        <input type="number" name="max_rate" id="rate_filter" class="form-control" placeholder="e.g. 100" min="0" value="{{ max_rate }}">
+                        <input type="number" name="max_rate" id="rate_filter" class="form-control"
+                            placeholder="e.g. 100" min="0" value="{{ max_rate }}">
                     </div>
 
                     <!-- Location Filter -->
                     <div class="mb-3">
                         <label for="location_filter" class="form-label">Location</label>
-                        <input type="text" name="location" id="location_filter" class="form-control" placeholder="e.g. New York" value="{{ location_filter }}">
+                        <input type="text" name="location" id="location_filter" class="form-control"
+                            placeholder="e.g. New York" value="{{ location_filter }}">
                     </div>
 
                     <!-- Availability Filter -->
                     <div class="mb-4">
                         <label for="avail_filter" class="form-label">Availability</label>
-                        <input type="text" name="availability" id="avail_filter" class="form-control" placeholder="e.g. Immediate, 2 Weeks" value="{{ availability_filter }}">
+                        <input type="text" name="availability" id="avail_filter" class="form-control"
+                            placeholder="e.g. Immediate, 2 Weeks" value="{{ availability_filter }}">
                     </div>
 
                     <button type="submit" class="btn btn-primary-custom w-100">
@@ -87,8 +92,10 @@
                     <input type="hidden" name="availability" value="{{ availability_filter }}">
 
                     <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="q" class="form-control border-start-0" placeholder="Search by candidate name, stack, or location..." value="{{ search_query }}">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i
+                                class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" name="q" class="form-control border-start-0"
+                            placeholder="Search by candidate name, stack, or location..." value="{{ search_query }}">
                         <button type="submit" class="btn btn-primary-custom px-4">Search</button>
                     </div>
                 </form>
@@ -97,68 +104,72 @@
             <!-- Candidates Grid -->
             <div class="row g-4">
                 {% for candidate in candidates %}
-                    <div class="col-md-6">
-                        <div class="card card-premium h-100 shadow-sm d-flex flex-column">
-                            <div class="card-body p-4 flex-grow-1">
-                                <div class="d-flex align-items-start justify-content-between mb-3">
-                                    <div class="d-flex align-items-center">
-                                        {% if candidate.profile_photo %}
-                                            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-card-avatar me-3">
-                                        {% else %}
-                                            <div class="avatar-circle-sm bg-indigo text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-weight: 600; font-size: 1.2rem;">
-                                                {{ candidate.full_name|slice:":2"|upper }}
-                                            </div>
-                                        {% endif %}
-                                        <div>
-                                            <h5 class="card-title fw-bold mb-1">{{ candidate.full_name }}</h5>
-                                            <p class="text-muted small mb-0"><i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ candidate.location }}</p>
-                                        </div>
+                <div class="col-md-6">
+                    <div class="card card-premium h-100 shadow-sm d-flex flex-column">
+                        <div class="card-body p-4 flex-grow-1">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    {% if candidate.profile_photo %}
+                                    <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}"
+                                        class="candidate-card-avatar me-3">
+                                    {% else %}
+                                    <div class="avatar-circle-sm bg-indigo text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                        style="width: 50px; height: 50px; font-weight: 600; font-size: 1.2rem;">
+                                        {{ candidate.full_name|slice:":2"|upper }}
                                     </div>
-                                    <span class="badge bg-success">{{ candidate.availability }}</span>
-                                </div>
-
-                                <div class="row mb-3 bg-light p-2 rounded text-center small">
-                                    <div class="col-6 border-end">
-                                        <div class="text-muted">Experience</div>
-                                        <div class="fw-bold text-dark">{{ candidate.years_of_experience }} Years</div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-muted">Rate Card</div>
-                                        <div class="fw-bold text-dark">${{ candidate.rate_card }}/hr</div>
+                                    {% endif %}
+                                    <div>
+                                        <h5 class="card-title fw-bold mb-1">{{ candidate.full_name }}</h5>
+                                        <p class="text-muted small mb-0"><i
+                                                class="fa-solid fa-location-dot me-1 text-danger"></i>{{
+                                            candidate.location }}</p>
                                     </div>
                                 </div>
+                                <span class="badge bg-success">{{ candidate.availability }}</span>
+                            </div>
 
-                                <div class="mb-3">
-                                    <div class="text-muted small mb-2">Technical Skills:</div>
-                                    <div class="d-flex flex-wrap">
-                                        {% for stack in candidate.technical_stack.all %}
-                                            <span class="badge-chip">{{ stack.name }}</span>
-                                        {% endfor %}
-                                    </div>
+                            <div class="row mb-3 bg-light p-2 rounded text-center small">
+                                <div class="col-6 border-end">
+                                    <div class="text-muted">Experience</div>
+                                    <div class="fw-bold text-dark">{{ candidate.years_of_experience }} Years</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-muted">Rate Card</div>
+                                    <div class="fw-bold text-dark">${{ candidate.rate_card }}/hr</div>
                                 </div>
                             </div>
 
-                            <div class="card-footer bg-white border-top p-4 d-flex justify-content-between gap-2 mt-auto">
-                                <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-outline-secondary w-50">
-                                    <i class="fa-solid fa-circle-info me-1"></i>Details
-                                </a>
-                                {% if candidate.id in cart_candidate_ids %}
-                                    <button class="btn btn-success w-50" disabled>
-                                        <i class="fa-solid fa-circle-check me-1"></i>In Cart
-                                    </button>
-                                {% else %}
-                                    <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary-custom w-50">
-                                        <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
-                                    </a>
-                                {% endif %}
+                            <div class="mb-3">
+                                <div class="text-muted small mb-2">Technical Skills:</div>
+                                <div class="d-flex flex-wrap">
+                                    {% for stack in candidate.technical_stack.all %}
+                                    <span class="badge-chip">{{ stack.name }}</span>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
+
+                        <div class="card-footer bg-white border-top p-4 d-flex justify-content-between gap-2 mt-auto">
+                            <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-outline-secondary w-50">
+                                <i class="fa-solid fa-circle-info me-1"></i>Details
+                            </a>
+                            {% if candidate.id in cart_candidate_ids %}
+                            <button class="btn btn-success w-50" disabled>
+                                <i class="fa-solid fa-circle-check me-1"></i>In Cart
+                            </button>
+                            {% else %}
+                            <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary-custom w-50">
+                                <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
+                            </a>
+                            {% endif %}
+                        </div>
                     </div>
+                </div>
                 {% empty %}
-                    <div class="col-12 text-center py-5 text-muted">
-                        <i class="fa-solid fa-user-group fa-4x mb-3"></i>
-                        <p class="fs-5 mb-0">No candidates match your search filters.</p>
-                    </div>
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="fa-solid fa-user-group fa-4x mb-3"></i>
+                    <p class="fs-5 mb-0">No candidates match your search filters.</p>
+                </div>
                 {% endfor %}
             </div>
         </div>

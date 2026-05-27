@@ -1,22 +1,24 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Talent Management Portal{% endblock %}</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- FontAwesome 6 for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    
+
     <!-- Custom Style Sheet -->
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
     <div class="wrapper">
@@ -30,51 +32,56 @@
 
             <ul class="list-unstyled components">
                 {% if user.role == 'admin' or user.is_superuser %}
-                    <p>Admin Operations</p>
-                    <li class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-                        <a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'recruiter_list' or request.resolver_match.url_name == 'edit_recruiter' %}active{% endif %}">
-                        <a href="{% url 'recruiter_list' %}"><i class="fa-solid fa-user-tie"></i> Recruiters</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'client_list' %}active{% endif %}">
-                        <a href="{% url 'client_list' %}"><i class="fa-solid fa-users"></i> Clients</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'team_list' or request.resolver_match.url_name == 'team_create' or request.resolver_match.url_name == 'team_edit' %}active{% endif %}">
-                        <a href="{% url 'team_list' %}"><i class="fa-solid fa-people-group"></i> Teams</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'stack_list' or request.resolver_match.url_name == 'stack_create' or request.resolver_match.url_name == 'stack_edit' %}active{% endif %}">
-                        <a href="{% url 'stack_list' %}"><i class="fa-solid fa-layer-group"></i> Tech Stacks</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'admin_candidate_list' %}active{% endif %}">
-                        <a href="{% url 'admin_candidate_list' %}"><i class="fa-solid fa-user-group"></i> Candidates</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'notification_logs' %}active{% endif %}">
-                        <a href="{% url 'notification_logs' %}"><i class="fa-solid fa-envelope-open-text"></i> Notification Logs</a>
-                    </li>
+                <p>Admin Operations</p>
+                <li class="{% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                    <a href="{% url 'admin_dashboard' %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                </li>
+                <li
+                    class="{% if request.resolver_match.url_name == 'recruiter_list' or request.resolver_match.url_name == 'edit_recruiter' %}active{% endif %}">
+                    <a href="{% url 'recruiter_list' %}"><i class="fa-solid fa-user-tie"></i> Recruiters</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'client_list' %}active{% endif %}">
+                    <a href="{% url 'client_list' %}"><i class="fa-solid fa-users"></i> Clients</a>
+                </li>
+                <li
+                    class="{% if request.resolver_match.url_name == 'team_list' or request.resolver_match.url_name == 'team_create' or request.resolver_match.url_name == 'team_edit' %}active{% endif %}">
+                    <a href="{% url 'team_list' %}"><i class="fa-solid fa-people-group"></i> Teams</a>
+                </li>
+                <li
+                    class="{% if request.resolver_match.url_name == 'stack_list' or request.resolver_match.url_name == 'stack_create' or request.resolver_match.url_name == 'stack_edit' %}active{% endif %}">
+                    <a href="{% url 'stack_list' %}"><i class="fa-solid fa-layer-group"></i> Tech Stacks</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'admin_candidate_list' %}active{% endif %}">
+                    <a href="{% url 'admin_candidate_list' %}"><i class="fa-solid fa-user-group"></i> Candidates</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'notification_logs' %}active{% endif %}">
+                    <a href="{% url 'notification_logs' %}"><i class="fa-solid fa-envelope-open-text"></i> Notification
+                        Logs</a>
+                </li>
                 {% elif user.role == 'recruiter' %}
-                    <p>Recruiter Desk</p>
-                    <li class="{% if request.resolver_match.url_name == 'recruiter_dashboard' %}active{% endif %}">
-                        <a href="{% url 'recruiter_dashboard' %}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'candidate_create' %}active{% endif %}">
-                        <a href="{% url 'candidate_create' %}"><i class="fa-solid fa-user-plus"></i> Add Candidate</a>
-                    </li>
+                <p>Recruiter Desk</p>
+                <li class="{% if request.resolver_match.url_name == 'recruiter_dashboard' %}active{% endif %}">
+                    <a href="{% url 'recruiter_dashboard' %}"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'candidate_create' %}active{% endif %}">
+                    <a href="{% url 'candidate_create' %}"><i class="fa-solid fa-user-plus"></i> Add Candidate</a>
+                </li>
                 {% elif user.role == 'client' %}
-                    <p>Client Portal</p>
-                    <li class="{% if request.resolver_match.url_name == 'client_dashboard' %}active{% endif %}">
-                        <a href="{% url 'client_dashboard' %}"><i class="fa-solid fa-magnifying-glass"></i> Browse Talent</a>
-                    </li>
-                    <li class="{% if request.resolver_match.url_name == 'cart_view' %}active{% endif %}">
-                        <a href="{% url 'cart_view' %}" class="d-flex justify-content-between align-items-center">
-                            <span><i class="fa-solid fa-shopping-cart"></i> Shopping Cart</span>
-                            {% if user.cart_items.count > 0 %}
-                                <span class="badge bg-danger rounded-pill">{{ user.cart_items.count }}</span>
-                            {% endif %}
-                        </a>
-                    </li>
+                <p>Client Portal</p>
+                <li class="{% if request.resolver_match.url_name == 'client_dashboard' %}active{% endif %}">
+                    <a href="{% url 'client_dashboard' %}"><i class="fa-solid fa-magnifying-glass"></i> Browse
+                        Talent</a>
+                </li>
+                <li class="{% if request.resolver_match.url_name == 'cart_view' %}active{% endif %}">
+                    <a href="{% url 'cart_view' %}" class="d-flex justify-content-between align-items-center">
+                        <span><i class="fa-solid fa-shopping-cart"></i> Shopping Cart</span>
+                        {% if user.cart_items.count > 0 %}
+                        <span class="badge bg-danger rounded-pill">{{ user.cart_items.count }}</span>
+                        {% endif %}
+                    </a>
+                </li>
                 {% endif %}
-                
+
                 <p>System</p>
                 <li>
                     <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
@@ -95,34 +102,40 @@
                     </a>
                     {% else %}
                     <span class="navbar-text">
-                        Welcome, <strong>{{ user.full_name }}</strong> 
+                        Welcome, <strong>{{ user.full_name }}</strong>
                         <span class="badge bg-secondary ms-1">{{ user.role|title }}</span>
                         {% if user.team %}
-                            <span class="badge bg-primary ms-1">{{ user.team.name }}</span>
+                        <span class="badge bg-primary ms-1">{{ user.team.name }}</span>
                         {% endif %}
                     </span>
                     {% endif %}
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                         <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
                             {% if user.is_authenticated %}
-                                <li class="nav-item">
-                                    <span class="nav-link text-muted"><i class="fa-regular fa-clock me-1"></i> {{ user.created_at|date:"M Y" }}</span>
-                                </li>
+                            <li class="nav-item">
+                                <span class="nav-link text-muted"><i class="fa-regular fa-clock me-1"></i> {{
+                                    user.created_at|date:"M Y" }}</span>
+                            </li>
                             {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {% if request.resolver_match.url_name == 'register_recruiter' %}active{% endif %}" href="{% url 'register_recruiter' %}">Register Recruiter</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {% if request.resolver_match.url_name == 'register_client' %}active{% endif %}" href="{% url 'register_client' %}">Register Client</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}"
+                                    href="{% url 'login' %}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'register_recruiter' %}active{% endif %}"
+                                    href="{% url 'register_recruiter' %}">Register Recruiter</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'register_client' %}active{% endif %}"
+                                    href="{% url 'register_client' %}">Register Client</a>
+                            </li>
                             {% endif %}
                         </ul>
                     </div>
@@ -133,21 +146,21 @@
             <div class="content-body flex-grow-1">
                 <!-- Django Messages Alerts System -->
                 {% if messages %}
-                    <div class="container-fluid px-0">
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
-                                {% if message.tags == 'success' %}
-                                    <i class="fa-solid fa-circle-check me-2"></i>
-                                {% elif message.tags == 'error' or message.tags == 'danger' %}
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-circle-info me-2"></i>
-                                {% endif %}
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
+                <div class="container-fluid px-0">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+                        {% if message.tags == 'success' %}
+                        <i class="fa-solid fa-circle-check me-2"></i>
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        {% else %}
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                    {% endfor %}
+                </div>
                 {% endif %}
 
                 <!-- Sub-page specific content blocks -->
@@ -156,12 +169,7 @@
                 </div>
             </div>
 
-            <!-- Footer Area -->
-            <footer class="bg-white border-top py-3 text-center text-muted mt-auto">
-                <div class="container-fluid">
-                    <small>&copy; 2026 Talent Recruitment Portal. All rights reserved.</small>
-                </div>
-            </footer>
+
         </div>
     </div>
 
@@ -171,4 +179,5 @@
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
