@@ -2,6 +2,24 @@ from django.db import models
 from django.conf import settings
 from teams.models import TechnologyStack
 
+class JobTitle(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
 class Candidate(models.Model):
     profile_photo = models.ImageField(
         upload_to='candidates/',
@@ -24,12 +42,29 @@ class Candidate(models.Model):
         max_length=100,
         help_text="e.g. Immediate, 2 Weeks Notice, 1 Month Notice"
     )
-    summary = models.TextField(help_text="Summary or notes about the candidate")
+    summary = models.TextField(blank=True, default='', help_text="Summary or notes about the candidate")
+    job_title = models.ForeignKey(
+        JobTitle,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='candidates'
+    )
+    skills = models.ManyToManyField(
+        Skill,
+        blank=True,
+        related_name='candidates'
+    )
     
     recruiter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='candidates'
+    )
+    
+    is_on_hold = models.BooleanField(
+        default=False,
+        help_text="If checked, this candidate is on hold and invisible to clients."
     )
     
     created_at = models.DateTimeField(auto_now_add=True)

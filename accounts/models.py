@@ -56,5 +56,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
 
+    @property
+    def visible_cart_items(self):
+        return self.cart_items.filter(candidate__is_on_hold=False)
+
     def __str__(self):
         return f"{self.full_name} ({self.email}) - {self.role.capitalize()}"

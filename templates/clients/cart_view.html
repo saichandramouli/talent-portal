@@ -13,7 +13,7 @@
 
     <div class="row">
         <!-- Main Cart List -->
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card card-premium shadow-sm overflow-hidden">
                 <div class="table-responsive">
                     <table class="table table-premium mb-0">
@@ -71,22 +71,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-
-        <!-- Right Checkout Information Panel -->
-        <div class="col-lg-4 mt-4 mt-lg-0">
-            <div class="card card-premium p-4 shadow-sm">
-                <h5 class="fw-bold mb-3 border-bottom pb-2">Cart Summary</h5>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Total Profiles Selected:</span>
-                    <span class="fw-bold fs-5">{{ cart_items.count }}</span>
-                </div>
-                <hr>
-                <div class="alert alert-info py-2 small mb-4">
-                    <i class="fa-solid fa-circle-info me-2"></i> Adding candidates to your cart triggers automated email notifications with the complete profile information.
-                </div>
-                <a href="{% url 'client_dashboard' %}" class="btn btn-secondary-custom w-100 mb-2">Continue Browsing</a>
             </div>
         </div>
     </div>

@@ -8,10 +8,10 @@
             <h1 class="h3 mb-1">Browse Professional Talent</h1>
             <p class="text-muted mb-0">Search and filter candidates. Add them to your cart to request details.</p>
         </div>
-        <a href="{% url 'cart_view' %}" class="btn btn-outline-primary d-flex align-items-center gap-2">
+        <a href="{% url 'cart_view' %}" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2">
             <i class="fa-solid fa-shopping-cart"></i>
             <span>View Shopping Cart</span>
-            <span class="badge bg-danger rounded-pill">{{ user.cart_items.count }}</span>
+            <span class="badge bg-danger rounded-pill">{{ user.visible_cart_items.count }}</span>
         </a>
     </div>
 
@@ -34,44 +34,36 @@
                         <select name="stack" id="stack_filter" class="form-select">
                             <option value="">All Stacks</option>
                             {% for stack in all_stacks %}
-                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                            <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
-                    <!-- Experience Range -->
+
+
+                    <!-- Job Title Filter -->
                     <div class="mb-3">
-                        <label class="form-label">Years of Experience</label>
-                        <div class="d-flex gap-2">
-                            <input type="number" name="min_exp" class="form-control" placeholder="Min" min="0"
-                                value="{{ min_exp }}">
-                            <input type="number" name="max_exp" class="form-control" placeholder="Max" min="0"
-                                value="{{ max_exp }}">
-                        </div>
+                        <label for="job_title_filter" class="form-label">Job Title</label>
+                        <select name="job_title" id="job_title_filter" class="form-select">
+                            <option value="">All Job Titles</option>
+                            {% for job in all_job_titles %}
+                                <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
-                    <!-- Rate Card Max -->
-                    <div class="mb-3">
-                        <label for="rate_filter" class="form-label">Max Rate ($/hour)</label>
-                        <input type="number" name="max_rate" id="rate_filter" class="form-control"
-                            placeholder="e.g. 100" min="0" value="{{ max_rate }}">
-                    </div>
-
-                    <!-- Location Filter -->
-                    <div class="mb-3">
-                        <label for="location_filter" class="form-label">Location</label>
-                        <input type="text" name="location" id="location_filter" class="form-control"
-                            placeholder="e.g. New York" value="{{ location_filter }}">
-                    </div>
-
-                    <!-- Availability Filter -->
+                    <!-- Skill Filter -->
                     <div class="mb-4">
-                        <label for="avail_filter" class="form-label">Availability</label>
-                        <input type="text" name="availability" id="avail_filter" class="form-control"
-                            placeholder="e.g. Immediate, 2 Weeks" value="{{ availability_filter }}">
+                        <label for="skills_filter" class="form-label">Skill</label>
+                        <select name="skills" id="skills_filter" class="form-select">
+                            <option value="">All Skills</option>
+                            {% for skill in all_skills %}
+                                <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary-custom w-100">
+                    <button type="submit" class="btn btn-sm btn-primary-custom w-100">
                         <i class="fa-solid fa-filter me-2"></i>Apply Filters
                     </button>
                 </form>
@@ -85,18 +77,16 @@
                 <form method="GET" action="{% url 'client_dashboard' %}">
                     <!-- Maintain Filters -->
                     <input type="hidden" name="stack" value="{{ selected_stack }}">
-                    <input type="hidden" name="min_exp" value="{{ min_exp }}">
-                    <input type="hidden" name="max_exp" value="{{ max_exp }}">
-                    <input type="hidden" name="max_rate" value="{{ max_rate }}">
-                    <input type="hidden" name="location" value="{{ location_filter }}">
-                    <input type="hidden" name="availability" value="{{ availability_filter }}">
+
+                    <input type="hidden" name="job_title" value="{{ job_title_filter }}">
+                    <input type="hidden" name="skills" value="{{ skills_filter }}">
 
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0 text-muted"><i
                                 class="fa-solid fa-magnifying-glass"></i></span>
                         <input type="text" name="q" class="form-control border-start-0"
-                            placeholder="Search by candidate name, stack, or location..." value="{{ search_query }}">
-                        <button type="submit" class="btn btn-primary-custom px-4">Search</button>
+                            placeholder="Search by candidate name, stack, job title, or skill..." value="{{ search_query }}">
+                        <button type="submit" class="btn btn-sm btn-primary-custom px-4">Search</button>
                     </div>
                 </form>
             </div>
@@ -104,9 +94,9 @@
             <!-- Candidates Grid -->
             <div class="row g-4">
                 {% for candidate in candidates %}
-                <div class="col-md-6">
+                <div class="col-md-6 col-lg-4">
                     <div class="card card-premium h-100 shadow-sm d-flex flex-column">
-                        <div class="card-body p-4 flex-grow-1">
+                        <div class="card-body p-3 flex-grow-1">
                             <div class="d-flex align-items-start justify-content-between mb-3">
                                 <div class="d-flex align-items-center">
                                     {% if candidate.profile_photo %}
@@ -120,9 +110,9 @@
                                     {% endif %}
                                     <div>
                                         <h5 class="card-title fw-bold mb-1">{{ candidate.full_name }}</h5>
-                                        <p class="text-muted small mb-0"><i
-                                                class="fa-solid fa-location-dot me-1 text-danger"></i>{{
-                                            candidate.location }}</p>
+                                        {% if candidate.job_title %}
+                                            <div class="text-primary small fw-semibold mb-1">{{ candidate.job_title }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <span class="badge bg-success">{{ candidate.availability }}</span>
@@ -131,13 +121,20 @@
                             <div class="row mb-3 bg-light p-2 rounded text-center small">
                                 <div class="col-6 border-end">
                                     <div class="text-muted">Experience</div>
-                                    <div class="fw-bold text-dark">{{ candidate.years_of_experience }} Years</div>
+                                    <div class="fw-bold text-white">{{ candidate.years_of_experience }} Years</div>
                                 </div>
                                 <div class="col-6">
                                     <div class="text-muted">Rate Card</div>
-                                    <div class="fw-bold text-dark">${{ candidate.rate_card }}/hr</div>
+                                    <div class="fw-bold text-white">${{ candidate.rate_card }}/hr</div>
                                 </div>
                             </div>
+
+                            {% if candidate.skills.all %}
+                            <div class="mb-3">
+                                <div class="text-muted small mb-1">Key Skills:</div>
+                                <div class="text-light small">{{ candidate.skills.all|join:", " }}</div>
+                            </div>
+                            {% endif %}
 
                             <div class="mb-3">
                                 <div class="text-muted small mb-2">Technical Skills:</div>
@@ -149,16 +146,16 @@
                             </div>
                         </div>
 
-                        <div class="card-footer bg-white border-top p-4 d-flex justify-content-between gap-2 mt-auto">
-                            <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-outline-secondary w-50">
+                        <div class="card-footer bg-white border-top p-3 d-flex justify-content-between gap-2 mt-auto">
+                            <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-secondary w-50">
                                 <i class="fa-solid fa-circle-info me-1"></i>Details
                             </a>
                             {% if candidate.id in cart_candidate_ids %}
-                            <button class="btn btn-success w-50" disabled>
+                            <button class="btn btn-sm btn-success w-50" disabled>
                                 <i class="fa-solid fa-circle-check me-1"></i>In Cart
                             </button>
                             {% else %}
-                            <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary-custom w-50">
+                            <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-sm btn-primary-custom w-50">
                                 <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
                             </a>
                             {% endif %}
@@ -175,4 +172,289 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const stackFilter = document.getElementById("stack_filter");
+    const jobTitleFilter = document.getElementById("job_title_filter");
+    
+    const skillsFilter = document.getElementById("skills_filter");
+    
+    if (stackFilter && jobTitleFilter && skillsFilter) {
+        // Keep a copy of all original job title options
+        const originalOptions = Array.from(jobTitleFilter.options).map(opt => ({
+            value: opt.value,
+            text: opt.text,
+            selected: opt.selected
+        }));
+        
+        // Keep a copy of all original skill options
+        const originalSkillOptions = Array.from(skillsFilter.options).map(opt => ({
+            value: opt.value,
+            text: opt.text,
+            selected: opt.selected
+        }));
+
+        const mlSkills = [
+            "Python", "ML", "DL", "TensorFlow", "PyTorch", "SQL", "MLOps", "Docker", "AWS",
+            "Model Deployment", "R", "Statistics", "Pandas", "NumPy", "Tableau", "Power BI",
+            "A/B Testing", "NLP", "CV", "APIs", "Experimentation", "Algorithms",
+            "Data Analysis", "Data Visualization", "Excel"
+        ];
+        
+        const nnSkills = [
+            "Python", "Text Analytics", "NLP", "Data Processing", "Regex", "NLTK", "SpaCy", "SQL",
+            "Computer Vision", "OpenCV", "CNN", "Image Processing", "TensorFlow", "PyTorch",
+            "Deep Learning", "DL", "Image Annotation", "Bounding Box", "Segmentation",
+            "Speech Annotation", "Audio Labeling", "Transcription", "Speech Recognition",
+            "Phonetics Basics", "Neural Networks", "RNN", "Transformers", "Model Training", "Optimization"
+        ];
+        
+        const naturalLearningSkills = [
+            "Python", "NLP", "Transformers", "BERT", "GPT", "NLTK", "SpaCy", "Hugging Face",
+            "ML", "DL", "Text Mining", "Research", "Text Analytics", "SQL", "Pandas",
+            "Data Visualization", "Pytorch", "PyTorch", "Retrieval Augmented Generation",
+            "Retrieval Augmented Generation (RAG)", "Text Annotation", "Named Entity Recognition (NER)",
+            "Sentiment Labeling", "Linguistics Basics"
+        ];
+        
+        const dataEngineeringSkills = [
+            "Python", "SQL", "ETL", "Data Pipelines", "Spark", "Hadoop", "Airflow", "AWS",
+            "Data Warehousing", "Kafka", "Data Modeling", "dbt", "BI Tools", "Tableau", "Power BI",
+            "Big Data", "Java", "Hive", "HDFS", "Distributed Systems", "Informatica", "SSIS",
+            "Data Integration", "ML Basics", "ML", "Statistics", "Pandas", "NumPy", "Visualization",
+            "Data Visualization", "Data Annotation", "Data Labeling", "Image/Text Tagging", "QA",
+            "Tools (Labelbox/CVAT)", "Attention to Detail", "Data Validation", "Annotation Review",
+            "Accuracy Check", "Guidelines", "Reporting"
+        ];
+        
+        const generativeAISkills = [
+            "Python", "Generative AI", "LLM", "Transformers", "OpenAI APIs", "Prompt Engineering",
+            "LangChain", "Fine-tuning", "GPT", "Hugging Face", "RAG", "Retrieval Augmented Generation (RAG)",
+            "AI Tools", "NLP Basics", "NLP", "Content Generation", "Testing & Iteration", "AI Integration",
+            "APIs", "ML", "Backend Development", "Cloud", "Deployment", "AI Solutions", "System Design",
+            "Client Requirements", "Chatbots", "Dialogflow", "Rasa", "Speech APIs", "Intent Recognition",
+            "Text Annotation", "Prompt Evaluation", "NER", "Named Entity Recognition (NER)",
+            "Sentiment Analysis", "Data Labeling", "LLM Evaluation", "Human Feedback", "RLHF",
+            "Quality Analysis", "QA", "Data Validation"
+        ];
+        
+        const mlopsSkills = [
+            "Python", "MLOps", "CI/CD", "Docker", "Kubernetes", "Mlflow", "Kubeflow", "AWS",
+            "Model Deployment", "ML Platforms", "APIs", "Cloud (AWS/GCP/Azure)", "Cloud", "GCP", "Azure",
+            "Data Pipelines", "Scalability", "Infrastructure", "Distributed Systems", "Spark",
+            "System Design", "DevOps", "Monitoring", "Automation", "ML Deployment", "Flask", "FastAPI"
+        ];
+        
+        const mlJobTitles = [
+            "Machine Learning Engineer",
+            "Data Scientist",
+            "AI Engineer",
+            "Applied Scientist",
+            "ML Analyst"
+        ];
+        
+        const nnJobTitles = [
+            "Text Analytics Engineer",
+            "Computer Vision Engineer",
+            "Speech Annotation",
+            "Neural Network Engineer"
+        ];
+        
+        const naturalLearningJobTitles = [
+            "NLP Engineer",
+            "NLP Scientist",
+            "Data Scientist (NLP)",
+            "NLP Annotator"
+        ];
+        
+        const dataEngineeringJobTitles = [
+            "Data Engineer",
+            "Analytics Engineer",
+            "AI Data Engineer",
+            "Big Data Engineer",
+            "ETL Developer",
+            "Data Analyst (AI-focused)",
+            "Data Annotator/Annotation Specialist",
+            "Annotation Quality Analyst"
+        ];
+
+        const generativeAIJobTitles = [
+            "Generative AI Engineer (Gen AI)",
+            "LLM Engineer",
+            "Prompt Engineer",
+            "AI Application Engineer",
+            "AI Solutions Engineer",
+            "Conversational AI Developer",
+            "Text / LLM Annotation",
+            "Human Feedback / AI Evaluation"
+        ];
+
+        const mlopsJobTitles = [
+            "MLOps Engineer",
+            "AI Platform Engineer",
+            "ML Infrastructure Engineer",
+            "DevOps Engineer (AI/ML)",
+            "Model Deployment Engineer"
+        ];
+        
+        function updateJobTitles() {
+            const selectedText = stackFilter.options[stackFilter.selectedIndex].text.trim().toLowerCase();
+            const currentSelectedValue = jobTitleFilter.value;
+            
+            // Clear existing options
+            jobTitleFilter.innerHTML = "";
+            
+            originalOptions.forEach(opt => {
+                const isAllOption = opt.value === "";
+                
+                if (selectedText.includes("machine learning")) {
+                    const isMLTitle = mlJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isMLTitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("neural networks")) {
+                    const isNNTitle = nnJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isNNTitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("natural learning")) {
+                    const isNLTitle = naturalLearningJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isNLTitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("data engineering")) {
+                    const isDETitle = dataEngineeringJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isDETitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("generative ai")) {
+                    const isGenAITitle = generativeAIJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isGenAITitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("mlops")) {
+                    const isMLOpsTitle = mlopsJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isMLOpsTitle) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        jobTitleFilter.add(newOpt);
+                    }
+                } else {
+                    const newOpt = new Option(opt.text, opt.value);
+                    if (opt.value === currentSelectedValue) {
+                        newOpt.selected = true;
+                    }
+                    jobTitleFilter.add(newOpt);
+                }
+            });
+        }
+
+        function updateSkills() {
+            const selectedText = stackFilter.options[stackFilter.selectedIndex].text.trim().toLowerCase();
+            const currentSelectedValue = skillsFilter.value;
+            
+            // Clear existing options
+            skillsFilter.innerHTML = "";
+            
+            originalSkillOptions.forEach(opt => {
+                const isAllOption = opt.value === "";
+                
+                if (selectedText.includes("machine learning")) {
+                    const isMLSkill = mlSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isMLSkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("neural networks")) {
+                    const isNNSkill = nnSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isNNSkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("natural learning")) {
+                    const isNLSkill = naturalLearningSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isNLSkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("data engineering")) {
+                    const isDESkill = dataEngineeringSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isDESkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("generative ai")) {
+                    const isGenAISkill = generativeAISkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isGenAISkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else if (selectedText.includes("mlops")) {
+                    const isMLOpsSkill = mlopsSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
+                    if (isAllOption || isMLOpsSkill) {
+                        const newOpt = new Option(opt.text, opt.value);
+                        if (opt.value === currentSelectedValue) {
+                            newOpt.selected = true;
+                        }
+                        skillsFilter.add(newOpt);
+                    }
+                } else {
+                    const newOpt = new Option(opt.text, opt.value);
+                    if (opt.value === currentSelectedValue) {
+                        newOpt.selected = true;
+                    }
+                    skillsFilter.add(newOpt);
+                }
+            });
+        }
+        
+        stackFilter.addEventListener("change", function() {
+            updateJobTitles();
+            updateSkills();
+        });
+        
+        // Run once on load to handle pre-selected stack
+        updateJobTitles();
+        updateSkills();
+    }
+});
+</script>
 {% endblock %}

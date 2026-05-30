@@ -1,30 +1,46 @@
 from django import forms
-from .models import Candidate
+from .models import Candidate, JobTitle, Skill
 from teams.models import TechnologyStack
+
+class JobTitleForm(forms.ModelForm):
+    class Meta:
+        model = JobTitle
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Senior Software Engineer'}),
+        }
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Python'}),
+        }
 
 class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = [
-            'profile_photo', 'full_name', 'years_of_experience',
-            'rate_card', 'technical_stack', 'location', 'availability', 'summary'
+            'profile_photo', 'full_name', 'job_title', 'skills', 'years_of_experience',
+            'rate_card', 'technical_stack', 'location', 'availability', 'is_on_hold'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Candidate Full Name'}),
+            'job_title': forms.Select(attrs={'class': 'form-select'}),
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'placeholder': 'e.g. 5'}),
             'rate_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 50.00'}),
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. New York, NY'}),
             'availability': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Immediate, 2 Weeks'}),
-            'summary': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Short summary...'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_on_hold': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'technical_stack': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+            'skills': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        
-        # Style technical_stack as select multi or checkboxes
-        self.fields['technical_stack'].widget = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
         
         # If user is recruiter, restrict the choices of tech stack to their team's stacks
         if self.user and self.user.role == 'recruiter':

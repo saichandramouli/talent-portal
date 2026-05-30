@@ -31,6 +31,14 @@
                         {% endif %}
                     </div>
 
+                    <div class="mb-3">
+                        <label for="id_job_title" class="form-label">Job Title</label>
+                        {{ form.job_title }}
+                        {% if form.job_title.errors %}
+                            <div class="text-danger small mt-1">{{ form.job_title.errors }}</div>
+                        {% endif %}
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="id_years_of_experience" class="form-label">Years of Experience</label>
@@ -79,13 +87,16 @@
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="id_summary" class="form-label">Candidate Summary / Notes</label>
-                        {{ form.summary }}
-                        {% if form.summary.errors %}
-                            <div class="text-danger small mt-1">{{ form.summary.errors }}</div>
+                    <div class="form-check mb-4">
+                        {{ form.is_on_hold }}
+                        <label for="id_is_on_hold" class="form-check-label fw-semibold ms-1">Put Candidate on Hold</label>
+                        <div class="form-text text-muted">If checked, this candidate is in the hiring process and will be hidden from all clients.</div>
+                        {% if form.is_on_hold.errors %}
+                            <div class="text-danger small mt-1">{{ form.is_on_hold.errors }}</div>
                         {% endif %}
                     </div>
+
+
 
                     <div class="mb-4">
                         <label class="form-label">Technical Stack (Select allowed stacks)</label>
@@ -103,6 +114,25 @@
                         </div>
                         {% if form.technical_stack.errors %}
                             <div class="text-danger small mt-1">{{ form.technical_stack.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Skills (Select applicable skills)</label>
+                        <div class="django-select-multiple-checkboxes">
+                            {% for checkbox in form.skills %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted mb-0 small">No skills defined by Admin yet.</p>
+                            {% endfor %}
+                        </div>
+                        {% if form.skills.errors %}
+                            <div class="text-danger small mt-1">{{ form.skills.errors }}</div>
                         {% endif %}
                     </div>
 

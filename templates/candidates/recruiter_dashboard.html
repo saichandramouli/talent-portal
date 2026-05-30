@@ -11,11 +11,11 @@
         </div>
         <div class="d-flex gap-2">
             {% if user.team %}
-            <a href="{% url 'candidate_create' %}" class="btn btn-primary-custom">
+            <a href="{% url 'candidate_create' %}" class="btn btn-sm btn-primary-custom">
                 <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
             </a>
             {% else %}
-            <button class="btn btn-primary-custom" disabled
+            <button class="btn btn-sm btn-primary-custom" disabled
                 title="You must be assigned to a team before you can upload candidates.">
                 <i class="fa-solid fa-user-plus me-1"></i>Add Candidate
             </button>
@@ -26,7 +26,7 @@
     <!-- Cards Info -->
     <div class="row g-4 mb-4">
         <div class="col-md-6 col-lg-4">
-            <div class="card card-premium card-stat p-4">
+            <div class="card card-premium card-stat p-4 h-100">
                 <h6 class="text-muted uppercase text-xs mb-2">Total Candidates Uploaded</h6>
                 <h2 class="display-6 fw-bold mb-0">{{ total_own }}</h2>
                 <div class="stat-icon">
@@ -35,14 +35,12 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-8">
-            <div class="card card-premium p-4">
-                <h6 class="text-muted uppercase text-xs mb-2">Allowed Tech Stacks (Based on Team: {{
-                    user.team.name|default:"Unassigned" }})</h6>
-                <div class="mt-2">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-premium p-4 h-100">
+                <h6 class="text-muted uppercase text-xs mb-2">Allowed Tech Stacks (Based on Team: {{ user.team.name|default:"Unassigned" }})</h6>
+                <div class="mt-2 d-flex flex-wrap">
                     {% for stack in allowed_stacks %}
-                    <span class="badge bg-primary fs-6 px-3 py-2 me-2 mb-2"><i class="fa-solid fa-tag me-1"></i>{{
-                        stack.name }}</span>
+                    <span class="badge-chip"><i class="fa-solid fa-tag me-1"></i>{{ stack.name }}</span>
                     {% empty %}
                     <div class="text-warning small py-1">
                         <i class="fa-solid fa-triangle-exclamation me-1"></i> No tech stacks permitted. Please ask your
@@ -52,13 +50,56 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-12 col-lg-4">
+            <div class="card card-premium p-4 h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="text-muted uppercase text-xs mb-0">
+                        <i class="fa-solid fa-bell text-warning me-2"></i>Notifications
+                    </h6>
+                    {% if notifications %}
+                    <form action="{% url 'mark_all_read' %}" method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link p-0 text-decoration-none text-xs text-muted">Mark all read</button>
+                    </form>
+                    {% endif %}
+                </div>
+                <div class="notifications-list flex-grow-1 overflow-auto pe-1" style="font-size: 0.85rem; max-height: 180px;">
+                    {% for notification in notifications %}
+                        <div class="notification-item p-2 mb-2 rounded border-start border-3 {% if not notification.is_read %}border-primary bg-primary bg-opacity-10{% else %}border-secondary bg-light{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start gap-1">
+                                <span class="fw-semibold {% if not notification.is_read %}text-dark{% else %}text-muted{% endif %}" style="font-size: 0.8rem;">{{ notification.title }}</span>
+                                <small class="text-muted text-nowrap" style="font-size: 0.75rem;">{{ notification.created_at|timesince }} ago</small>
+                            </div>
+                            <div class="collapse mt-2" id="notif-details-{{ notification.id }}">
+                                <pre class="p-2 bg-white rounded border text-xs text-dark mb-0" style="white-space: pre-wrap; font-family: monospace;">{{ notification.message }}</pre>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <button class="btn btn-sm btn-link p-0 text-decoration-none text-primary fw-semibold" style="font-size: 0.75rem;" type="button" data-bs-toggle="collapse" data-bs-target="#notif-details-{{ notification.id }}">
+                                    Toggle Details
+                                </button>
+                                {% if not notification.is_read %}
+                                <form action="{% url 'mark_read' notification.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none text-success fw-semibold" style="font-size: 0.75rem;">Mark Read</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-muted text-center py-4">
+                            <i class="fa-regular fa-bell-slash fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0 text-sm">No notifications</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Table of Own Candidates -->
     <div class="card card-premium shadow-sm overflow-hidden">
-        <div class="card-header bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">My Candidate Roster</h5>
-        </div>
+
         <div class="table-responsive">
             <table class="table table-premium mb-0">
                 <thead>
@@ -66,9 +107,8 @@
                         <th>Candidate</th>
                         <th>Experience</th>
                         <th>Rate Card</th>
-                        <th>Location</th>
                         <th>Availability</th>
-                        <th>Key Stack Skills</th>
+                        <th>Stacks & Skills</th>
                         <th class="text-end">Actions</th>
                     </tr>
                 </thead>
@@ -88,21 +128,32 @@
                                 {% endif %}
                                 <div>
                                     <div class="fw-semibold">{{ candidate.full_name }}</div>
-                                    <div class="text-muted small">Uploaded: {{ candidate.created_at|date:"Y-m-d" }}
-                                    </div>
+                                    {% if candidate.is_on_hold %}
+                                    <span class="badge bg-warning text-dark mt-1" style="font-size: 0.75rem;"><i
+                                            class="fa-solid fa-pause me-1"></i>On Hold</span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </td>
-                        <td>{{ candidate.years_of_experience }} years</td>
-                        <td>${{ candidate.rate_card }}/hr</td>
-                        <td>{{ candidate.location }}</td>
-                        <td><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
+                        <td class="text-nowrap">{{ candidate.years_of_experience }} years</td>
+                        <td class="text-nowrap">${{ candidate.rate_card }}/hr</td>
+                        <td class="text-nowrap"><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
                         <td>
-                            {% for stack in candidate.technical_stack.all %}
-                            <span class="badge-chip">{{ stack.name }}</span>
-                            {% endfor %}
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for stack in candidate.technical_stack.all %}
+                                <span class="badge-chip mb-1 me-1"><i class="fa-solid fa-tag me-1 text-primary"></i>{{ stack.name }}</span>
+                                {% endfor %}
+                            </div>
+                            {% if candidate.skills.all %}
+                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                {% for skill in candidate.skills.all %}
+                                <span class="badge bg-secondary text-white"
+                                    style="font-size: 0.7rem; padding: 2px 6px;">{{ skill.name }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </td>
-                        <td class="text-end">
+                        <td class="text-end text-nowrap">
                             <a href="{% url 'candidate_detail' candidate.id %}"
                                 class="btn btn-sm btn-outline-secondary me-2">
                                 <i class="fa-solid fa-eye me-1"></i>View
@@ -111,6 +162,19 @@
                                 class="btn btn-sm btn-outline-primary me-2">
                                 <i class="fa-solid fa-pen me-1"></i>Edit
                             </a>
+                            <form action="{% url 'candidate_toggle_hold' candidate.id %}" method="POST"
+                                class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit"
+                                    class="btn btn-sm {% if candidate.is_on_hold %}btn-warning text-dark{% else %}btn-outline-warning{% endif %} me-2"
+                                    title="{% if candidate.is_on_hold %}Unhold candidate{% else %}Hold candidate{% endif %}">
+                                    {% if candidate.is_on_hold %}
+                                    <i class="fa-solid fa-play me-1"></i>Unhold
+                                    {% else %}
+                                    <i class="fa-solid fa-pause me-1"></i>Hold
+                                    {% endif %}
+                                </button>
+                            </form>
                             <a href="{% url 'candidate_delete' candidate.id %}" class="btn btn-sm btn-outline-danger">
                                 <i class="fa-solid fa-trash me-1"></i>Delete
                             </a>
@@ -118,7 +182,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="6" class="text-center py-5 text-muted">
                             <i class="fa-solid fa-user-group fa-3x mb-3"></i>
                             <p class="mb-0">You have not uploaded any candidates yet.</p>
                         </td>

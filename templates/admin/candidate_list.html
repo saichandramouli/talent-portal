@@ -8,7 +8,7 @@
             <h1 class="h3 mb-1">All Registered Candidates</h1>
             <p class="text-muted mb-0">Monitor recruiter uploads and edit or delete candidate profiles.</p>
         </div>
-        <a href="{% url 'candidate_create' %}" class="btn btn-primary-custom">
+        <a href="{% url 'candidate_create' %}" class="btn btn-sm btn-primary-custom">
             <i class="fa-solid fa-plus me-1"></i>Add Candidate
         </a>
     </div>
@@ -22,9 +22,8 @@
                         <th>Recruiter Owner</th>
                         <th>Experience</th>
                         <th>Rate Card</th>
-                        <th>Location</th>
                         <th>Availability</th>
-                        <th>Stack Skills</th>
+                        <th>Stacks & Skills</th>
                         <th class="text-end">Actions</th>
                     </tr>
                 </thead>
@@ -40,40 +39,61 @@
                                             {{ candidate.full_name|slice:":2"|upper }}
                                         </div>
                                     {% endif %}
-                                    <div>
-                                        <div class="fw-semibold">{{ candidate.full_name }}</div>
-                                        <div class="text-muted small">Uploaded: {{ candidate.created_at|date:"Y-m-d" }}</div>
-                                    </div>
+                                     <div>
+                                         <div class="fw-semibold">{{ candidate.full_name }}</div>
+                                         <div class="text-muted small">Uploaded: {{ candidate.created_at|date:"Y-m-d" }}</div>
+                                         {% if candidate.is_on_hold %}
+                                             <span class="badge bg-warning text-dark mt-1" style="font-size: 0.75rem;"><i class="fa-solid fa-pause me-1"></i>On Hold</span>
+                                         {% endif %}
+                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 <div>{{ candidate.recruiter.full_name }}</div>
                                 <div class="small text-muted">{{ candidate.recruiter.team.name|default:"No Team" }}</div>
                             </td>
-                            <td>{{ candidate.years_of_experience }} years</td>
-                            <td>${{ candidate.rate_card }}/hr</td>
-                            <td>{{ candidate.location }}</td>
-                            <td><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
+                            <td class="text-nowrap">{{ candidate.years_of_experience }} years</td>
+                            <td class="text-nowrap">${{ candidate.rate_card }}/hr</td>
+                            <td class="text-nowrap"><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
                             <td>
-                                {% for stack in candidate.technical_stack.all %}
-                                    <span class="badge-chip">{{ stack.name }}</span>
-                                {% endfor %}
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for stack in candidate.technical_stack.all %}
+                                        <span class="badge-chip mb-1 me-1"><i class="fa-solid fa-tag me-1 text-primary"></i>{{ stack.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% if candidate.skills.all %}
+                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                    {% for skill in candidate.skills.all %}
+                                        <span class="badge bg-secondary text-white" style="font-size: 0.7rem; padding: 2px 6px;">{{ skill.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </td>
-                            <td class="text-end">
-                                <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-secondary me-2">
-                                    <i class="fa-solid fa-eye me-1"></i>View
-                                </a>
-                                <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-sm btn-outline-primary me-2">
-                                    <i class="fa-solid fa-pen me-1"></i>Edit
-                                </a>
-                                <a href="{% url 'candidate_delete' candidate.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="fa-solid fa-trash me-1"></i>Delete
-                                </a>
+                            <td class="text-end text-nowrap">
+                                 <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-secondary me-2">
+                                     <i class="fa-solid fa-eye me-1"></i>View
+                                 </a>
+                                 <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-sm btn-outline-primary me-2">
+                                     <i class="fa-solid fa-pen me-1"></i>Edit
+                                 </a>
+                                 <form action="{% url 'candidate_toggle_hold' candidate.id %}" method="POST" class="d-inline">
+                                     {% csrf_token %}
+                                     <button type="submit" class="btn btn-sm {% if candidate.is_on_hold %}btn-warning text-dark{% else %}btn-outline-warning{% endif %} me-2" title="{% if candidate.is_on_hold %}Unhold candidate{% else %}Hold candidate{% endif %}">
+                                         {% if candidate.is_on_hold %}
+                                             <i class="fa-solid fa-play me-1"></i>Unhold
+                                         {% else %}
+                                             <i class="fa-solid fa-pause me-1"></i>Hold
+                                         {% endif %}
+                                     </button>
+                                 </form>
+                                 <a href="{% url 'candidate_delete' candidate.id %}" class="btn btn-sm btn-outline-danger">
+                                     <i class="fa-solid fa-trash me-1"></i>Delete
+                                 </a>
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">
+                            <td colspan="7" class="text-center py-5 text-muted">
                                 <i class="fa-solid fa-user-group fa-3x mb-3"></i>
                                 <p class="mb-0">No candidates uploaded yet.</p>
                             </td>

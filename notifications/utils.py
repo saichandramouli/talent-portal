@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.conf import settings
-from .models import NotificationLog
 
 def send_cart_notification(client, candidate):
     """
@@ -41,6 +40,16 @@ def send_cart_notification(client, candidate):
     recipient_list = [recruiter.email]
     
     try:
+        from .models import Notification
+        Notification.objects.create(
+            user=recruiter,
+            title=subject,
+            message=message
+        )
+    except Exception as e:
+        print(f"Error creating dashboard notification: {e}")
+        
+    try:
         send_mail(
             subject=subject,
             message=message,
@@ -53,13 +62,37 @@ def send_cart_notification(client, candidate):
         status = 'failed'
         print(f"Error sending email: {e}") # helpful debug print
         
-    # Maintain notification logs
-    log = NotificationLog.objects.create(
-        client=client,
-        candidate=candidate,
-        email_sent_to=recruiter.email,
-        subject=subject,
-        message=message,
-        status=status
+    return status == 'success'
+
+def send_recruiter_creation_email(recruiter, password):
+    """
+    Sends email to the recruiter about their account creation and login details.
+    """
+    subject = "Talent Portal - Your Recruiter Account Has Been Created"
+    message = (
+        f"Hello {recruiter.full_name},\n\n"
+        f"An administrator has created a Recruiter account for you on the Talent Recruitment Portal.\n\n"
+        f"Here are your login credentials:\n"
+        f"-------------------------------\n"
+        f"Email Address: {recruiter.email}\n"
+        f"Password: {password}\n\n"
+        f"You can log in to your dashboard here:\n"
+        f"http://127.0.0.1:8000/accounts/login/\n\n"
+        f"Thank you,\n"
+        f"Talent Management Portal Team"
     )
-    return log
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@talentportal.com')
+    recipient_list = [recruiter.email]
+    
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=from_email,
+            recipient_list=recipient_list,
+            fail_silently=False
+        )
+        return True
+    except Exception as e:
+        print(f"Error sending recruiter creation email: {e}")
+        return False

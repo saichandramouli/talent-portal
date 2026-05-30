@@ -33,11 +33,17 @@
                     {% endif %}
                     
                     <h3 class="fw-bold mb-1">{{ candidate.full_name }}</h3>
+                    {% if candidate.job_title %}
+                        <h5 class="text-primary fw-semibold mb-2">{{ candidate.job_title }}</h5>
+                    {% endif %}
                     <p class="text-muted"><i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ candidate.location }}</p>
                     
-                    <div class="d-flex justify-content-center gap-2 mt-3">
+                    <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
                         <span class="badge bg-primary px-3 py-2 fs-6">${{ candidate.rate_card }}/hr</span>
                         <span class="badge bg-success px-3 py-2 fs-6">{{ candidate.availability }}</span>
+                        {% if candidate.is_on_hold %}
+                            <span class="badge bg-warning text-dark px-3 py-2 fs-6"><i class="fa-solid fa-pause me-1"></i>On Hold</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -71,16 +77,38 @@
                     {% endfor %}
                 </div>
 
-                <h5 class="fw-bold mb-2">Summary / Evaluation Notes</h5>
-                <div class="p-3 bg-light rounded-3 border">
-                    <p class="mb-0 text-secondary" style="white-space: pre-line;">{{ candidate.summary }}</p>
+                {% if candidate.skills.all %}
+                <h5 class="fw-bold mb-2">Key Skills</h5>
+                <div class="mb-4 text-dark fs-6 d-flex flex-wrap gap-2">
+                    {% for skill in candidate.skills.all %}
+                        <span class="badge bg-secondary fs-6 px-3 py-2"><i class="fa-solid fa-screwdriver-wrench me-1"></i>{{ skill.name }}</span>
+                    {% endfor %}
                 </div>
+                {% endif %}
+
+
                 
                 {% if user.role == 'client' %}
                     <div class="mt-4">
                         <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary-custom px-4 py-2">
                             <i class="fa-solid fa-cart-plus me-2"></i>Add Candidate to Cart
                         </a>
+                    </div>
+                {% elif user.role == 'admin' or user == candidate.recruiter %}
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-primary-custom px-4 py-2">
+                            <i class="fa-solid fa-pen me-2"></i>Edit Candidate
+                        </a>
+                        <form action="{% url 'candidate_toggle_hold' candidate.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn {% if candidate.is_on_hold %}btn-warning text-dark{% else %}btn-outline-warning{% endif %} px-4 py-2">
+                                {% if candidate.is_on_hold %}
+                                    <i class="fa-solid fa-play me-2"></i>Remove Hold
+                                {% else %}
+                                    <i class="fa-solid fa-pause me-2"></i>Put on Hold
+                                {% endif %}
+                            </button>
+                        </form>
                     </div>
                 {% endif %}
             </div>

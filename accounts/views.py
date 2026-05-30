@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .forms import CustomLoginForm, RecruiterRegistrationForm, ClientRegistrationForm, RecruiterEditForm
+from .forms import CustomLoginForm, RecruiterRegistrationForm, ClientRegistrationForm, RecruiterEditForm, AdminRecruiterCreationForm
 from .decorators import admin_required
 from teams.models import Team, TechnologyStack
 from candidates.models import Candidate
 from clients.models import Cart
-from notifications.models import NotificationLog
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -39,18 +39,8 @@ def logout_view(request):
     return redirect('login')
 
 def register_recruiter(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-        
-    if request.method == 'POST':
-        form = RecruiterRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, "Registration successful! You can now log in. Note: Admin needs to assign you a Team.")
-            return redirect('login')
-    else:
-        form = RecruiterRegistrationForm()
-    return render(request, 'accounts/register_recruiter.html', {'form': form})
+    messages.error(request, "Self-registration for recruiters is disabled. Please contact an Administrator to set up your account.")
+    return redirect('login')
 
 def register_client(request):
     if request.user.is_authenticated:
@@ -78,7 +68,6 @@ def admin_dashboard(request):
     active_carts = Cart.objects.count()
     
     recent_candidates = Candidate.objects.order_by('-created_at')[:5]
-    recent_logs = NotificationLog.objects.order_by('-created_at')[:5]
     
     context = {
         'total_recruiters': total_recruiters,
@@ -88,7 +77,6 @@ def admin_dashboard(request):
         'total_stacks': total_stacks,
         'active_carts': active_carts,
         'recent_candidates': recent_candidates,
-        'recent_logs': recent_logs,
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
@@ -127,3 +115,22 @@ def toggle_recruiter_active(request, pk):
     status = "activated" if recruiter.is_active else "deactivated"
     messages.success(request, f"Recruiter {recruiter.full_name} has been {status}.")
     return redirect('recruiter_list')
+
+@login_required
+@admin_required
+def create_recruiter(request):
+    if request.method == 'POST':
+        form = AdminRecruiterCreationForm(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            recruiter = form.save()
+            
+            # Send credentials email asynchronously using Celery
+            from notifications.tasks import send_recruiter_creation_email_task
+            send_recruiter_creation_email_task.delay(recruiter.id, password)
+            
+            messages.success(request, f"Recruiter account for {recruiter.full_name} created successfully. Credentials email sent.")
+            return redirect('recruiter_list')
+    else:
+        form = AdminRecruiterCreationForm()
+    return render(request, 'accounts/recruiter_create.html', {'form': form})

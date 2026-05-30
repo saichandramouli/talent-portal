@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from accounts.decorators import recruiter_required, role_required
-from .models import Candidate
-from .forms import CandidateForm
+from .models import Candidate, JobTitle, Skill
+from .forms import CandidateForm, JobTitleForm, SkillForm
 from teams.models import TechnologyStack
 
 @login_required
@@ -22,12 +22,14 @@ def recruiter_dashboard(request):
         allowed_stacks = TechnologyStack.objects.none()
         
     recent_uploads = own_candidates.order_by('-created_at')[:5]
+    notifications = recruiter.notifications.all()
     
     context = {
         'total_own': total_own,
         'allowed_stacks': allowed_stacks,
         'recent_uploads': recent_uploads,
         'candidates': own_candidates,
+        'notifications': notifications,
     }
     return render(request, 'candidates/recruiter_dashboard.html', context)
 
@@ -116,5 +118,126 @@ def candidate_detail(request, pk):
                 messages.error(request, "You are not authorized to view this candidate outside your team's stacks.")
                 return redirect('recruiter_dashboard')
                 
+    # Client restriction check for candidates on hold
+    if request.user.role == 'client' and candidate.is_on_hold:
+        messages.error(request, "This candidate is currently on hold.")
+        return redirect('client_dashboard')
+
     # Client has full read access to approved candidates (all candidates since approval is disabled)
     return render(request, 'candidates/candidate_detail.html', {'candidate': candidate})
+
+@login_required
+@role_required(['recruiter', 'admin'])
+def candidate_toggle_hold(request, pk):
+    candidate = get_object_or_404(Candidate, pk=pk)
+    
+    # Ownership/Admin check
+    if request.user.role == 'recruiter' and candidate.recruiter != request.user:
+        messages.error(request, "You are not authorized to edit this candidate's hold status.")
+        return redirect('recruiter_dashboard')
+        
+    if request.method == 'POST':
+        candidate.is_on_hold = not candidate.is_on_hold
+        candidate.save()
+        status_str = "placed on hold" if candidate.is_on_hold else "removed from hold"
+        messages.success(request, f"Candidate {candidate.full_name} has been {status_str}.")
+        
+    # Redirect back to referee or fallback
+    next_url = request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    if request.user.role == 'admin':
+        return redirect('admin_candidate_list')
+    return redirect('recruiter_dashboard')
+
+
+# --- Job Title Admin Views ---
+
+@login_required
+@role_required(['admin'])
+def job_title_list(request):
+    job_titles = JobTitle.objects.all()
+    return render(request, 'candidates/job_title_list.html', {'job_titles': job_titles})
+
+@login_required
+@role_required(['admin'])
+def job_title_create(request):
+    if request.method == 'POST':
+        form = JobTitleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Job Title created successfully.")
+            return redirect('job_title_list')
+    else:
+        form = JobTitleForm()
+    return render(request, 'candidates/job_title_form.html', {'form': form, 'title': 'Add Job Title'})
+
+@login_required
+@role_required(['admin'])
+def job_title_update(request, pk):
+    job_title = get_object_or_404(JobTitle, pk=pk)
+    if request.method == 'POST':
+        form = JobTitleForm(request.POST, instance=job_title)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Job Title '{job_title.name}' updated successfully.")
+            return redirect('job_title_list')
+    else:
+        form = JobTitleForm(instance=job_title)
+    return render(request, 'candidates/job_title_form.html', {'form': form, 'title': 'Edit Job Title', 'job_title': job_title})
+
+@login_required
+@role_required(['admin'])
+def job_title_delete(request, pk):
+    job_title = get_object_or_404(JobTitle, pk=pk)
+    if request.method == 'POST':
+        job_title.delete()
+        messages.success(request, f"Job Title '{job_title.name}' deleted successfully.")
+        return redirect('job_title_list')
+    return render(request, 'candidates/job_title_confirm_delete.html', {'job_title': job_title})
+
+
+# --- Skill Admin Views ---
+
+@login_required
+@role_required(['admin'])
+def skill_list(request):
+    skills = Skill.objects.all()
+    return render(request, 'candidates/skill_list.html', {'skills': skills})
+
+@login_required
+@role_required(['admin'])
+def skill_create(request):
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Skill created successfully.")
+            return redirect('skill_list')
+    else:
+        form = SkillForm()
+    return render(request, 'candidates/skill_form.html', {'form': form, 'title': 'Add Skill'})
+
+@login_required
+@role_required(['admin'])
+def skill_update(request, pk):
+    skill = get_object_or_404(Skill, pk=pk)
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Skill '{skill.name}' updated successfully.")
+            return redirect('skill_list')
+    else:
+        form = SkillForm(instance=skill)
+    return render(request, 'candidates/skill_form.html', {'form': form, 'title': 'Edit Skill', 'skill': skill})
+
+@login_required
+@role_required(['admin'])
+def skill_delete(request, pk):
+    skill = get_object_or_404(Skill, pk=pk)
+    if request.method == 'POST':
+        skill.delete()
+        messages.success(request, f"Skill '{skill.name}' deleted successfully.")
+        return redirect('skill_list')
+    return render(request, 'candidates/skill_confirm_delete.html', {'skill': skill})

@@ -8,6 +8,9 @@
             <h1 class="h3 mb-1">Recruiters</h1>
             <p class="text-muted mb-0">View, assign teams, and manage recruiter accounts.</p>
         </div>
+        <a href="{% url 'create_recruiter' %}" class="btn btn-primary-custom">
+            <i class="fa-solid fa-plus me-1"></i>Create Recruiter
+        </a>
     </div>
 
     <div class="card card-premium shadow-sm overflow-hidden">
@@ -27,7 +30,7 @@
                 <tbody>
                     {% for recruiter in recruiters %}
                         <tr>
-                            <td>
+                            <td class="text-nowrap">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-circle-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; font-weight: 600;">
                                         {{ recruiter.full_name|slice:":2"|upper }}
@@ -38,33 +41,26 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ recruiter.email }}</td>
-                            <td>{{ recruiter.company_name|default:"-" }}</td>
-                            <td>{{ recruiter.phone|default:"-" }}</td>
-                            <td>
+                            <td class="text-nowrap">{{ recruiter.email }}</td>
+                            <td class="text-nowrap">{{ recruiter.company_name|default:"-" }}</td>
+                            <td class="text-nowrap">{{ recruiter.phone|default:"-" }}</td>
+                            <td class="text-nowrap">
                                 {% if recruiter.team %}
                                     <span class="badge bg-primary px-3 py-2"><i class="fa-solid fa-people-group me-1"></i>{{ recruiter.team.name }}</span>
                                 {% else %}
                                     <span class="badge bg-warning text-dark px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i>Unassigned</span>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 {% if recruiter.is_active %}
                                     <span class="badge bg-success badge-role">Active</span>
                                 {% else %}
                                     <span class="badge bg-danger badge-role">Deactivated</span>
                                 {% endif %}
                             </td>
-                            <td class="text-end">
-                                <a href="{% url 'edit_recruiter' recruiter.id %}" class="btn btn-sm btn-outline-primary me-2">
+                            <td class="text-end text-nowrap">
+                                <a href="{% url 'edit_recruiter' recruiter.id %}" class="btn btn-sm btn-outline-primary">
                                     <i class="fa-solid fa-user-pen me-1"></i>Edit / Assign Team
-                                </a>
-                                <a href="{% url 'toggle_recruiter_active' recruiter.id %}" class="btn btn-sm {% if recruiter.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
-                                    {% if recruiter.is_active %}
-                                        <i class="fa-solid fa-user-slash me-1"></i>Deactivate
-                                    {% else %}
-                                        <i class="fa-solid fa-user-check me-1"></i>Activate
-                                    {% endif %}
                                 </a>
                             </td>
                         </tr>

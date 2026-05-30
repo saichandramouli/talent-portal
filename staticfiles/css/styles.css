@@ -85,6 +85,19 @@ h1, h2, h3, h4, h5, h6, .brand-text {
     -webkit-text-fill-color: transparent;
 }
 
+.admin-h5-blue {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.admin-h5-blue i {
+    color: #ffffff !important;
+}
+
 /* Base transitions */
 a, button, .card, .nav-link, .badge-chip, .btn {
     transition: var(--transition-smooth);
@@ -191,7 +204,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
 
 /* Content Area */
 #content {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     min-height: 100vh;
     background: transparent;
 }
@@ -346,6 +360,12 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     font-size: 0.9rem;
 }
 
+.btn-sm {
+    padding: 6px 14px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+}
+
 .btn-primary-custom {
     background: linear-gradient(135deg, var(--primary-color) 0%, #00bcff 50%, var(--secondary-color) 100%);
     border: none;
@@ -427,6 +447,13 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     color: #ffffff;
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
     outline: none;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: rgba(6, 8, 20, 0.3) !important;
+    color: var(--text-muted) !important;
+    border-color: rgba(0, 242, 254, 0.04) !important;
+    opacity: 0.6;
 }
 
 .form-label {

@@ -4,26 +4,25 @@ from django.contrib import messages
 from django.db.models import Q
 from accounts.decorators import client_required
 from .models import Cart
-from candidates.models import Candidate
+from candidates.models import Candidate, JobTitle, Skill
 from teams.models import TechnologyStack
-from notifications.utils import send_cart_notification
+from notifications.tasks import send_cart_notification_task
 
 @login_required
 @client_required
 def client_dashboard(request):
     client = request.user
-    candidates = Candidate.objects.all().order_by('-created_at')
+    candidates = Candidate.objects.filter(is_on_hold=False).order_by('-created_at')
     
-    # Get all tech stacks for filter dropdown
+    # Get all tech stacks, job titles, and skills for filter dropdowns
     all_stacks = TechnologyStack.objects.all()
+    all_job_titles = JobTitle.objects.all()
+    all_skills = Skill.objects.all()
     
     # Get values for filter dropdowns/searches
     selected_stack = request.GET.get('stack', '')
-    min_exp = request.GET.get('min_exp', '')
-    max_exp = request.GET.get('max_exp', '')
-    max_rate = request.GET.get('max_rate', '')
-    location_filter = request.GET.get('location', '')
-    availability_filter = request.GET.get('availability', '')
+    job_title_filter = request.GET.get('job_title', '')
+    skills_filter = request.GET.get('skills', '')
     search_query = request.GET.get('q', '')
 
     # Apply Search
@@ -31,27 +30,21 @@ def client_dashboard(request):
         candidates = candidates.filter(
             Q(full_name__icontains=search_query) |
             Q(technical_stack__name__icontains=search_query) |
-            Q(location__icontains=search_query)
+            Q(job_title__name__icontains=search_query) |
+            Q(skills__name__icontains=search_query)
         ).distinct()
 
     # Apply Filters
     if selected_stack:
         candidates = candidates.filter(technical_stack__id=selected_stack)
         
-    if min_exp:
-        candidates = candidates.filter(years_of_experience__gte=min_exp)
-        
-    if max_exp:
-        candidates = candidates.filter(years_of_experience__lte=max_exp)
-        
-    if max_rate:
-        candidates = candidates.filter(rate_card__lte=max_rate)
-        
-    if location_filter:
-        candidates = candidates.filter(location__icontains=location_filter)
-        
-    if availability_filter:
-        candidates = candidates.filter(availability__icontains=availability_filter)
+
+
+    if job_title_filter:
+        candidates = candidates.filter(job_title__id=job_title_filter)
+
+    if skills_filter:
+        candidates = candidates.filter(skills__id=skills_filter)
 
     # Get client's current cart candidate IDs to show state
     cart_candidate_ids = set(Cart.objects.filter(client=client).values_list('candidate_id', flat=True))
@@ -59,14 +52,14 @@ def client_dashboard(request):
     context = {
         'candidates': candidates,
         'all_stacks': all_stacks,
+        'all_job_titles': all_job_titles,
+        'all_skills': all_skills,
         'cart_candidate_ids': cart_candidate_ids,
         # Maintain form state
         'selected_stack': selected_stack,
-        'min_exp': min_exp,
-        'max_exp': max_exp,
-        'max_rate': max_rate,
-        'location_filter': location_filter,
-        'availability_filter': availability_filter,
+
+        'job_title_filter': job_title_filter,
+        'skills_filter': skills_filter,
         'search_query': search_query,
     }
     return render(request, 'clients/client_dashboard.html', context)
@@ -75,7 +68,7 @@ def client_dashboard(request):
 @client_required
 def cart_view(request):
     client = request.user
-    cart_items = Cart.objects.filter(client=client).select_related('candidate', 'candidate__recruiter')
+    cart_items = Cart.objects.filter(client=client, candidate__is_on_hold=False).select_related('candidate', 'candidate__recruiter')
     return render(request, 'clients/cart_view.html', {'cart_items': cart_items})
 
 @login_required
@@ -83,13 +76,16 @@ def cart_view(request):
 def add_to_cart(request, candidate_id):
     client = request.user
     candidate = get_object_or_404(Candidate, id=candidate_id)
+    if candidate.is_on_hold:
+        messages.error(request, "This candidate is currently on hold and cannot be added to your cart.")
+        return redirect('client_dashboard')
     
     # Prevent duplicates
     cart_item, created = Cart.objects.get_or_create(client=client, candidate=candidate)
     
     if created:
-        # Trigger email notification to the recruiter
-        send_cart_notification(client, candidate)
+        # Trigger email notification to the recruiter asynchronously
+        send_cart_notification_task.delay(client.id, candidate.id)
         messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. A notification email was sent to their recruiter, {candidate.recruiter.full_name}.")
     else:
         messages.warning(request, f"Candidate {candidate.full_name} is already in your cart.")
