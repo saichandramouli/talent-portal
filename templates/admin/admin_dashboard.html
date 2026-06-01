@@ -109,5 +109,113 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <!-- Recruiters Management -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-premium h-100 shadow-sm overflow-hidden">
+                <div class="card-header bg-white border-bottom px-4 py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold admin-h5-blue"><i class="fa-solid fa-user-tie text-primary me-2"></i>Manage Recruiters</h5>
+                    <a href="{% url 'recruiter_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-premium mb-0" style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recruiter in recruiters|slice:":5" %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ recruiter.full_name }}</div>
+                                    <div class="text-muted small">{{ recruiter.email }}</div>
+                                </td>
+                                <td>
+                                    {% if recruiter.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Deactivated</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if recruiter.is_active %}
+                                        <a href="{% url 'toggle_recruiter_active' recruiter.id %}" class="btn btn-sm btn-danger py-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="fa-solid fa-user-slash me-1"></i>Deactivate
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'toggle_recruiter_active' recruiter.id %}" class="btn btn-sm btn-success py-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="fa-solid fa-user-check me-1"></i>Activate
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-3 text-muted">No recruiters registered yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients Management -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-premium h-100 shadow-sm overflow-hidden">
+                <div class="card-header bg-white border-bottom px-4 py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold admin-h5-blue"><i class="fa-solid fa-users text-primary me-2"></i>Manage Clients</h5>
+                    <a href="{% url 'client_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-premium mb-0" style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in clients|slice:":5" %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ client.full_name }}</div>
+                                    <div class="text-muted small">{{ client.email }}</div>
+                                </td>
+                                <td>
+                                    {% if client.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Deactivated</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if client.is_active %}
+                                        <a href="{% url 'toggle_client_active' client.id %}" class="btn btn-sm btn-danger py-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="fa-solid fa-user-slash me-1"></i>Deactivate
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'toggle_client_active' client.id %}" class="btn btn-sm btn-success py-1 px-2" style="font-size: 0.8rem;">
+                                            <i class="fa-solid fa-user-check me-1"></i>Activate
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-3 text-muted">No clients registered yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

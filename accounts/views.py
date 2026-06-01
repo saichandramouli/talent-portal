@@ -68,6 +68,8 @@ def admin_dashboard(request):
     active_carts = Cart.objects.count()
     
     recent_candidates = Candidate.objects.order_by('-created_at')[:5]
+    recruiters = User.objects.filter(role='recruiter').order_by('-created_at')
+    clients = User.objects.filter(role='client').order_by('-created_at')
     
     context = {
         'total_recruiters': total_recruiters,
@@ -77,6 +79,8 @@ def admin_dashboard(request):
         'total_stacks': total_stacks,
         'active_carts': active_carts,
         'recent_candidates': recent_candidates,
+        'recruiters': recruiters,
+        'clients': clients,
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
@@ -114,7 +118,25 @@ def toggle_recruiter_active(request, pk):
     recruiter.save()
     status = "activated" if recruiter.is_active else "deactivated"
     messages.success(request, f"Recruiter {recruiter.full_name} has been {status}.")
+    
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'admin-dashboard' in referer:
+        return redirect('admin_dashboard')
     return redirect('recruiter_list')
+
+@login_required
+@admin_required
+def toggle_client_active(request, pk):
+    client = get_object_or_404(User, pk=pk, role='client')
+    client.is_active = not client.is_active
+    client.save()
+    status = "activated" if client.is_active else "deactivated"
+    messages.success(request, f"Client {client.full_name} has been {status}.")
+    
+    referer = request.META.get('HTTP_REFERER', '')
+    if 'admin-dashboard' in referer:
+        return redirect('admin_dashboard')
+    return redirect('client_list')
 
 @login_required
 @admin_required

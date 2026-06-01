@@ -12,4 +12,5 @@ urlpatterns = [
     path('recruiters/<int:pk>/edit/', views.edit_recruiter, name='edit_recruiter'),
     path('recruiters/<int:pk>/toggle-active/', views.toggle_recruiter_active, name='toggle_recruiter_active'),
     path('clients/', views.client_list, name='client_list'),
+    path('clients/<int:pk>/toggle-active/', views.toggle_client_active, name='toggle_client_active'),
 ]
