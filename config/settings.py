@@ -15,6 +15,9 @@ import os
 import dj_database_url
 import sys
 import environ
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     
     # Custom apps
@@ -56,6 +61,12 @@ INSTALLED_APPS = [
     'notifications',
     'core',
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -173,8 +184,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media Files
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Email Configuration
 EMAIL_BACKEND = os.environ['EMAIL_BACKEND']
@@ -197,4 +207,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
 # In local development, run tasks synchronously (eager mode) by default unless CELERY_TASK_ALWAYS_EAGER is set to False in .env
-CELERY_TASK_ALWAYS_EAGER = os.environ['CELERY_TASK_ALWAYS_EAGER'].lower() == 'true'
+CELERY_TASK_ALWAYS_EAGER = os.environ['CELERY_TASK_ALWAYS_EAGER'].lower() == 'true'

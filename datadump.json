@@ -1,0 +1,2039 @@
+[
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$NJ4HaKyqWk8FR1Mx4vZG12$9cxP6x2rRtzLV57udkqeeipTtHMMTc6UVBGvdqQ4lX0=",
+            "last_login": "2026-05-29T11:05:12.201Z",
+            "is_superuser": false,
+            "email": "testing@gmail.com",
+            "full_name": "Test",
+            "role": "recruiter",
+            "company_name": "PPW",
+            "phone": "1234567890",
+            "team": 1,
+            "created_at": "2026-05-26T05:37:39.218Z",
+            "is_active": true,
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$OqrO4rR40lt7YWcgft8iHF$lSm0xD84zjX4whybLyCtROJh+AbtswAW+MB1Sb4mDnI=",
+            "last_login": "2026-05-30T05:22:42.846Z",
+            "is_superuser": false,
+            "email": "aranalamouli@gmail.com",
+            "full_name": "testing",
+            "role": "client",
+            "company_name": "PPWW",
+            "phone": "1234567890",
+            "team": null,
+            "created_at": "2026-05-26T05:40:25.520Z",
+            "is_active": true,
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$crHZxjBBvgOjvnaqsVxWh5$3F9sHaXXdwuCs1mi7H5mMSjS2BHF6i1YPRebDsa0a5U=",
+            "last_login": "2026-05-30T04:42:42.248Z",
+            "is_superuser": true,
+            "email": "vishnudmseo@gmail.com",
+            "full_name": "vishnu",
+            "role": "admin",
+            "company_name": null,
+            "phone": null,
+            "team": null,
+            "created_at": "2026-05-27T06:48:15.811Z",
+            "is_active": true,
+            "is_staff": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$4fHwbUKMlxahmAavsrGlOX$/EHqvldnHVmRsn2R174MDIBMAoDoPBPpBFRMoaTOGoE=",
+            "last_login": "2026-05-27T07:46:49.842Z",
+            "is_superuser": false,
+            "email": "aranalasaichandramouli@gmail.com",
+            "full_name": "testing client",
+            "role": "client",
+            "company_name": "PPWW",
+            "phone": "9723273281",
+            "team": null,
+            "created_at": "2026-05-27T07:31:35.287Z",
+            "is_active": true,
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$s6PQQyJE9D99xJYBov6kXZ$X3Y9xPetnUqj4rJumCd2SF5Z+HhCizCq0Z+Q+fzdjQo=",
+            "last_login": "2026-05-30T06:38:54.469Z",
+            "is_superuser": false,
+            "email": "mvv9182396037@gmail.com",
+            "full_name": "Mouli",
+            "role": "recruiter",
+            "company_name": "PPWW",
+            "phone": "1234567890",
+            "team": 1,
+            "created_at": "2026-05-28T08:59:53.684Z",
+            "is_active": true,
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.user",
+        "fields": {
+            "password": "pbkdf2_sha256$1200000$qCLuZ36hicxrLcuU9fl5Pm$P2bGWHDwb6arcU5CtlTHKW7/2M8RX8+6Maep4C0ZRoY=",
+            "last_login": null,
+            "is_superuser": false,
+            "email": "digitalpeopleprime@gmail.com",
+            "full_name": "sai",
+            "role": "recruiter",
+            "company_name": "PPWW",
+            "phone": null,
+            "team": 1,
+            "created_at": "2026-05-29T10:01:27.925Z",
+            "is_active": true,
+            "is_staff": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 4,
+        "fields": {
+            "name": "Machine Learning (ML)",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 5,
+        "fields": {
+            "name": "Neural Networks",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 6,
+        "fields": {
+            "name": "Natural Learning",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 7,
+        "fields": {
+            "name": "Data Engineering",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 8,
+        "fields": {
+            "name": "Generative AI & LLMs",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.technologystack",
+        "pk": 9,
+        "fields": {
+            "name": "MLOps & AI Deployment",
+            "description": ""
+        }
+    },
+    {
+        "model": "teams.team",
+        "pk": 1,
+        "fields": {
+            "name": "ppw",
+            "description": "",
+            "created_at": "2026-05-27T06:51:34.934Z",
+            "technology_stacks": [
+                7,
+                8,
+                4,
+                9,
+                6,
+                5
+            ]
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 1,
+        "fields": {
+            "name": "Machine Learning Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 2,
+        "fields": {
+            "name": "Data Scientist"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 3,
+        "fields": {
+            "name": "AI Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 4,
+        "fields": {
+            "name": "Applied Scientist"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 5,
+        "fields": {
+            "name": "ML Analyst"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 6,
+        "fields": {
+            "name": "Text Analytics Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 7,
+        "fields": {
+            "name": "Computer Vision Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 8,
+        "fields": {
+            "name": "Speech Annotation"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 9,
+        "fields": {
+            "name": "Neural Network Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 10,
+        "fields": {
+            "name": "NLP Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 11,
+        "fields": {
+            "name": "NLP Scientist"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 12,
+        "fields": {
+            "name": "Data Scientist (NLP)"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 13,
+        "fields": {
+            "name": "NLP Annotator"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 14,
+        "fields": {
+            "name": "Data Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 15,
+        "fields": {
+            "name": "Analytics Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 16,
+        "fields": {
+            "name": "AI Data Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 17,
+        "fields": {
+            "name": "Big Data Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 18,
+        "fields": {
+            "name": "ETL Developer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 19,
+        "fields": {
+            "name": "Data Analyst (AI-focused)"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 20,
+        "fields": {
+            "name": "Data Annotator/Annotation Specialist"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 21,
+        "fields": {
+            "name": "Annotation Quality Analyst"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 22,
+        "fields": {
+            "name": "Generative AI Engineer (Gen AI)"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 23,
+        "fields": {
+            "name": "LLM Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 24,
+        "fields": {
+            "name": "Prompt Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 25,
+        "fields": {
+            "name": "AI Application Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 26,
+        "fields": {
+            "name": "AI Solutions Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 27,
+        "fields": {
+            "name": "Conversational AI Developer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 28,
+        "fields": {
+            "name": "Text / LLM Annotation"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 29,
+        "fields": {
+            "name": "Human Feedback / AI Evaluation"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 30,
+        "fields": {
+            "name": "MLOps Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 31,
+        "fields": {
+            "name": "AI Platform Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 32,
+        "fields": {
+            "name": "ML Infrastructure Engineer"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 33,
+        "fields": {
+            "name": "DevOps Engineer (AI/ML)"
+        }
+    },
+    {
+        "model": "candidates.jobtitle",
+        "pk": 34,
+        "fields": {
+            "name": "Model Deployment Engineer"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 1,
+        "fields": {
+            "name": "Python"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 2,
+        "fields": {
+            "name": "ML"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 3,
+        "fields": {
+            "name": "DL"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 4,
+        "fields": {
+            "name": "TensorFlow"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 5,
+        "fields": {
+            "name": "PyTorch"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 6,
+        "fields": {
+            "name": "SQL"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 7,
+        "fields": {
+            "name": "MLOps"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 8,
+        "fields": {
+            "name": "Docker"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 9,
+        "fields": {
+            "name": "AWS"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 10,
+        "fields": {
+            "name": "Model Deployment"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 11,
+        "fields": {
+            "name": "R"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 12,
+        "fields": {
+            "name": "Statistics"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 13,
+        "fields": {
+            "name": "Pandas"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 14,
+        "fields": {
+            "name": "NumPy"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 15,
+        "fields": {
+            "name": "Tableau"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 16,
+        "fields": {
+            "name": "Power BI"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 17,
+        "fields": {
+            "name": "A/B Testing"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 18,
+        "fields": {
+            "name": "NLP"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 19,
+        "fields": {
+            "name": "CV"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 20,
+        "fields": {
+            "name": "APIs"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 21,
+        "fields": {
+            "name": "Experimentation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 22,
+        "fields": {
+            "name": "Algorithms"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 23,
+        "fields": {
+            "name": "Data Analysis"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 24,
+        "fields": {
+            "name": "Data Visualization"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 25,
+        "fields": {
+            "name": "Excel"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 26,
+        "fields": {
+            "name": "Text Analytics"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 27,
+        "fields": {
+            "name": "Data Processing"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 28,
+        "fields": {
+            "name": "Regex"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 29,
+        "fields": {
+            "name": "NLTK"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 30,
+        "fields": {
+            "name": "SpaCy"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 31,
+        "fields": {
+            "name": "Computer Vision"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 32,
+        "fields": {
+            "name": "OpenCV"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 33,
+        "fields": {
+            "name": "CNN"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 34,
+        "fields": {
+            "name": "Image Processing"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 35,
+        "fields": {
+            "name": "Image Annotation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 36,
+        "fields": {
+            "name": "Bounding Box"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 37,
+        "fields": {
+            "name": "Segmentation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 38,
+        "fields": {
+            "name": "Speech Annotation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 39,
+        "fields": {
+            "name": "Audio Labeling"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 40,
+        "fields": {
+            "name": "Transcription"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 41,
+        "fields": {
+            "name": "Speech Recognition"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 42,
+        "fields": {
+            "name": "Phonetics Basics"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 43,
+        "fields": {
+            "name": "Neural Networks"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 44,
+        "fields": {
+            "name": "RNN"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 45,
+        "fields": {
+            "name": "Transformers"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 46,
+        "fields": {
+            "name": "Model Training"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 47,
+        "fields": {
+            "name": "Optimization"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 48,
+        "fields": {
+            "name": "BERT"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 49,
+        "fields": {
+            "name": "GPT"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 50,
+        "fields": {
+            "name": "Hugging Face"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 51,
+        "fields": {
+            "name": "Text Mining"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 52,
+        "fields": {
+            "name": "Research"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 53,
+        "fields": {
+            "name": "Retrieval Augmented Generation (RAG)"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 54,
+        "fields": {
+            "name": "Text Annotation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 55,
+        "fields": {
+            "name": "Named Entity Recognition (NER)"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 56,
+        "fields": {
+            "name": "Sentiment Labeling"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 57,
+        "fields": {
+            "name": "Linguistics Basics"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 58,
+        "fields": {
+            "name": "ETL"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 59,
+        "fields": {
+            "name": "Data Pipelines"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 60,
+        "fields": {
+            "name": "Spark"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 61,
+        "fields": {
+            "name": "Hadoop"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 62,
+        "fields": {
+            "name": "Airflow"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 63,
+        "fields": {
+            "name": "Data Warehousing"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 64,
+        "fields": {
+            "name": "Kafka"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 65,
+        "fields": {
+            "name": "Data Modeling"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 66,
+        "fields": {
+            "name": "dbt"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 67,
+        "fields": {
+            "name": "Big Data"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 68,
+        "fields": {
+            "name": "Java"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 69,
+        "fields": {
+            "name": "Hive"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 70,
+        "fields": {
+            "name": "HDFS"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 71,
+        "fields": {
+            "name": "Distributed Systems"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 72,
+        "fields": {
+            "name": "Informatica"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 73,
+        "fields": {
+            "name": "SSIS"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 74,
+        "fields": {
+            "name": "Data Integration"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 75,
+        "fields": {
+            "name": "Data Annotation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 76,
+        "fields": {
+            "name": "Data Labeling"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 77,
+        "fields": {
+            "name": "Image/Text Tagging"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 78,
+        "fields": {
+            "name": "QA"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 79,
+        "fields": {
+            "name": "Tools (Labelbox/CVAT)"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 80,
+        "fields": {
+            "name": "Attention to Detail"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 81,
+        "fields": {
+            "name": "Data Validation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 82,
+        "fields": {
+            "name": "Annotation Review"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 83,
+        "fields": {
+            "name": "Accuracy Check"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 84,
+        "fields": {
+            "name": "Guidelines"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 85,
+        "fields": {
+            "name": "Reporting"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 86,
+        "fields": {
+            "name": "Generative AI"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 87,
+        "fields": {
+            "name": "LLM"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 88,
+        "fields": {
+            "name": "OpenAI APIs"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 89,
+        "fields": {
+            "name": "Prompt Engineering"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 90,
+        "fields": {
+            "name": "Fine-tuning"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 91,
+        "fields": {
+            "name": "LangChain"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 92,
+        "fields": {
+            "name": "AI Tools"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 93,
+        "fields": {
+            "name": "Content Generation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 94,
+        "fields": {
+            "name": "Testing & Iteration"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 95,
+        "fields": {
+            "name": "AI Integration"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 96,
+        "fields": {
+            "name": "Backend Development"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 97,
+        "fields": {
+            "name": "Cloud"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 98,
+        "fields": {
+            "name": "AI Solutions"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 99,
+        "fields": {
+            "name": "System Design"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 100,
+        "fields": {
+            "name": "Client Requirements"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 101,
+        "fields": {
+            "name": "Deployment"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 102,
+        "fields": {
+            "name": "Chatbots"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 103,
+        "fields": {
+            "name": "Dialogflow"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 104,
+        "fields": {
+            "name": "Rasa"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 105,
+        "fields": {
+            "name": "Speech APIs"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 106,
+        "fields": {
+            "name": "Intent Recognition"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 107,
+        "fields": {
+            "name": "Sentiment Analysis"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 108,
+        "fields": {
+            "name": "LLM Evaluation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 109,
+        "fields": {
+            "name": "Human Feedback"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 110,
+        "fields": {
+            "name": "RLHF"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 111,
+        "fields": {
+            "name": "Quality Analysis"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 112,
+        "fields": {
+            "name": "CI/CD"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 113,
+        "fields": {
+            "name": "Kubernetes"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 114,
+        "fields": {
+            "name": "Mlflow"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 115,
+        "fields": {
+            "name": "Kubeflow"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 116,
+        "fields": {
+            "name": "ML Platforms"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 117,
+        "fields": {
+            "name": "GCP"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 118,
+        "fields": {
+            "name": "Azure"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 119,
+        "fields": {
+            "name": "Infrastructure"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 120,
+        "fields": {
+            "name": "Scalability"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 121,
+        "fields": {
+            "name": "DevOps"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 122,
+        "fields": {
+            "name": "Monitoring"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 123,
+        "fields": {
+            "name": "Automation"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 124,
+        "fields": {
+            "name": "Flask"
+        }
+    },
+    {
+        "model": "candidates.skill",
+        "pk": 125,
+        "fields": {
+            "name": "FastAPI"
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 5,
+        "fields": {
+            "profile_photo": "candidates/gubbala_s8LOIUW.jpg",
+            "full_name": "Nikhil Sai",
+            "years_of_experience": 4,
+            "rate_card": "10.28",
+            "location": "Mumbai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 14,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:14:58.258Z",
+            "updated_at": "2026-05-30T06:54:30.662Z",
+            "technical_stack": [
+                7
+            ],
+            "skills": [
+                62,
+                58,
+                1,
+                6
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 6,
+        "fields": {
+            "profile_photo": "candidates/srishti_X95PAbZ.jpg",
+            "full_name": "Deeksha Katare",
+            "years_of_experience": 4,
+            "rate_card": "12.18",
+            "location": "Noida",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 14,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:19:56.495Z",
+            "updated_at": "2026-05-30T06:54:18.498Z",
+            "technical_stack": [
+                7
+            ],
+            "skills": [
+                62,
+                58,
+                1,
+                6
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 7,
+        "fields": {
+            "profile_photo": "candidates/cdt3.png",
+            "full_name": "SANIYA GUNDAWAR",
+            "years_of_experience": 4,
+            "rate_card": "15.00",
+            "location": "Pune",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 14,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:22:27.072Z",
+            "updated_at": "2026-05-30T06:58:39.694Z",
+            "technical_stack": [
+                7
+            ],
+            "skills": [
+                62,
+                58,
+                1,
+                6
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 8,
+        "fields": {
+            "profile_photo": "candidates/aj.jpeg",
+            "full_name": "Akshita Bhatnagar",
+            "years_of_experience": 4,
+            "rate_card": "15.00",
+            "location": "Gurugram",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 14,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:29:14.548Z",
+            "updated_at": "2026-05-30T06:58:11.789Z",
+            "technical_stack": [
+                7
+            ],
+            "skills": [
+                9,
+                58,
+                1,
+                6
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 9,
+        "fields": {
+            "profile_photo": "candidates/karan_sharma_XYySqnf.jpg",
+            "full_name": "Anup Kumar",
+            "years_of_experience": 4,
+            "rate_card": "8.40",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 16,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:33:45.676Z",
+            "updated_at": "2026-05-30T06:56:42.820Z",
+            "technical_stack": [
+                7
+            ],
+            "skills": [
+                58,
+                1,
+                6
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 10,
+        "fields": {
+            "profile_photo": "candidates/pratik_desai_8vigdKp.jpg",
+            "full_name": "Pranjal Verma",
+            "years_of_experience": 6,
+            "rate_card": "15.98",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 1,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:48:00.204Z",
+            "updated_at": "2026-05-30T06:56:09.878Z",
+            "technical_stack": [
+                4
+            ],
+            "skills": [
+                34,
+                77,
+                87,
+                2
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 11,
+        "fields": {
+            "profile_photo": "candidates/abh_chau_1SeUe0M.jpg",
+            "full_name": "ABHISHEK KUMAR",
+            "years_of_experience": 5,
+            "rate_card": "18.00",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 1,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:49:22.730Z",
+            "updated_at": "2026-05-30T06:55:56.097Z",
+            "technical_stack": [
+                4
+            ],
+            "skills": [
+                44,
+                107,
+                41,
+                4
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 12,
+        "fields": {
+            "profile_photo": "candidates/vinith_QoU1NL7.jpg",
+            "full_name": "Vinith Andavar",
+            "years_of_experience": 5,
+            "rate_card": "17.98",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 1,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:52:01.864Z",
+            "updated_at": "2026-05-30T06:55:38.523Z",
+            "technical_stack": [
+                4
+            ],
+            "skills": [
+                14,
+                105,
+                4,
+                54
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 13,
+        "fields": {
+            "profile_photo": "candidates/naveen_rihQQig.jpg",
+            "full_name": "Bandaru Ravi",
+            "years_of_experience": 3,
+            "rate_card": "12.00",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 1,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:54:14.259Z",
+            "updated_at": "2026-05-30T06:55:09.134Z",
+            "technical_stack": [
+                4
+            ],
+            "skills": [
+                82,
+                76,
+                77,
+                72,
+                91,
+                87
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 14,
+        "fields": {
+            "profile_photo": "candidates/sohan_sejff2M.jpg",
+            "full_name": "Saravanan C",
+            "years_of_experience": 6,
+            "rate_card": "12.98",
+            "location": "Coimbatore",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 1,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:55:37.889Z",
+            "updated_at": "2026-05-30T06:53:59.171Z",
+            "technical_stack": [
+                4
+            ],
+            "skills": [
+                44,
+                107,
+                41,
+                26
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 15,
+        "fields": {
+            "profile_photo": "candidates/pratik_desai_xsyuTMZ.jpg",
+            "full_name": "Suchir Mathur",
+            "years_of_experience": 5,
+            "rate_card": "13.00",
+            "location": "Mumbai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 10,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:58:03.732Z",
+            "updated_at": "2026-05-30T06:53:42.050Z",
+            "technical_stack": [
+                6
+            ],
+            "skills": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 16,
+        "fields": {
+            "profile_photo": "candidates/naveen_SYpyttf.jpg",
+            "full_name": "Raja Kodumuru",
+            "years_of_experience": 5,
+            "rate_card": "11.99",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 10,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T11:59:14.437Z",
+            "updated_at": "2026-05-30T06:53:25.746Z",
+            "technical_stack": [
+                6
+            ],
+            "skills": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 17,
+        "fields": {
+            "profile_photo": "candidates/abh_chau_IqLogj2.jpg",
+            "full_name": "Ritik Gupta",
+            "years_of_experience": 5,
+            "rate_card": "14.98",
+            "location": "Gwalior",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 10,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:00:16.698Z",
+            "updated_at": "2026-05-30T06:53:10.680Z",
+            "technical_stack": [
+                6
+            ],
+            "skills": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 18,
+        "fields": {
+            "profile_photo": "candidates/karan_sharma_zjSKnVi.jpg",
+            "full_name": "Vimal Raj D",
+            "years_of_experience": 6,
+            "rate_card": "14.00",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 10,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:01:19.671Z",
+            "updated_at": "2026-05-30T06:52:53.878Z",
+            "technical_stack": [
+                6
+            ],
+            "skills": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 19,
+        "fields": {
+            "profile_photo": "candidates/prakhar_LLZS1vH.jpg",
+            "full_name": "Samya Nandy",
+            "years_of_experience": 3,
+            "rate_card": "11.00",
+            "location": "Mumbai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 10,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:02:07.011Z",
+            "updated_at": "2026-05-30T06:52:37.063Z",
+            "technical_stack": [
+                6
+            ],
+            "skills": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 20,
+        "fields": {
+            "profile_photo": "candidates/sohan.jpg",
+            "full_name": "Sohan Suryawanshi",
+            "years_of_experience": 4,
+            "rate_card": "11.00",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 30,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:07:33.958Z",
+            "updated_at": "2026-05-30T06:51:47.716Z",
+            "technical_stack": [
+                9
+            ],
+            "skills": [
+                123,
+                7,
+                10,
+                46
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 21,
+        "fields": {
+            "profile_photo": "candidates/vinith.jpg",
+            "full_name": "Vinith Andavar",
+            "years_of_experience": 5,
+            "rate_card": "12.00",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 30,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:08:39.772Z",
+            "updated_at": "2026-05-30T06:51:25.570Z",
+            "technical_stack": [
+                9
+            ],
+            "skills": [
+                7,
+                13,
+                1,
+                5
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 22,
+        "fields": {
+            "profile_photo": "candidates/gaur.jpg",
+            "full_name": "Himanshu Gaur",
+            "years_of_experience": 4,
+            "rate_card": "13.00",
+            "location": "Mumbai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 30,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:10:02.762Z",
+            "updated_at": "2026-05-30T06:51:08.406Z",
+            "technical_stack": [
+                9
+            ],
+            "skills": [
+                92,
+                62,
+                22,
+                82
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 23,
+        "fields": {
+            "profile_photo": "candidates/pratik_desai.jpg",
+            "full_name": "Pratik Desai",
+            "years_of_experience": 4,
+            "rate_card": "10.00",
+            "location": "Chennai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 30,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:12:15.028Z",
+            "updated_at": "2026-05-30T06:50:50.359Z",
+            "technical_stack": [
+                9
+            ],
+            "skills": [
+                101,
+                35,
+                108,
+                2
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 24,
+        "fields": {
+            "profile_photo": "candidates/prakhar.jpg",
+            "full_name": "Prakhar Gairola",
+            "years_of_experience": 6,
+            "rate_card": "14.00",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 30,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:13:21.791Z",
+            "updated_at": "2026-05-30T06:50:36.628Z",
+            "technical_stack": [
+                9
+            ],
+            "skills": [
+                125,
+                90,
+                61,
+                70
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 25,
+        "fields": {
+            "profile_photo": "candidates/gubbala.jpg",
+            "full_name": "Gubbala Venkata Sai Dinesh",
+            "years_of_experience": 3,
+            "rate_card": "12.00",
+            "location": "New York",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 9,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:15:28.083Z",
+            "updated_at": "2026-05-30T06:50:21.062Z",
+            "technical_stack": [
+                5
+            ],
+            "skills": [
+                43,
+                18,
+                29
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 26,
+        "fields": {
+            "profile_photo": "candidates/karan_sharma.jpg",
+            "full_name": "Karan Sharma",
+            "years_of_experience": 3,
+            "rate_card": "10.00",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 9,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:16:37.839Z",
+            "updated_at": "2026-05-30T06:50:04.390Z",
+            "technical_stack": [
+                5
+            ],
+            "skills": [
+                55,
+                43,
+                18
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 27,
+        "fields": {
+            "profile_photo": "candidates/naveen.jpg",
+            "full_name": "Naveen J",
+            "years_of_experience": 6,
+            "rate_card": "12.00",
+            "location": "Bengaluru",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 9,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:17:54.849Z",
+            "updated_at": "2026-05-30T06:49:43.659Z",
+            "technical_stack": [
+                5
+            ],
+            "skills": [
+                43,
+                18,
+                29,
+                14
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 28,
+        "fields": {
+            "profile_photo": "candidates/abh_chau.jpg",
+            "full_name": "Abhishek Chauhan",
+            "years_of_experience": 7,
+            "rate_card": "18.00",
+            "location": "Hyderabad",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 9,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:19:39.370Z",
+            "updated_at": "2026-05-30T06:49:30.323Z",
+            "technical_stack": [
+                5
+            ],
+            "skills": [
+                43,
+                18,
+                29,
+                88
+            ]
+        }
+    },
+    {
+        "model": "candidates.candidate",
+        "pk": 29,
+        "fields": {
+            "profile_photo": "candidates/srishti.jpg",
+            "full_name": "Srishti",
+            "years_of_experience": 2,
+            "rate_card": "14.00",
+            "location": "Chennai",
+            "availability": "Immediate",
+            "summary": "",
+            "job_title": 9,
+            "recruiter": [
+                "mvv9182396037@gmail.com"
+            ],
+            "is_on_hold": false,
+            "created_at": "2026-05-29T12:20:44.516Z",
+            "updated_at": "2026-05-30T06:49:18.708Z",
+            "technical_stack": [
+                5
+            ],
+            "skills": [
+                22,
+                43,
+                18
+            ]
+        }
+    },
+    {
+        "model": "clients.cart",
+        "pk": 14,
+        "fields": {
+            "client": [
+                "aranalamouli@gmail.com"
+            ],
+            "candidate": 28,
+            "created_at": "2026-05-29T12:54:09.386Z"
+        }
+    },
+    {
+        "model": "notifications.notification",
+        "pk": 1,
+        "fields": {
+            "user": [
+                "mvv9182396037@gmail.com"
+            ],
+            "title": "Talent Portal - Your Candidate Added to Cart: Abhishek Chauhan",
+            "message": "Hello Mouli,\n\nA client has added one of your candidates to their cart on the Talent Recruitment Portal.\n\nClient Details:\n---------------\nName: testing\nCompany: PPWW\nEmail: aranalamouli@gmail.com\nPhone: 1234567890\n\nCandidate Details:\n-----------------\nName: Abhishek Chauhan\nExperience: 7 years\nTechnology Stack: Neural Networks\nRate Card: $18.00/hr\nLocation: Hyderabad\nAvailability: Immediate\n\nTimestamp: 2026-05-29 12:54:09 UTC\n\nThank you,\nTalent Management Portal Team",
+            "is_read": true,
+            "created_at": "2026-05-29T12:54:09.535Z"
+        }
+    },
+    {
+        "model": "notifications.notification",
+        "pk": 2,
+        "fields": {
+            "user": [
+                "testing@gmail.com"
+            ],
+            "title": "Test Notif",
+            "message": "Test Msg",
+            "is_read": false,
+            "created_at": "2026-05-29T12:58:25.013Z"
+        }
+    }
+]
