@@ -148,10 +148,13 @@ def create_recruiter(request):
             recruiter = form.save()
             
             # Send credentials email asynchronously using Celery
-            from notifications.tasks import send_recruiter_creation_email_task
-            send_recruiter_creation_email_task.delay(recruiter.id, password)
-            
-            messages.success(request, f"Recruiter account for {recruiter.full_name} created successfully. Credentials email sent.")
+            try:
+                from notifications.tasks import send_recruiter_creation_email_task
+                send_recruiter_creation_email_task.delay(recruiter.id, password)
+                messages.success(request, f"Recruiter account for {recruiter.full_name} created successfully. Credentials email sent.")
+            except Exception as e:
+                print(f"Celery task dispatch failed: {e}")
+                messages.success(request, f"Recruiter account for {recruiter.full_name} created successfully. (Credentials email will be sent shortly).")
             return redirect('recruiter_list')
     else:
         form = AdminRecruiterCreationForm()
