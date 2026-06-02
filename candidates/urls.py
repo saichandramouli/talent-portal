@@ -21,4 +21,10 @@ urlpatterns = [
     path('skills/create/', views.skill_create, name='skill_create'),
     path('skills/<int:pk>/edit/', views.skill_update, name='skill_edit'),
     path('skills/<int:pk>/delete/', views.skill_delete, name='skill_delete'),
+    
+    # Credential requests routes
+    path('<int:candidate_id>/request-credentials/', views.request_credentials, name='request_credentials'),
+    path('requests/<int:request_id>/approve/', views.approve_credential_request, name='approve_credential_request'),
+    path('requests/<int:request_id>/reject/', views.reject_credential_request, name='reject_credential_request'),
+    path('<int:candidate_id>/document/<str:doc_type>/', views.download_candidate_document, name='download_candidate_document'),
 ]

@@ -87,6 +87,45 @@
                         {% endif %}
                     </div>
 
+                    <div class="mb-3">
+                        <label for="id_resume" class="form-label">Resume (PDF Only)</label>
+                        {% if candidate.resume %}
+                            <div class="mb-2 small">
+                                <i class="fa-solid fa-file-pdf text-danger me-1"></i>Current: <a href="{{ candidate.resume.url }}" target="_blank" class="text-info text-decoration-none">{{ candidate.resume.name }}</a>
+                            </div>
+                        {% endif %}
+                        {{ form.resume }}
+                        {% if form.resume.errors %}
+                            <div class="text-danger small mt-1">{{ form.resume.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_bgv_verification" class="form-label">BGV Verification (PDF Only)</label>
+                        {% if candidate.bgv_verification %}
+                            <div class="mb-2 small">
+                                <i class="fa-solid fa-file-pdf text-danger me-1"></i>Current: <a href="{{ candidate.bgv_verification.url }}" target="_blank" class="text-info text-decoration-none">{{ candidate.bgv_verification.name }}</a>
+                            </div>
+                        {% endif %}
+                        {{ form.bgv_verification }}
+                        {% if form.bgv_verification.errors %}
+                            <div class="text-danger small mt-1">{{ form.bgv_verification.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_evaluation_certificate" class="form-label">Evaluation Certificate (PDF Only)</label>
+                        {% if candidate.evaluation_certificate %}
+                            <div class="mb-2 small">
+                                <i class="fa-solid fa-file-pdf text-danger me-1"></i>Current: <a href="{{ candidate.evaluation_certificate.url }}" target="_blank" class="text-info text-decoration-none">{{ candidate.evaluation_certificate.name }}</a>
+                            </div>
+                        {% endif %}
+                        {{ form.evaluation_certificate }}
+                        {% if form.evaluation_certificate.errors %}
+                            <div class="text-danger small mt-1">{{ form.evaluation_certificate.errors }}</div>
+                        {% endif %}
+                    </div>
+
                     <div class="form-check mb-4">
                         {{ form.is_on_hold }}
                         <label for="id_is_on_hold" class="form-check-label fw-semibold ms-1">Put Candidate on Hold</label>

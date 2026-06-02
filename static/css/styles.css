@@ -5,55 +5,55 @@
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Design Colors - Dark AI/Cybernetic Theme */
-    --bg-main: #03050d;
-    /* Deep Space Obsidian */
-    --sidebar-bg: rgba(6, 8, 20, 0.75);
-    --sidebar-hover: rgba(0, 242, 254, 0.12);
+    /* Design Colors - Light White & Blue Theme */
+    --bg-main: #f8fafc;
+    /* Clean Light Gray/Blue */
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: rgba(37, 99, 235, 0.08);
 
-    --primary-color: #00f2fe;
-    /* Cyber Electric Cyan */
-    --primary-hover: #00dfd8;
-    --primary-glow: rgba(0, 242, 254, 0.35);
+    --primary-color: #2563eb;
+    /* Premium Classic Blue */
+    --primary-hover: #1d4ed8;
+    --primary-glow: rgba(37, 99, 235, 0.15);
 
-    --secondary-color: #7928ca;
-    /* AI Hologram Purple */
-    --secondary-hover: #b800ff;
-    --secondary-glow: rgba(121, 40, 202, 0.3);
+    --secondary-color: #3b82f6;
+    /* Soft Blue */
+    --secondary-hover: #2563eb;
+    --secondary-glow: rgba(59, 130, 246, 0.1);
 
-    --accent-color: #ff0080;
-    /* Synthwave Magenta */
+    --accent-color: #1e3a8a;
+    /* Dark Blue Accent */
 
-    --success-color: #00ffaa;
-    /* Cyber Neon Green */
-    --success-bg: rgba(0, 255, 170, 0.12);
-    --warning-color: #ffb703;
-    /* Solar Amber */
-    --warning-bg: rgba(255, 183, 3, 0.12);
-    --danger-color: #ff0055;
-    /* Neon Laser Red */
-    --danger-bg: rgba(255, 0, 85, 0.12);
+    --success-color: #10b981;
+    /* Soft Emerald Green */
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --warning-color: #f59e0b;
+    /* Soft Amber */
+    --warning-bg: rgba(245, 158, 11, 0.1);
+    --danger-color: #ef4444;
+    /* Soft Red */
+    --danger-bg: rgba(239, 68, 68, 0.1);
 
-    --text-main: #f3f4f6;
-    /* Ice White */
-    --text-muted: #8b9bb4;
-    /* Futuristic Slate Grey */
-    --card-bg: rgba(11, 15, 33, 0.5);
-    /* Semi-transparent Cyber Grid */
-    --border-color: rgba(0, 242, 254, 0.08);
-    /* Frosted Cyan Edge */
-    --glass-blur: blur(18px);
+    --text-main: #0f172a;
+    /* Deep Slate Dark Text */
+    --text-muted: #64748b;
+    /* Slate Grey Text */
+    --card-bg: #ffffff;
+    /* Solid White Card */
+    --border-color: rgba(226, 232, 240, 0.8);
+    /* Soft Light Gray Border */
+    --glass-blur: blur(0px);
 
     /* Glowing Shadows */
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.7);
-    --shadow-premium: 0 0 35px rgba(0, 242, 254, 0.12);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-premium: 0 4px 20px rgba(37, 99, 235, 0.08);
 
-    --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom Scrollbar for Cyber Mode */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -64,13 +64,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 242, 254, 0.2);
+    background: rgba(37, 99, 235, 0.2);
     border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 242, 254, 0.45);
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+    background: rgba(37, 99, 235, 0.45);
 }
 
 body {
@@ -78,11 +77,6 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     overflow-x: hidden;
-    background-image:
-        radial-gradient(circle at 5% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 85%, rgba(121, 40, 202, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(255, 0, 128, 0.02) 0%, transparent 50%);
-    background-attachment: fixed;
     min-height: 100vh;
 }
 
@@ -101,9 +95,9 @@ h6,
     font-family: var(--font-heading);
     font-weight: 800;
     letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #ffffff 40%, #00f2fe 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--text-main) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--text-main) !important;
 }
 
 .admin-h5-blue {
@@ -158,9 +152,7 @@ button,
 }
 
 #sidebar .brand-text {
-    background: linear-gradient(135deg, #ffffff 30%, var(--primary-color) 70%, var(--secondary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary-color) !important;
     font-weight: 800;
 }
 
@@ -173,7 +165,7 @@ button,
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    color: rgba(0, 242, 254, 0.4);
+    color: var(--text-muted);
     font-weight: 800;
     margin-bottom: 8px;
     margin-top: 16px;
@@ -205,27 +197,24 @@ button,
 }
 
 #sidebar ul li a:hover {
-    color: var(--text-main);
+    color: var(--primary-color);
     background: var(--sidebar-hover);
-    box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.05);
 }
 
 #sidebar ul li a:hover i {
     color: var(--primary-color);
     transform: translateX(3px);
-    text-shadow: 0 0 8px var(--primary-glow);
 }
 
 #sidebar ul li.active a {
-    color: #ffffff;
-    background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(121, 40, 202, 0.05) 100%);
-    box-shadow: inset 0 0 12px rgba(0, 242, 254, 0.1);
+    color: var(--primary-color);
+    background: var(--sidebar-hover);
+    font-weight: 600;
     border-left: 3px solid var(--primary-color);
 }
 
 #sidebar ul li.active a i {
     color: var(--primary-color);
-    text-shadow: 0 0 8px var(--primary-glow);
 }
 
 /* Content Area */
@@ -237,9 +226,7 @@ button,
 }
 
 .top-navbar {
-    background: rgba(3, 5, 13, 0.65);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: #ffffff;
     border-bottom: 1px solid var(--border-color);
     padding: 22px 40px;
 }
@@ -248,7 +235,7 @@ button,
 .top-navbar .navbar-text,
 .top-navbar .navbar-text strong,
 .top-navbar .nav-link {
-    color: #ffffff !important;
+    color: var(--text-main) !important;
     font-size: 0.95rem;
 }
 
@@ -264,7 +251,6 @@ button,
 .top-navbar .navbar-brand:hover,
 .logo-hover:hover {
     transform: scale(1.04);
-    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
 }
 
 .content-body {
@@ -469,9 +455,9 @@ button,
 
 .form-control,
 .form-select {
-    background-color: rgba(6, 8, 20, 0.5);
+    background-color: #ffffff !important;
     border: 1px solid var(--border-color);
-    color: var(--text-main);
+    color: var(--text-main) !important;
     border-radius: 10px;
     padding: 12px 18px;
     font-size: 0.95rem;
@@ -479,23 +465,23 @@ button,
 }
 
 .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.2);
+    color: var(--text-muted);
 }
 
 .form-control:focus,
 .form-select:focus {
-    background-color: rgba(6, 8, 20, 0.8);
-    border-color: var(--primary-color);
-    color: #ffffff;
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    background-color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.15) !important;
     outline: none;
 }
 
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: rgba(6, 8, 20, 0.3) !important;
+    background-color: #f1f5f9 !important;
     color: var(--text-muted) !important;
-    border-color: rgba(0, 242, 254, 0.04) !important;
+    border-color: var(--border-color) !important;
     opacity: 0.6;
 }
 
@@ -515,7 +501,7 @@ button,
     border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 16px;
-    background-color: rgba(6, 8, 20, 0.3);
+    background-color: #ffffff;
 }
 
 .django-select-multiple-checkboxes label {
@@ -537,13 +523,13 @@ button,
 }
 
 .table-premium th {
-    background-color: rgba(0, 242, 254, 0.02);
+    background-color: rgba(37, 99, 235, 0.04);
     font-family: var(--font-heading);
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.7rem;
     letter-spacing: 0.12em;
-    color: rgba(0, 242, 254, 0.5);
+    color: var(--text-main);
     padding: 18px 24px;
     border-bottom: 1px solid var(--border-color);
 }
@@ -561,13 +547,13 @@ button,
 }
 
 .table-premium tbody tr:hover {
-    background-color: rgba(0, 242, 254, 0.02);
+    background-color: rgba(37, 99, 235, 0.02);
     transform: scale(1.002);
 }
 
 /* --- Auth / Login screens --- */
 .auth-bg {
-    background: radial-gradient(circle at 50% 50%, #060918 0%, #030409 100%);
+    background: #f8fafc !important;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -584,7 +570,7 @@ button,
     height: 320px;
     background: var(--primary-color);
     filter: blur(160px);
-    opacity: 0.12;
+    opacity: 0.08;
     top: 15%;
     left: 15%;
     pointer-events: none;
@@ -597,7 +583,7 @@ button,
     height: 320px;
     background: var(--secondary-color);
     filter: blur(160px);
-    opacity: 0.1;
+    opacity: 0.06;
     bottom: 15%;
     right: 15%;
     pointer-events: none;
@@ -606,22 +592,20 @@ button,
 .auth-card {
     max-width: 480px;
     width: 100%;
-    background: rgba(6, 8, 20, 0.65);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--border-color);
+    background: #ffffff !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 24px;
     padding: 48px;
-    box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 242, 254, 0.08);
+    box-shadow: var(--shadow-lg), 0 0 40px rgba(37, 99, 235, 0.08) !important;
     position: relative;
     z-index: 10;
+    color: var(--text-main) !important;
 }
 
 .auth-card .text-center i {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.3));
+    color: var(--primary-color) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--primary-color) !important;
 }
 
 /* --- Candidate Detail Photo Layout --- */
@@ -754,54 +738,61 @@ button,
 }
 
 footer {
-    background: rgba(3, 5, 13, 0.45) !important;
+    background: #ffffff !important;
     border-top: 1px solid var(--border-color) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
 }
 
-/* Premium Cyberpunk Card Design */
+/* Premium White & Blue Card Design */
 .candidate-card-premium-cyber {
-    background: #0d111d !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: #ffffff !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 28px !important;
     overflow: hidden !important;
     transition: var(--transition-smooth);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
 .candidate-card-premium-cyber:hover {
     transform: translateY(-8px);
-    border-color: rgba(0, 242, 254, 0.4) !important;
-    box-shadow: 0 15px 40px rgba(0, 242, 254, 0.15), var(--shadow-premium) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: var(--shadow-lg), var(--shadow-premium) !important;
 }
 
 .candidate-card-premium-cyber .card-image-wrap {
-    position: relative;
-    width: 100%;
-    height: 260px; /* Fixed height for consistent grid layout */
-    overflow: hidden;
-    background: #1e293b;
+    display: flex;
+    justify-content: center;
+    padding-top: 24px;
+    background: transparent;
 }
 
 .candidate-card-premium-cyber .candidate-img-full {
-    width: 100%;
-    height: 100%;
+    width: 160px;
+    height: 160px;
+    border-radius: 16px;
     object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
     transition: var(--transition-smooth);
 }
 
 .candidate-card-premium-cyber:hover .candidate-img-full {
-    transform: scale(1.06);
+    transform: scale(1.08);
+    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
 }
 
 .candidate-card-premium-cyber .avatar-fallback-full {
-    width: 100%;
-    height: 100%;
-    font-size: 3rem;
+    width: 160px;
+    height: 160px;
+    border-radius: 16px;
+    font-size: 2.2rem;
     font-weight: 800;
     color: #ffffff;
-    background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Availability Badge Overlay */
@@ -815,7 +806,7 @@ footer {
     font-size: 0.75rem;
     padding: 6px 14px;
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     display: inline-flex;
     align-items: center;
 }
@@ -823,32 +814,30 @@ footer {
 /* Bottom content section */
 .candidate-card-premium-cyber .card-content-cyber {
     padding: 24px;
-    background: linear-gradient(180deg, rgba(13, 17, 29, 0.85) 0%, #080b13 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: #ffffff !important;
 }
 
 .candidate-card-premium-cyber .text-white {
-    color: #ffffff !important;
+    color: var(--text-main) !important;
     font-size: 1.15rem;
 }
 
 .candidate-card-premium-cyber .text-muted-separator {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
     margin: 0 4px;
 }
 
 .candidate-card-premium-cyber .text-cyan-accent {
-    color: #00f2fe !important;
+    color: var(--primary-color) !important;
     font-weight: 600;
 }
 
 .candidate-card-premium-cyber .text-slate-light {
-    color: #ffffff !important;
+    color: var(--text-muted) !important;
 }
 
 .candidate-card-premium-cyber .text-slate-muted {
-    color: #ffffff !important;
+    color: var(--text-muted) !important;
 }
 
 .candidate-card-premium-cyber .text-skills-list {
@@ -858,39 +847,78 @@ footer {
 
 /* Buttons and Footer */
 .candidate-card-premium-cyber .border-top-cyber {
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid var(--border-color) !important;
 }
 
 .candidate-card-premium-cyber .btn-outline-cyber {
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #cbd5e1 !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
     background: transparent;
     padding: 8px 16px !important;
 }
 
 .candidate-card-premium-cyber .btn-outline-cyber:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: var(--primary-color) !important;
     color: #ffffff !important;
 }
 
 .candidate-card-premium-cyber .btn-primary-cyber {
-    background: linear-gradient(135deg, #00f2fe 0%, #4f46e5 100%);
+    background: var(--primary-color) !important;
     border: none !important;
-    color: #03050d !important;
+    color: #ffffff !important;
     font-weight: 700;
     padding: 8px 16px !important;
 }
 
 .candidate-card-premium-cyber .btn-primary-cyber:hover {
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4) !important;
+    background: var(--primary-hover) !important;
+    box-shadow: 0 4px 12px var(--primary-glow) !important;
     color: #ffffff !important;
 }
 
 .candidate-card-premium-cyber .btn-success-cyber {
-    background: rgba(16, 185, 129, 0.15) !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
-    color: #34d399 !important;
+    background: var(--success-bg) !important;
+    border: 1px solid var(--success-color) !important;
+    color: var(--success-color) !important;
     font-weight: 700;
     padding: 8px 16px !important;
+}
+
+/* Availability Badge Text Color Override */
+.availability-badge {
+    color: #000000 !important;
+}
+
+/* Custom Alert Notifications Styling */
+.alert {
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background-color: var(--success-bg) !important;
+    color: #000000 !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.alert-danger,
+.alert-error {
+    background-color: var(--danger-bg) !important;
+    color: #000000 !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.alert-info {
+    background-color: rgba(37, 99, 235, 0.08) !important;
+    color: #000000 !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+.alert-warning {
+    background-color: var(--warning-bg) !important;
+    color: #000000 !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
 }

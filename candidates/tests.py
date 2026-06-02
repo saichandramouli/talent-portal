@@ -488,3 +488,117 @@ class JobTitleSkillTestCase(TestCase):
         
         for skill in expected_skills:
             self.assertContains(response, f'"{skill}"')
+
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from candidates.models import CredentialRequest
+
+class CandidateCredentialsTestCase(TestCase):
+    def setUp(self):
+        # Create standard tech stack
+        self.stack = TechnologyStack.objects.create(name="Python")
+        
+        # Create Recruiter
+        self.recruiter = User.objects.create_user(
+            email='rec_cred@test.com',
+            password='password123',
+            full_name='Recruiter Owner',
+            role='recruiter'
+        )
+        # Create Client
+        self.client_user = User.objects.create_user(
+            email='client_cred@test.com',
+            password='password123',
+            full_name='Client User',
+            role='client'
+        )
+        # Create Another Client (Unauthorized)
+        self.unauth_client = User.objects.create_user(
+            email='unauth_client@test.com',
+            password='password123',
+            full_name='Unauth Client',
+            role='client'
+        )
+        
+        # Create Candidate with PDF files
+        self.resume_file = SimpleUploadedFile("resume.pdf", b"pdf content", content_type="application/pdf")
+        self.bgv_file = SimpleUploadedFile("bgv.pdf", b"bgv content", content_type="application/pdf")
+        self.eval_file = SimpleUploadedFile("eval.pdf", b"eval content", content_type="application/pdf")
+        
+        self.candidate = Candidate.objects.create(
+            full_name='Candidate Py',
+            years_of_experience=3,
+            rate_card=50.00,
+            location='Remote',
+            availability='Immediate',
+            recruiter=self.recruiter,
+            resume=self.resume_file,
+            bgv_verification=self.bgv_file,
+            evaluation_certificate=self.eval_file
+        )
+        self.candidate.technical_stack.add(self.stack)
+
+    def test_client_can_request_credentials(self):
+        self.client.force_login(self.client_user)
+        response = self.client.get(f'/candidates/{self.candidate.id}/request-credentials/')
+        self.assertEqual(response.status_code, 302) # Redirects to cart_view
+        
+        # Verify request created in pending state
+        req = CredentialRequest.objects.get(client=self.client_user, candidate=self.candidate)
+        self.assertEqual(req.status, 'pending')
+
+    def test_recruiter_can_approve_request(self):
+        req = CredentialRequest.objects.create(client=self.client_user, candidate=self.candidate, status='pending')
+        self.client.force_login(self.recruiter)
+        response = self.client.post(f'/candidates/requests/{req.id}/approve/')
+        self.assertEqual(response.status_code, 302)
+        
+        req.refresh_from_db()
+        self.assertEqual(req.status, 'approved')
+
+    def test_recruiter_can_reject_request(self):
+        req = CredentialRequest.objects.create(client=self.client_user, candidate=self.candidate, status='pending')
+        self.client.force_login(self.recruiter)
+        response = self.client.post(f'/candidates/requests/{req.id}/reject/')
+        self.assertEqual(response.status_code, 302)
+        
+        req.refresh_from_db()
+        self.assertEqual(req.status, 'rejected')
+
+    def test_secure_download_permissions(self):
+        # 1. Unauthenticated / Unauthorized Client request should be blocked (403)
+        self.client.force_login(self.unauth_client)
+        response = self.client.get(f'/candidates/{self.candidate.id}/document/resume/')
+        self.assertEqual(response.status_code, 403)
+        
+        # 2. Request Pending Client should be blocked (403)
+        req = CredentialRequest.objects.create(client=self.client_user, candidate=self.candidate, status='pending')
+        self.client.force_login(self.client_user)
+        response = self.client.get(f'/candidates/{self.candidate.id}/document/resume/')
+        self.assertEqual(response.status_code, 403)
+        
+        # 3. Approved Client should succeed (200)
+        req.status = 'approved'
+        req.save()
+        response = self.client.get(f'/candidates/{self.candidate.id}/document/resume/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['content-type'], 'application/pdf')
+
+    def test_pdf_only_validation_in_form(self):
+        # Uploading a non-pdf file should fail validation
+        txt_file = SimpleUploadedFile("resume.txt", b"text content", content_type="text/plain")
+        form_data = {
+            'full_name': 'Candidate Py',
+            'years_of_experience': 3,
+            'rate_card': 50.00,
+            'location': 'Remote',
+            'availability': 'Immediate',
+            'technical_stack': [self.stack.id],
+        }
+        file_data = {
+            'resume': txt_file
+        }
+        form = CandidateForm(data=form_data, files=file_data, user=self.recruiter)
+        self.assertFalse(form.is_valid())
+        self.assertIn('resume', form.errors)
+        self.assertIn('Only PDF files are allowed', form.errors['resume'][0])

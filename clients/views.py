@@ -69,6 +69,18 @@ def client_dashboard(request):
 def cart_view(request):
     client = request.user
     cart_items = Cart.objects.filter(client=client, candidate__is_on_hold=False).select_related('candidate', 'candidate__recruiter')
+    
+    # Map credential request status
+    candidate_ids = [item.candidate.id for item in cart_items]
+    from candidates.models import CredentialRequest
+    credential_requests = {
+        req.candidate_id: req
+        for req in CredentialRequest.objects.filter(client=client, candidate_id__in=candidate_ids)
+    }
+    
+    for item in cart_items:
+        item.credential_request = credential_requests.get(item.candidate.id)
+        
     return render(request, 'clients/cart_view.html', {'cart_items': cart_items})
 
 @login_required

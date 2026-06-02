@@ -97,6 +97,50 @@
         </div>
     </div>
 
+    <!-- Pending Credential Requests -->
+    {% if pending_requests %}
+    <div class="card card-premium shadow-sm mb-4">
+        <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold mb-0 text-white"><i class="fa-solid fa-key text-warning me-2"></i>Pending Credential Requests</h5>
+        </div>
+        <div class="table-responsive p-4">
+            <table class="table table-premium mb-0">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Candidate</th>
+                        <th>Requested On</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in pending_requests %}
+                    <tr>
+                        <td class="text-black fw-semibold">{{ req.client.full_name }}<br><small class="text-black-50">{{ req.client.email }}</small></td>
+                        <td class="text-black">{{ req.candidate.full_name }}</td>
+                        <td class="text-black-50">{{ req.created_at|date:"M d, Y H:i" }}</td>
+                        <td class="text-end">
+                            <form action="{% url 'approve_credential_request' req.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-primary-custom me-2">
+                                    <i class="fa-solid fa-check me-1"></i>Approve
+                                </button>
+                            </form>
+                            <form action="{% url 'reject_credential_request' req.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="fa-solid fa-xmark me-1"></i>Reject
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Table of Own Candidates -->
     <div class="card card-premium shadow-sm overflow-hidden">
 
@@ -137,7 +181,7 @@
                         </td>
                         <td class="text-nowrap">{{ candidate.years_of_experience }} years</td>
                         <td class="text-nowrap">${{ candidate.rate_card }}/hr</td>
-                        <td class="text-nowrap"><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
+                        <td class="text-nowrap"><span class="badge bg-info availability-badge">{{ candidate.availability }}</span></td>
                         <td>
                             <div class="d-flex flex-wrap gap-1">
                                 {% for stack in candidate.technical_stack.all %}
@@ -147,7 +191,7 @@
                             {% if candidate.skills.all %}
                             <div class="d-flex flex-wrap gap-1 mt-1">
                                 {% for skill in candidate.skills.all %}
-                                <span class="badge bg-secondary text-white"
+                                <span class="badge bg-primary"
                                     style="font-size: 0.7rem; padding: 2px 6px;">{{ skill.name }}</span>
                                 {% endfor %}
                             </div>

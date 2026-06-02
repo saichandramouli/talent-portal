@@ -54,7 +54,7 @@
                             </td>
                             <td class="text-nowrap">{{ candidate.years_of_experience }} years</td>
                             <td class="text-nowrap">${{ candidate.rate_card }}/hr</td>
-                            <td class="text-nowrap"><span class="badge bg-info text-dark">{{ candidate.availability }}</span></td>
+                            <td class="text-nowrap"><span class="badge bg-info availability-badge">{{ candidate.availability }}</span></td>
                             <td>
                                 <div class="d-flex flex-wrap gap-1">
                                     {% for stack in candidate.technical_stack.all %}
@@ -64,7 +64,7 @@
                                 {% if candidate.skills.all %}
                                 <div class="d-flex flex-wrap gap-1 mt-1">
                                     {% for skill in candidate.skills.all %}
-                                        <span class="badge bg-secondary text-white" style="font-size: 0.7rem; padding: 2px 6px;">{{ skill.name }}</span>
+                                        <span class="badge bg-primary" style="font-size: 0.7rem; padding: 2px 6px;">{{ skill.name }}</span>
                                     {% endfor %}
                                 </div>
                                 {% endif %}

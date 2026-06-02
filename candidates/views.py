@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from accounts.decorators import recruiter_required, role_required
-from .models import Candidate, JobTitle, Skill
+from .models import Candidate, JobTitle, Skill, CredentialRequest
 from .forms import CandidateForm, JobTitleForm, SkillForm
 from teams.models import TechnologyStack
 
@@ -24,12 +24,19 @@ def recruiter_dashboard(request):
     recent_uploads = own_candidates.order_by('-created_at')[:5]
     notifications = recruiter.notifications.all()
     
+    # Fetch pending credential requests for this recruiter's candidates
+    pending_requests = CredentialRequest.objects.filter(
+        candidate__recruiter=recruiter,
+        status='pending'
+    ).select_related('client', 'candidate')
+    
     context = {
         'total_own': total_own,
         'allowed_stacks': allowed_stacks,
         'recent_uploads': recent_uploads,
         'candidates': own_candidates,
         'notifications': notifications,
+        'pending_requests': pending_requests,
     }
     return render(request, 'candidates/recruiter_dashboard.html', context)
 
@@ -241,3 +248,97 @@ def skill_delete(request, pk):
         messages.success(request, f"Skill '{skill.name}' deleted successfully.")
         return redirect('skill_list')
     return render(request, 'candidates/skill_confirm_delete.html', {'skill': skill})
+
+
+@login_required
+@role_required(['client'])
+def request_credentials(request, candidate_id):
+    candidate = get_object_or_404(Candidate, id=candidate_id)
+    if candidate.is_on_hold:
+        messages.error(request, "This candidate is currently on hold.")
+        return redirect('client_dashboard')
+        
+    req, created = CredentialRequest.objects.get_or_create(
+        client=request.user,
+        candidate=candidate
+    )
+    if created:
+        messages.success(request, f"Credential request for {candidate.full_name} has been submitted successfully.")
+    else:
+        if req.status == 'rejected':
+            req.status = 'pending'
+            req.save()
+            messages.success(request, f"Credential request for {candidate.full_name} has been re-submitted successfully.")
+        else:
+            messages.info(request, f"A credential request for {candidate.full_name} is already {req.status}.")
+            
+    return redirect('cart_view')
+
+
+@login_required
+@role_required(['recruiter', 'admin'])
+def approve_credential_request(request, request_id):
+    credential_request = get_object_or_404(CredentialRequest, id=request_id)
+    if request.user.role == 'recruiter' and credential_request.candidate.recruiter != request.user:
+        messages.error(request, "You are not authorized to approve this request.")
+        return redirect('recruiter_dashboard')
+        
+    credential_request.status = 'approved'
+    credential_request.save()
+    messages.success(request, f"Request from {credential_request.client.full_name} for candidate {credential_request.candidate.full_name} approved.")
+    return redirect('recruiter_dashboard')
+
+
+@login_required
+@role_required(['recruiter', 'admin'])
+def reject_credential_request(request, request_id):
+    credential_request = get_object_or_404(CredentialRequest, id=request_id)
+    if request.user.role == 'recruiter' and credential_request.candidate.recruiter != request.user:
+        messages.error(request, "You are not authorized to reject this request.")
+        return redirect('recruiter_dashboard')
+        
+    credential_request.status = 'rejected'
+    credential_request.save()
+    messages.success(request, f"Request from {credential_request.client.full_name} for candidate {credential_request.candidate.full_name} rejected.")
+    return redirect('recruiter_dashboard')
+
+
+@login_required
+def download_candidate_document(request, candidate_id, doc_type):
+    candidate = get_object_or_404(Candidate, id=candidate_id)
+    
+    # Access control: admin, authorized recruiter, or client with approved request
+    has_access = False
+    if request.user.role == 'admin':
+        has_access = True
+    elif request.user.role == 'recruiter':
+        if candidate.recruiter == request.user:
+            has_access = True
+        elif request.user.team and request.user.team.technology_stacks.filter(id__in=candidate.technical_stack.all()).exists():
+            has_access = True
+    elif request.user.role == 'client':
+        has_access = CredentialRequest.objects.filter(
+            client=request.user,
+            candidate=candidate,
+            status='approved'
+        ).exists()
+        
+    if not has_access:
+        raise PermissionDenied("You do not have access to these credentials.")
+        
+    file_field = None
+    if doc_type == 'resume':
+        file_field = candidate.resume
+    elif doc_type == 'bgv':
+        file_field = candidate.bgv_verification
+    elif doc_type == 'evaluation':
+        file_field = candidate.evaluation_certificate
+        
+    if not file_field or not file_field.name:
+        messages.error(request, f"No document uploaded for the {doc_type} of candidate {candidate.full_name}.")
+        return redirect(request.META.get('HTTP_REFERER', 'client_dashboard'))
+        
+    from django.http import FileResponse
+    response = FileResponse(file_field.open(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{file_field.name.split("/")[-1]}"'
+    return response

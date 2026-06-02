@@ -15,148 +15,143 @@
         </a>
     </div>
 
-    <div class="row">
-        <!-- Left Filter Panel -->
-        <div class="col-lg-3 mb-4">
-            <div class="card card-premium p-4 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-sliders text-primary me-2"></i>Filters</h5>
-                    <a href="{% url 'client_dashboard' %}" class="text-muted small text-decoration-none">Clear All</a>
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-end mb-4">
+        <div class="card card-premium p-1 shadow-sm" style="width: 100%; max-width: 350px;">
+            <form method="GET" action="{% url 'client_dashboard' %}">
+                <!-- Maintain Filters -->
+                <input type="hidden" name="stack" value="{{ selected_stack }}">
+                <input type="hidden" name="job_title" value="{{ job_title_filter }}">
+                <input type="hidden" name="skills" value="{{ skills_filter }}">
+
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i
+                            class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0"
+                        placeholder="Search candidates..."
+                        value="{{ search_query }}">
+                    <button type="submit" class="btn btn-sm btn-primary-custom px-3">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="card card-premium p-4 mb-4 shadow-sm">
+        <form method="GET" action="{% url 'client_dashboard' %}">
+            <!-- Maintain Search Query -->
+            <input type="hidden" name="q" value="{{ search_query }}">
+
+            <div class="row align-items-end g-3">
+                <!-- Tech Stack Filter -->
+                <div class="col-md-3">
+                    <label for="stack_filter" class="form-label mb-2">Technology Stack</label>
+                    <select name="stack" id="stack_filter" class="form-select">
+                        <option value="">All Stacks</option>
+                        {% for stack in all_stacks %}
+                        <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
-                <form method="GET" action="{% url 'client_dashboard' %}">
-                    <!-- Maintain Search Query -->
-                    <input type="hidden" name="q" value="{{ search_query }}">
+                <!-- Job Title Filter -->
+                <div class="col-md-3">
+                    <label for="job_title_filter" class="form-label mb-2">Job Title</label>
+                    <select name="job_title" id="job_title_filter" class="form-select">
+                        <option value="">All Job Titles</option>
+                        {% for job in all_job_titles %}
+                        <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                    <!-- Tech Stack Filter -->
-                    <div class="mb-3">
-                        <label for="stack_filter" class="form-label">Technology Stack</label>
-                        <select name="stack" id="stack_filter" class="form-select">
-                            <option value="">All Stacks</option>
-                            {% for stack in all_stacks %}
-                            <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                <!-- Skill Filter -->
+                <div class="col-md-3">
+                    <label for="skills_filter" class="form-label mb-2">Skill</label>
+                    <select name="skills" id="skills_filter" class="form-select">
+                        <option value="">All Skills</option>
+                        {% for skill in all_skills %}
+                        <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-
-
-                    <!-- Job Title Filter -->
-                    <div class="mb-3">
-                        <label for="job_title_filter" class="form-label">Job Title</label>
-                        <select name="job_title" id="job_title_filter" class="form-select">
-                            <option value="">All Job Titles</option>
-                            {% for job in all_job_titles %}
-                            <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Skill Filter -->
-                    <div class="mb-4">
-                        <label for="skills_filter" class="form-label">Skill</label>
-                        <select name="skills" id="skills_filter" class="form-select">
-                            <option value="">All Skills</option>
-                            {% for skill in all_skills %}
-                            <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-sm btn-primary-custom w-100">
+                <!-- Action Buttons -->
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary-custom flex-grow-1">
                         <i class="fa-solid fa-filter me-2"></i>Apply Filters
                     </button>
-                </form>
+                    <a href="{% url 'client_dashboard' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-3" title="Clear All">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </a>
+                </div>
             </div>
-        </div>
+        </form>
+    </div>
 
-        <!-- Right Candidates Grid -->
-        <div class="col-lg-9">
-            <!-- Search Bar -->
-            <div class="card card-premium p-3 mb-4 shadow-sm">
-                <form method="GET" action="{% url 'client_dashboard' %}">
-                    <!-- Maintain Filters -->
-                    <input type="hidden" name="stack" value="{{ selected_stack }}">
-
-                    <input type="hidden" name="job_title" value="{{ job_title_filter }}">
-                    <input type="hidden" name="skills" value="{{ skills_filter }}">
-
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0 text-muted"><i
-                                class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="q" class="form-control border-start-0"
-                            placeholder="Search by candidate name, stack, job title, or skill..."
-                            value="{{ search_query }}">
-                        <button type="submit" class="btn btn-sm btn-primary-custom px-4">Search</button>
+    <!-- Candidates Grid -->
+    <div class="row g-4">
+        {% for candidate in candidates %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column">
+                <!-- Top Image Section (Full Width, No Padding) -->
+                <div class="card-image-wrap">
+                    {% if candidate.profile_photo %}
+                    <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-img-full">
+                    {% else %}
+                    <div class="avatar-fallback-full d-flex align-items-center justify-content-center">
+                        {{ candidate.full_name|slice:":2"|upper }}
                     </div>
-                </form>
-            </div>
+                    {% endif %}
+                </div>
 
-            <!-- Candidates Grid -->
-            <div class="row g-4">
-                {% for candidate in candidates %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column">
-                        <!-- Top Image Section (Full Width, No Padding) -->
-                        <div class="card-image-wrap">
-                            {% if candidate.profile_photo %}
-                            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-img-full">
-                            {% else %}
-                            <div class="avatar-fallback-full d-flex align-items-center justify-content-center">
-                                {{ candidate.full_name|slice:":2"|upper }}
-                            </div>
-                            {% endif %}
+                <!-- Bottom Content Section (Frosted Dark Cyber Theme) -->
+                <div class="card-content-cyber flex-grow-1 d-flex flex-column justify-content-between">
+                    <div class="mb-3 text-start">
+                        <h5 class="fw-bold mb-1 d-flex justify-content-between align-items-center">
+                            <span class="text-white">{{ candidate.full_name }}</span>
+                            <span class="text-cyan-accent fs-6 fw-bold">${{ candidate.rate_card }}/hr</span>
+                        </h5>
+                        {% if candidate.job_title %}
+                        <div class="text-cyan-accent small mb-2 fw-semibold">
+                            {{ candidate.job_title }}
                         </div>
-
-                        <!-- Bottom Content Section (Frosted Dark Cyber Theme) -->
-                        <div class="card-content-cyber flex-grow-1 d-flex flex-column justify-content-between">
-                            <div class="mb-3 text-start">
-                                <h5 class="fw-bold mb-1 d-flex justify-content-between align-items-center">
-                                    <span class="text-white">{{ candidate.full_name }}</span>
-                                    <span class="text-cyan-accent fs-6 fw-bold">${{ candidate.rate_card }}/hr</span>
-                                </h5>
-                                {% if candidate.job_title %}
-                                <div class="text-cyan-accent small mb-2 fw-semibold">
-                                    {{ candidate.job_title }}
-                                </div>
-                                {% endif %}
-                                <div class="text-slate-light small mb-2" style="color: #ffffff !important;">
-                                    {{ candidate.recruiter.company_name|default:"People Prime" }} | {{ candidate.years_of_experience }}+ years of experience
-                                </div>
-                                {% if candidate.skills.all %}
-                                <div class="text-slate-muted small text-skills-list" style="color: #ffffff !important;">
-                                    {% for skill in candidate.skills.all %}
-                                        {{ skill.name }}{% if not forloop.last %} | {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                            </div>
-
-                            <div class="pt-3 border-top-cyber d-flex justify-content-between gap-2 mt-auto">
-                                <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-cyber w-50">
-                                    <i class="fa-solid fa-circle-info me-1"></i>Details
-                                </a>
-                                {% if candidate.id in cart_candidate_ids %}
-                                <button class="btn btn-sm btn-success-cyber w-50" disabled>
-                                    <i class="fa-solid fa-circle-check me-1"></i>In Cart
-                                </button>
-                                {% else %}
-                                <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-sm btn-primary-cyber w-50">
-                                    <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
-                                </a>
-                                {% endif %}
-                            </div>
+                        {% endif %}
+                        <div class="text-slate-light small mb-2" style="color: #0f172a !important;">
+                            {{ candidate.recruiter.company_name|default:"People Prime" }} | {{ candidate.years_of_experience }}+ years of experience
                         </div>
+                        {% if candidate.skills.all %}
+                        <div class="text-slate-muted small text-skills-list" style="color: #0f172a !important;">
+                            {% for skill in candidate.skills.all %}
+                                {{ skill.name }}{% if not forloop.last %} | {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="pt-3 border-top-cyber d-flex justify-content-between gap-2 mt-auto">
+                        <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-cyber w-50">
+                            <i class="fa-solid fa-circle-info me-1"></i>Details
+                        </a>
+                        {% if candidate.id in cart_candidate_ids %}
+                        <button class="btn btn-sm btn-success-cyber w-50" disabled>
+                            <i class="fa-solid fa-circle-check me-1"></i>In Cart
+                        </button>
+                        {% else %}
+                        <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-sm btn-primary-cyber w-50">
+                            <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center py-5 text-muted">
-                    <i class="fa-solid fa-user-group fa-4x mb-3"></i>
-                    <p class="fs-5 mb-0">No candidates match your search filters.</p>
-                </div>
-                {% endfor %}
             </div>
         </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 text-muted">
+            <i class="fa-solid fa-user-group fa-4x mb-3"></i>
+            <p class="fs-5 mb-0">No candidates match your search filters.</p>
+        </div>
+        {% endfor %}
     </div>
 </div>
 

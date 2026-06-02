@@ -23,7 +23,8 @@ class CandidateForm(forms.ModelForm):
         model = Candidate
         fields = [
             'profile_photo', 'full_name', 'job_title', 'skills', 'years_of_experience',
-            'rate_card', 'technical_stack', 'location', 'availability', 'is_on_hold'
+            'rate_card', 'technical_stack', 'location', 'availability', 'is_on_hold',
+            'resume', 'bgv_verification', 'evaluation_certificate'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Candidate Full Name'}),
@@ -36,6 +37,9 @@ class CandidateForm(forms.ModelForm):
             'is_on_hold': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'technical_stack': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
             'skills': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+            'resume': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -82,3 +86,21 @@ class CandidateForm(forms.ModelForm):
             if ext not in ['jpg', 'jpeg', 'png', 'webp']:
                 raise forms.ValidationError("Unsupported image format. Allowed formats: JPG, JPEG, PNG, WEBP.")
         return photo
+
+    def _validate_pdf_only(self, file_obj, field_name):
+        if file_obj:
+            if file_obj.size > 10 * 1024 * 1024:
+                raise forms.ValidationError(f"{field_name} file size should not exceed 10MB.")
+            ext = file_obj.name.split('.')[-1].lower()
+            if ext != 'pdf':
+                raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
+        return file_obj
+
+    def clean_resume(self):
+        return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')
+
+    def clean_bgv_verification(self):
+        return self._validate_pdf_only(self.cleaned_data.get('bgv_verification'), 'BGV Verification')
+
+    def clean_evaluation_certificate(self):
+        return self._validate_pdf_only(self.cleaned_data.get('evaluation_certificate'), 'Evaluation Certificate')

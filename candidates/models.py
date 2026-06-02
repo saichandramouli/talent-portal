@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 from teams.models import TechnologyStack
 
 class JobTitle(models.Model):
@@ -56,6 +57,26 @@ class Candidate(models.Model):
         related_name='candidates'
     )
     
+    # Document Fields (restricted to PDF only)
+    resume = models.FileField(
+        upload_to='resumes/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+    bgv_verification = models.FileField(
+        upload_to='bgv_verifications/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+    evaluation_certificate = models.FileField(
+        upload_to='evaluation_certificates/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+    
     recruiter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -75,3 +96,35 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f"{self.full_name} ({self.years_of_experience} yrs exp)"
+
+
+class CredentialRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    client = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='credential_requests'
+    )
+    candidate = models.ForeignKey(
+        Candidate,
+        on_delete=models.CASCADE,
+        related_name='credential_requests'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('client', 'candidate')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Request by {self.client.full_name} for {self.candidate.full_name} ({self.status})"
