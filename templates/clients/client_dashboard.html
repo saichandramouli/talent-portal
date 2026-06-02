@@ -111,8 +111,9 @@
                         <!-- Bottom Content Section (Frosted Dark Cyber Theme) -->
                         <div class="card-content-cyber flex-grow-1 d-flex flex-column justify-content-between">
                             <div class="mb-3 text-start">
-                                <h5 class="fw-bold mb-1">
+                                <h5 class="fw-bold mb-1 d-flex justify-content-between align-items-center">
                                     <span class="text-white">{{ candidate.full_name }}</span>
+                                    <span class="text-cyan-accent fs-6 fw-bold">${{ candidate.rate_card }}/hr</span>
                                 </h5>
                                 {% if candidate.job_title %}
                                 <div class="text-cyan-accent small mb-2 fw-semibold">
