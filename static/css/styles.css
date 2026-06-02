@@ -4,41 +4,52 @@
 :root {
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
-    
+
     /* Design Colors - Dark AI/Cybernetic Theme */
-    --bg-main: #03050d; /* Deep Space Obsidian */
+    --bg-main: #03050d;
+    /* Deep Space Obsidian */
     --sidebar-bg: rgba(6, 8, 20, 0.75);
     --sidebar-hover: rgba(0, 242, 254, 0.12);
-    
-    --primary-color: #00f2fe; /* Cyber Electric Cyan */
+
+    --primary-color: #00f2fe;
+    /* Cyber Electric Cyan */
     --primary-hover: #00dfd8;
     --primary-glow: rgba(0, 242, 254, 0.35);
-    
-    --secondary-color: #7928ca; /* AI Hologram Purple */
+
+    --secondary-color: #7928ca;
+    /* AI Hologram Purple */
     --secondary-hover: #b800ff;
     --secondary-glow: rgba(121, 40, 202, 0.3);
-    
-    --accent-color: #ff0080; /* Synthwave Magenta */
-    
-    --success-color: #00ffaa; /* Cyber Neon Green */
+
+    --accent-color: #ff0080;
+    /* Synthwave Magenta */
+
+    --success-color: #00ffaa;
+    /* Cyber Neon Green */
     --success-bg: rgba(0, 255, 170, 0.12);
-    --warning-color: #ffb703; /* Solar Amber */
+    --warning-color: #ffb703;
+    /* Solar Amber */
     --warning-bg: rgba(255, 183, 3, 0.12);
-    --danger-color: #ff0055; /* Neon Laser Red */
+    --danger-color: #ff0055;
+    /* Neon Laser Red */
     --danger-bg: rgba(255, 0, 85, 0.12);
-    
-    --text-main: #f3f4f6; /* Ice White */
-    --text-muted: #8b9bb4; /* Futuristic Slate Grey */
-    --card-bg: rgba(11, 15, 33, 0.5); /* Semi-transparent Cyber Grid */
-    --border-color: rgba(0, 242, 254, 0.08); /* Frosted Cyan Edge */
+
+    --text-main: #f3f4f6;
+    /* Ice White */
+    --text-muted: #8b9bb4;
+    /* Futuristic Slate Grey */
+    --card-bg: rgba(11, 15, 33, 0.5);
+    /* Semi-transparent Cyber Grid */
+    --border-color: rgba(0, 242, 254, 0.08);
+    /* Frosted Cyan Edge */
     --glass-blur: blur(18px);
-    
+
     /* Glowing Shadows */
     --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.6);
     --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.7);
     --shadow-premium: 0 0 35px rgba(0, 242, 254, 0.12);
-    
+
     --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -47,13 +58,16 @@
     width: 6px;
     height: 6px;
 }
+
 ::-webkit-scrollbar-track {
     background: var(--bg-main);
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(0, 242, 254, 0.2);
     border-radius: 99px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 242, 254, 0.45);
     box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
@@ -64,7 +78,7 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     overflow-x: hidden;
-    background-image: 
+    background-image:
         radial-gradient(circle at 5% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 35%),
         radial-gradient(circle at 85% 85%, rgba(121, 40, 202, 0.06) 0%, transparent 40%),
         radial-gradient(circle at 50% 50%, rgba(255, 0, 128, 0.02) 0%, transparent 50%);
@@ -72,11 +86,18 @@ body {
     min-height: 100vh;
 }
 
-.text-muted, .text-secondary {
+.text-muted,
+.text-secondary {
     color: var(--text-muted) !important;
 }
 
-h1, h2, h3, h4, h5, h6, .brand-text {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-text {
     font-family: var(--font-heading);
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -99,7 +120,12 @@ h1, h2, h3, h4, h5, h6, .brand-text {
 }
 
 /* Base transitions */
-a, button, .card, .nav-link, .badge-chip, .btn {
+a,
+button,
+.card,
+.nav-link,
+.badge-chip,
+.btn {
     transition: var(--transition-smooth);
 }
 
@@ -218,9 +244,9 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     padding: 22px 40px;
 }
 
-.top-navbar, 
-.top-navbar .navbar-text, 
-.top-navbar .navbar-text strong, 
+.top-navbar,
+.top-navbar .navbar-text,
+.top-navbar .navbar-text strong,
 .top-navbar .nav-link {
     color: #ffffff !important;
     font-size: 0.95rem;
@@ -230,11 +256,13 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     color: var(--primary-color) !important;
 }
 
-.top-navbar .navbar-brand, .logo-hover {
+.top-navbar .navbar-brand,
+.logo-hover {
     transition: var(--transition-smooth);
 }
 
-.top-navbar .navbar-brand:hover, .logo-hover:hover {
+.top-navbar .navbar-brand:hover,
+.logo-hover:hover {
     transform: scale(1.04);
     filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
 }
@@ -244,7 +272,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
 }
 
 /* --- Premium Cyber-Glassmorphic Cards --- */
-.card, .card-premium {
+.card,
+.card-premium {
     background: var(--card-bg) !important;
     backdrop-filter: var(--glass-blur) !important;
     -webkit-backdrop-filter: var(--glass-blur) !important;
@@ -255,7 +284,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     overflow: hidden;
 }
 
-.card::before, .card-premium::before {
+.card::before,
+.card-premium::before {
     content: '';
     position: absolute;
     top: 0;
@@ -267,7 +297,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     pointer-events: none;
 }
 
-.card:hover, .card-premium:hover {
+.card:hover,
+.card-premium:hover {
     box-shadow: var(--shadow-lg), var(--shadow-premium);
     border-color: rgba(0, 242, 254, 0.22) !important;
     transform: translateY(-4px);
@@ -436,7 +467,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     box-shadow: var(--shadow-md);
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
     background-color: rgba(6, 8, 20, 0.5);
     border: 1px solid var(--border-color);
     color: var(--text-main);
@@ -450,7 +482,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     color: rgba(255, 255, 255, 0.2);
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     background-color: rgba(6, 8, 20, 0.8);
     border-color: var(--primary-color);
     color: #ffffff;
@@ -458,7 +491,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     outline: none;
 }
 
-.form-control:disabled, .form-control[readonly] {
+.form-control:disabled,
+.form-control[readonly] {
     background-color: rgba(6, 8, 20, 0.3) !important;
     color: var(--text-muted) !important;
     border-color: rgba(0, 242, 254, 0.04) !important;
@@ -662,7 +696,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
     color: #a7f3d0;
 }
 
-.alert-danger, .alert-error {
+.alert-danger,
+.alert-error {
     border-color: rgba(255, 0, 85, 0.3);
     background-color: rgba(255, 0, 85, 0.08);
     color: #fca5a5;
@@ -694,7 +729,8 @@ a, button, .card, .nav-link, .badge-chip, .btn {
 }
 
 /* Custom avatar circle fallback */
-.avatar-circle-sm, .avatar-circle-lg {
+.avatar-circle-sm,
+.avatar-circle-lg {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
     box-shadow: var(--shadow-sm);
     color: #03050d !important;
@@ -702,13 +738,14 @@ a, button, .card, .nav-link, .badge-chip, .btn {
 
 /* Animations */
 @keyframes fadeInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(15px); 
+    from {
+        opacity: 0;
+        transform: translateY(15px);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -721,4 +758,139 @@ footer {
     border-top: 1px solid var(--border-color) !important;
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* Premium Cyberpunk Card Design */
+.candidate-card-premium-cyber {
+    background: #0d111d !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 28px !important;
+    overflow: hidden !important;
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.candidate-card-premium-cyber:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0, 242, 254, 0.4) !important;
+    box-shadow: 0 15px 40px rgba(0, 242, 254, 0.15), var(--shadow-premium) !important;
+}
+
+.candidate-card-premium-cyber .card-image-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px; /* Fixed height for consistent grid layout */
+    overflow: hidden;
+    background: #1e293b;
+}
+
+.candidate-card-premium-cyber .candidate-img-full {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.candidate-card-premium-cyber:hover .candidate-img-full {
+    transform: scale(1.06);
+}
+
+.candidate-card-premium-cyber .avatar-fallback-full {
+    width: 100%;
+    height: 100%;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
+}
+
+/* Availability Badge Overlay */
+.candidate-card-premium-cyber .badge-available {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(209, 250, 229, 0.95);
+    color: #065f46;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Bottom content section */
+.candidate-card-premium-cyber .card-content-cyber {
+    padding: 24px;
+    background: linear-gradient(180deg, rgba(13, 17, 29, 0.85) 0%, #080b13 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.candidate-card-premium-cyber .text-white {
+    color: #ffffff !important;
+    font-size: 1.15rem;
+}
+
+.candidate-card-premium-cyber .text-muted-separator {
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 4px;
+}
+
+.candidate-card-premium-cyber .text-cyan-accent {
+    color: #00f2fe !important;
+    font-weight: 600;
+}
+
+.candidate-card-premium-cyber .text-slate-light {
+    color: #ffffff !important;
+}
+
+.candidate-card-premium-cyber .text-slate-muted {
+    color: #ffffff !important;
+}
+
+.candidate-card-premium-cyber .text-skills-list {
+    line-height: 1.6;
+    margin-top: 8px;
+}
+
+/* Buttons and Footer */
+.candidate-card-premium-cyber .border-top-cyber {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.candidate-card-premium-cyber .btn-outline-cyber {
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #cbd5e1 !important;
+    background: transparent;
+    padding: 8px 16px !important;
+}
+
+.candidate-card-premium-cyber .btn-outline-cyber:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.candidate-card-premium-cyber .btn-primary-cyber {
+    background: linear-gradient(135deg, #00f2fe 0%, #4f46e5 100%);
+    border: none !important;
+    color: #03050d !important;
+    font-weight: 700;
+    padding: 8px 16px !important;
+}
+
+.candidate-card-premium-cyber .btn-primary-cyber:hover {
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.candidate-card-premium-cyber .btn-success-cyber {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    color: #34d399 !important;
+    font-weight: 700;
+    padding: 8px 16px !important;
 }

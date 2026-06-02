@@ -119,7 +119,7 @@
                             </li>
                             <li class="nav-item me-3">
                                 <a class="nav-link {% if request.resolver_match.url_name == 'cart_view' %}active{% endif %}" href="{% url 'cart_view' %}">
-                                    <i class="fa-solid fa-shopping-cart me-1"></i> Shopping Cart
+                                    <i class="fa-solid fa-shopping-cart me-1"></i> Cart
                                     {% if user.visible_cart_items.count > 0 %}
                                     <span class="badge bg-danger rounded-pill ms-1">{{ user.visible_cart_items.count }}</span>
                                     {% endif %}

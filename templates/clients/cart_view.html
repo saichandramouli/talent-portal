@@ -88,7 +88,7 @@
     <!-- Recruiter Details Modal -->
     <div class="modal fade" id="recruiterModal{{ item.candidate.id }}" tabindex="-1" aria-labelledby="recruiterModalLabel{{ item.candidate.id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg border-0 text-dark" style="border-radius: 12px; overflow: hidden;">
+            <div class="modal-content shadow-lg border-0 text-white" style="border-radius: 12px; overflow: hidden;">
                 <div class="modal-header bg-primary text-white py-3">
                     <h5 class="modal-title fw-bold" id="recruiterModalLabel{{ item.candidate.id }}">
                         <i class="fa-solid fa-user-tie me-2"></i>Recruiter Contact Details
@@ -96,24 +96,24 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-start">
-                    <p class="text-muted mb-4">You can contact the recruiter who uploaded <strong>{{ item.candidate.full_name }}</strong>'s profile:</p>
+                    <p class="text-white-50 mb-4">You can contact the recruiter who uploaded <strong>{{ item.candidate.full_name }}</strong>'s profile:</p>
                     <div class="d-flex align-items-center mb-3">
                         <div class="avatar-circle-sm bg-light text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px; font-weight: 600; border: 1px solid #e3e6f0;">
                             {{ item.candidate.recruiter.full_name|slice:":2"|upper }}
                         </div>
                         <div>
-                            <div class="fw-bold fs-5">{{ item.candidate.recruiter.full_name }}</div>
-                            <div class="text-muted small">Recruiter Owner</div>
+                            <div class="fw-bold fs-5 text-white">{{ item.candidate.recruiter.full_name }}</div>
+                            <div class="text-white-50 small">Recruiter Owner</div>
                         </div>
                     </div>
-                    <hr class="my-3">
+                    <hr class="my-3" style="border-color: rgba(255, 255, 255, 0.15);">
                     <div class="mb-3">
-                        <div class="text-muted small mb-1"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email Address</div>
-                        <a href="mailto:{{ item.candidate.recruiter.email }}" class="fw-semibold text-decoration-none text-dark fs-6">{{ item.candidate.recruiter.email }}</a>
+                        <div class="small mb-1" style="color: rgba(255, 255, 255, 0.7);"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email Address</div>
+                        <a href="mailto:{{ item.candidate.recruiter.email }}" class="fw-semibold text-decoration-none text-white fs-6">{{ item.candidate.recruiter.email }}</a>
                     </div>
                     <div class="mb-2">
-                        <div class="text-muted small mb-1"><i class="fa-solid fa-phone me-2 text-primary"></i>Phone Number</div>
-                        <a href="tel:{{ item.candidate.recruiter.phone }}" class="fw-semibold text-decoration-none text-dark fs-6">{{ item.candidate.recruiter.phone|default:"Not Provided" }}</a>
+                        <div class="small mb-1" style="color: rgba(255, 255, 255, 0.7);"><i class="fa-solid fa-phone me-2 text-primary"></i>Phone Number</div>
+                        <a href="tel:{{ item.candidate.recruiter.phone }}" class="fw-semibold text-decoration-none text-white fs-6">{{ item.candidate.recruiter.phone|default:"Not Provided" }}</a>
                     </div>
                 </div>
                 <div class="modal-footer bg-light py-2">
