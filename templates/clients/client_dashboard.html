@@ -31,8 +31,7 @@
                         <select name="stack" id="stack_filter" class="form-select">
                             <option value="">All Stacks</option>
                             {% for stack in all_stacks %}
-                            <option value="{{ stack.id }}" {% if selected_stack==stack.id|stringformat:"i" %}selected{%
-                                endif %}>{{ stack.name }}</option>
+                            <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -43,8 +42,7 @@
                         <select name="job_title" id="job_title_filter" class="form-select">
                             <option value="">All Job Titles</option>
                             {% for job in all_job_titles %}
-                            <option value="{{ job.id }}" {% if job_title_filter==job.id|stringformat:"i" %}selected{%
-                                endif %}>{{ job.name }}</option>
+                            <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -55,8 +53,7 @@
                         <select name="skills" id="skills_filter" class="form-select">
                             <option value="">All Skills</option>
                             {% for skill in all_skills %}
-                            <option value="{{ skill.id }}" {% if skills_filter==skill.id|stringformat:"i" %}selected{%
-                                endif %}>{{ skill.name }}</option>
+                            <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -134,12 +131,10 @@
                                 </div>
 
                                 <!-- Profile Details -->
-                                <div class="text-muted small lh-lg" style="color: #334155 !important; font-size: 11px;">
+                                <div class="text-muted small lh-lg" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
                                     <div class="text-nowrap">{{ candidate.years_of_experience }} Years Experience</div>
-                                    <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in
-                                        candidate.location|lower %}/Remote{% endif %}</div>
-                                    <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0
-                                        }}/ INR {{ candidate.rate_card_inr }}</div>
+                                    <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
+                                    <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0 }}/ INR {{ candidate.rate_card_inr }}</div>
                                     <div class="text-nowrap">Notice Period : {{ candidate.availability }}</div>
                                     <div class="text-nowrap">Resume : Shortlist to View</div>
                                     <div class="text-nowrap">Interviewed Sheet : Shortlist to View</div>
