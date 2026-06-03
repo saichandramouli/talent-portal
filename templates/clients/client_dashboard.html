@@ -31,7 +31,8 @@
                         <select name="stack" id="stack_filter" class="form-select">
                             <option value="">All Stacks</option>
                             {% for stack in all_stacks %}
-                            <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                            <option value="{{ stack.id }}" {% if selected_stack==stack.id|stringformat:"i" %}selected{%
+                                endif %}>{{ stack.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -42,7 +43,8 @@
                         <select name="job_title" id="job_title_filter" class="form-select">
                             <option value="">All Job Titles</option>
                             {% for job in all_job_titles %}
-                            <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
+                            <option value="{{ job.id }}" {% if job_title_filter==job.id|stringformat:"i" %}selected{%
+                                endif %}>{{ job.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -53,7 +55,8 @@
                         <select name="skills" id="skills_filter" class="form-select">
                             <option value="">All Skills</option>
                             {% for skill in all_skills %}
-                            <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
+                            <option value="{{ skill.id }}" {% if skills_filter==skill.id|stringformat:"i" %}selected{%
+                                endif %}>{{ skill.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -63,7 +66,9 @@
                         <button type="submit" class="btn btn-sm btn-primary-custom flex-grow-1">
                             <i class="fa-solid fa-filter me-2"></i>Apply Filters
                         </button>
-                        <a href="{% url 'client_dashboard' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-3" title="Clear All">
+                        <a href="{% url 'client_dashboard' %}"
+                            class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-3"
+                            title="Clear All">
                             <i class="fa-solid fa-arrows-rotate"></i>
                         </a>
                     </div>
@@ -86,8 +91,7 @@
                             <span class="input-group-text bg-white border-end-0 text-muted"><i
                                     class="fa-solid fa-magnifying-glass"></i></span>
                             <input type="text" name="q" class="form-control border-start-0"
-                                placeholder="Search candidates..."
-                                value="{{ search_query }}">
+                                placeholder="Search candidates..." value="{{ search_query }}">
                             <button type="submit" class="btn btn-sm btn-primary-custom px-3">Search</button>
                         </div>
                     </form>
@@ -98,13 +102,18 @@
             <div class="row g-4">
                 {% for candidate in candidates %}
                 <div class="col-sm-6 col-md-4 col-lg-3">
-                    <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column text-center px-2 py-3">
+                    <div
+                        class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column text-center px-2 py-3">
                         <!-- Top Image Section (Centered) -->
-                        <div class="card-image-wrap d-flex justify-content-center align-items-center py-3" style="background: transparent;">
+                        <div class="card-image-wrap d-flex justify-content-center align-items-center py-3"
+                            style="background: transparent;">
                             {% if candidate.profile_photo %}
-                            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-img-full" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}"
+                                class="candidate-img-full"
+                                style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                             {% else %}
-                            <div class="avatar-fallback-full d-flex align-items-center justify-content-center" style="width: 140px; height: 140px; background: #fff; border: 1px solid #ddd; border-radius: 12px; color: #333;">
+                            <div class="avatar-fallback-full d-flex align-items-center justify-content-center"
+                                style="width: 140px; height: 140px; background: #fff; border: 1px solid #ddd; border-radius: 12px; color: #333;">
                                 <i class="fa-solid fa-laptop-code" style="font-size: 5rem;"></i>
                             </div>
                             {% endif %}
@@ -114,30 +123,34 @@
                         <div class="card-content flex-grow-1 d-flex flex-column justify-content-between">
                             <div class="mb-3">
                                 <!-- Name -->
-                                <h5 class="fw-bold mb-1" style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
+                                <h5 class="fw-bold mb-1"
+                                    style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
                                     {{ candidate.full_name }}
                                 </h5>
-                                
+
                                 <!-- Job Title / Technical Stack -->
                                 <div class="mb-2 fw-semibold" style="color: #2563eb !important; font-size: 0.95rem;">
                                     {{ candidate.job_title|default:"Professional" }}
                                 </div>
-                                
+
                                 <!-- Profile Details -->
                                 <div class="text-muted small lh-lg" style="color: #334155 !important; font-size: 11px;">
                                     <div class="text-nowrap">{{ candidate.years_of_experience }} Years Experience</div>
-                                    <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
-                                    <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0 }}/ INR {{ candidate.rate_card_inr }}</div>
+                                    <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in
+                                        candidate.location|lower %}/Remote{% endif %}</div>
+                                    <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0
+                                        }}/ INR {{ candidate.rate_card_inr }}</div>
                                     <div class="text-nowrap">Notice Period : {{ candidate.availability }}</div>
                                     <div class="text-nowrap">Resume : Shortlist to View</div>
                                     <div class="text-nowrap">Interviewed Sheet : Shortlist to View</div>
-                                    <div class="text-nowrap">BGV Clearance : Yes</div>
+                                    <div class="text-nowrap">Background Verification Clearance : Yes</div>
                                 </div>
                             </div>
 
                             <!-- Interactive Buttons -->
                             <div class="pt-3 border-top d-flex justify-content-between gap-2 mt-auto">
-                                <a href="{% url 'candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-primary w-50 text-nowrap">
+                                <a href="{% url 'candidate_detail' candidate.id %}"
+                                    class="btn btn-sm btn-outline-primary w-50 text-nowrap">
                                     <i class="fa-solid fa-circle-info me-1"></i>Details
                                 </a>
                                 {% if candidate.id in cart_candidate_ids %}
@@ -145,7 +158,8 @@
                                     <i class="fa-solid fa-circle-check me-1"></i>In Cart
                                 </button>
                                 {% else %}
-                                <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-sm btn-primary-custom w-50 text-nowrap">
+                                <a href="{% url 'add_to_cart' candidate.id %}"
+                                    class="btn btn-sm btn-primary-custom w-50 text-nowrap">
                                     <i class="fa-solid fa-cart-plus me-1"></i>Add Cart
                                 </a>
                                 {% endif %}
