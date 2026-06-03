@@ -338,7 +338,16 @@ def download_candidate_document(request, candidate_id, doc_type):
         messages.error(request, f"No document uploaded for the {doc_type} of candidate {candidate.full_name}.")
         return redirect(request.META.get('HTTP_REFERER', 'client_dashboard'))
         
-    from django.http import FileResponse
-    response = FileResponse(file_field.open(), content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{file_field.name.split("/")[-1]}"'
-    return response
+    # For remote storage (like Cloudinary), redirecting to the URL is the most reliable way to serve the file
+    if hasattr(file_field, 'url') and file_field.url.startswith(('http://', 'https://')):
+        return redirect(file_field.url)
+        
+    try:
+        from django.http import FileResponse
+        response = FileResponse(file_field.open(), content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{file_field.name.split("/")[-1]}"'
+        return response
+    except (OSError, ValueError):
+        if hasattr(file_field, 'url'):
+            return redirect(file_field.url)
+        raise

@@ -91,6 +91,10 @@ class Candidate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def rate_card_inr(self):
+        return int(float(self.rate_card) * 95.75)
+
     class Meta:
         ordering = ['-created_at']
 

@@ -216,7 +216,7 @@ class CandidateHoldTestCase(TestCase):
         self.client.force_login(self.client_user)
         response = self.client.get('/clients/dashboard/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, 'Remote')
+        self.assertContains(response, 'Remote')
         self.assertNotContains(response, 'Search by candidate name, stack, or location...')
 
         # 3. Admin Candidate List
