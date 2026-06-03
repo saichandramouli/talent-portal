@@ -18,56 +18,33 @@
     <div class="row g-4">
         <!-- Left Sidebar: Filters -->
         <div class="col-lg-3">
-            <div class="card card-premium p-4 mb-4 shadow-sm">
-                <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-sliders me-2"></i>Filters</h5>
-                <hr class="my-3">
+            <div class="py-2">
                 <form method="GET" action="{% url 'client_dashboard' %}">
                     <!-- Maintain Search Query -->
                     <input type="hidden" name="q" value="{{ search_query }}">
 
-                    <!-- Tech Stack Filter -->
-                    <div class="mb-3">
-                        <label for="stack_filter" class="form-label mb-2">Technology Stack</label>
-                        <select name="stack" id="stack_filter" class="form-select">
+                    <!-- Tech Stack Filter (Direct Select overlay with auto-submit) -->
+                    <div class="mb-3 position-relative">
+                        <!-- Custom Label styled like a button or header -->
+                        <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                            <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                {% if selected_stack %}
+                                    {% for stack in all_stacks %}
+                                        {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Artificial Intelligence
+                                {% endif %}
+                            </span>
+                            <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                        </div>
+                        <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                        <select name="stack" id="stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
                             <option value="">All Stacks</option>
                             {% for stack in all_stacks %}
                             <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-
-                    <!-- Job Title Filter -->
-                    <div class="mb-3">
-                        <label for="job_title_filter" class="form-label mb-2">Job Title</label>
-                        <select name="job_title" id="job_title_filter" class="form-select">
-                            <option value="">All Job Titles</option>
-                            {% for job in all_job_titles %}
-                            <option value="{{ job.id }}" {% if job_title_filter == job.id|stringformat:"i" %}selected{% endif %}>{{ job.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Skill Filter -->
-                    <div class="mb-4">
-                        <label for="skills_filter" class="form-label mb-2">Skill</label>
-                        <select name="skills" id="skills_filter" class="form-select">
-                            <option value="">All Skills</option>
-                            {% for skill in all_skills %}
-                            <option value="{{ skill.id }}" {% if skills_filter == skill.id|stringformat:"i" %}selected{% endif %}>{{ skill.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-sm btn-primary-custom flex-grow-1">
-                            <i class="fa-solid fa-filter me-2"></i>Apply Filters
-                        </button>
-                        <a href="{% url 'client_dashboard' %}"
-                            class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center px-3"
-                            title="Clear All">
-                            <i class="fa-solid fa-arrows-rotate"></i>
-                        </a>
                     </div>
                 </form>
             </div>
@@ -445,6 +422,8 @@
                     }
                 });
             }
+
+
 
             stackFilter.addEventListener("change", function () {
                 updateJobTitles();
