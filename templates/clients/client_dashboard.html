@@ -24,27 +24,190 @@
                     <input type="hidden" name="q" value="{{ search_query }}">
 
                     <!-- Tech Stack Filter (Direct Select overlay with auto-submit) -->
-                    <div class="mb-3 position-relative">
-                        <!-- Custom Label styled like a button or header -->
-                        <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                            <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
-                                {% if selected_stack %}
-                                    {% for stack in all_stacks %}
-                                        {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Artificial Intelligence
+                    <div class="mb-3">
+                        <label class="form-label mb-2" style="font-weight: 600; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Technology stack</label>
+                        
+                        <!-- Artificial Intelligence Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "4" or selected_stack == "5" or selected_stack == "6" or selected_stack == "7" or selected_stack == "8" or selected_stack == "9" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Artificial Intelligence
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id < 10 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                                 {% endif %}
-                            </span>
-                            <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                                {% endfor %}
+                            </select>
                         </div>
-                        <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                        <select name="stack" id="stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
-                            <option value="">All Stacks</option>
-                            {% for stack in all_stacks %}
-                            <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
-                            {% endfor %}
-                        </select>
+
+                        <!-- Enterprise Apps Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "16" or selected_stack == "17" or selected_stack == "18" or selected_stack == "19" or selected_stack == "20" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Enterprise Apps
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="new_stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id >= 16 and stack.id <= 20 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- IT Infrastructure Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "21" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        IT Infrastructure
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="it_infrastructure_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 21 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Application Services Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "22" or selected_stack == "23" or selected_stack == "24" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Application Services
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="application_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id >= 22 and stack.id <= 24 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Cloud Solutions Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "13" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Cloud Solutions
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="cloud_solutions_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 13 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Digital Services Dropdown -->
+                        <div class="position-relative mb-3">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "14" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Digital Services
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="digital_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 14 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Engineering Services Dropdown -->
+                        <div class="position-relative">
+                            <!-- Custom Label styled like a button or header -->
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                                    {% if selected_stack and selected_stack == "15" %}
+                                        {% for stack in all_stacks %}
+                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        Engineering Services
+                                    {% endif %}
+                                </span>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
+                            </div>
+                            <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
+                            <select name="stack" id="engineering_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                                <option value="">All Stacks</option>
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 15 %}
+                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
