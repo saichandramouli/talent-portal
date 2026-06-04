@@ -19,83 +19,95 @@
         <!-- Left Sidebar: Filters -->
         <div class="col-lg-3">
             <div class="py-2">
-                <form method="GET" action="{% url 'client_dashboard' %}">
+                <form id="filter-form" method="GET" action="{% url 'client_dashboard' %}">
                     <!-- Maintain Search Query -->
-                    <input type="hidden" name="q" value="{{ search_query }}">
+                    <input type="hidden" id="filter-search-query" name="q" value="{{ search_query }}">
 
                     <!-- Tech Stack Filter (Direct Select overlay with auto-submit) -->
                     <div class="mb-3">
-                        <label class="form-label mb-2" style="font-weight: 600; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Technology stack</label>
-                        
+                        <label class="form-label mb-2"
+                            style="font-weight: 600; font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Technology
+                            stack</label>
+
                         <!-- Artificial Intelligence Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "4" or selected_stack == "5" or selected_stack == "6" or selected_stack == "7" or selected_stack == "8" or selected_stack == "9" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Artificial Intelligence
+                                    Artificial Intelligence
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="stack_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
-                                {% if stack.id < 10 %}
-                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% if stack.id < 10 %} <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                                 {% endif %}
-                                {% endfor %}
+                                    {% endfor %}
                             </select>
                         </div>
 
                         <!-- Enterprise Apps Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "16" or selected_stack == "17" or selected_stack == "18" or selected_stack == "19" or selected_stack == "20" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Enterprise Apps
+                                    Enterprise Apps
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="new_stack_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="new_stack_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
-                                {% if stack.id >= 16 and stack.id <= 20 %}
-                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% if stack.id >= 16 and stack.id <= 20 %} <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                                 {% endif %}
-                                {% endfor %}
+                                    {% endfor %}
                             </select>
                         </div>
 
                         <!-- IT Infrastructure Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "21" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        IT Infrastructure
+                                    IT Infrastructure
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="it_infrastructure_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="it_infrastructure_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
                                 {% if stack.id == 21 %}
@@ -108,46 +120,53 @@
                         <!-- Application Services Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "22" or selected_stack == "23" or selected_stack == "24" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Application Services
+                                    Application Services
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="application_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="application_services_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
-                                {% if stack.id >= 22 and stack.id <= 24 %}
-                                <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
+                                {% if stack.id >= 22 and stack.id <= 24 %} <option value="{{ stack.id }}" {% if selected_stack == stack.id|stringformat:"i" %}selected{% endif %}>{{ stack.name }}</option>
                                 {% endif %}
-                                {% endfor %}
+                                    {% endfor %}
                             </select>
                         </div>
 
                         <!-- Cloud Solutions Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "13" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Cloud Solutions
+                                    Cloud Solutions
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="cloud_solutions_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="cloud_solutions_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
                                 {% if stack.id == 13 %}
@@ -160,20 +179,24 @@
                         <!-- Digital Services Dropdown -->
                         <div class="position-relative mb-3">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "14" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Digital Services
+                                    Digital Services
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="digital_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="digital_services_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
                                 {% if stack.id == 14 %}
@@ -186,20 +209,24 @@
                         <!-- Engineering Services Dropdown -->
                         <div class="position-relative">
                             <!-- Custom Label styled like a button or header -->
-                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2" style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
-                                <span class="form-label mb-0" style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
+                            <div class="d-flex align-items-center justify-content-between mb-0 px-3 py-2"
+                                style="pointer-events: none; background: #f1f5f9; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <span class="form-label mb-0"
+                                    style="font-weight: 600; font-size: 0.82rem; color: #000000 !important; text-transform: uppercase; letter-spacing: 0.08em;">
                                     {% if selected_stack and selected_stack == "15" %}
-                                        {% for stack in all_stacks %}
-                                            {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
-                                        {% endfor %}
+                                    {% for stack in all_stacks %}
+                                    {% if selected_stack == stack.id|stringformat:"i" %}{{ stack.name }}{% endif %}
+                                    {% endfor %}
                                     {% else %}
-                                        Engineering Services
+                                    Engineering Services
                                     {% endif %}
                                 </span>
                                 <span class="text-primary fw-bold" style="font-size: 1.1rem; line-height: 1;">+</span>
                             </div>
                             <!-- Invisible Select overlaid exactly on top of the text/icon with auto-submit -->
-                            <select name="stack" id="engineering_services_filter" onchange="this.form.submit()" class="form-select position-absolute top-0 start-0 w-100 h-100" style="opacity: 0; cursor: pointer; padding: 0;">
+                            <select name="stack" id="engineering_services_filter" onchange="applyFilters(this)"
+                                class="form-select position-absolute top-0 start-0 w-100 h-100"
+                                style="opacity: 0; cursor: pointer; padding: 0;">
                                 <option value="">All Stacks</option>
                                 {% for stack in all_stacks %}
                                 {% if stack.id == 15 %}
@@ -236,7 +263,7 @@
             </div>
 
             <!-- Candidates Grid -->
-            <div class="row g-4">
+            <div id="candidates-grid" class="row g-4">
                 {% for candidate in candidates %}
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div
@@ -271,7 +298,8 @@
                                 </div>
 
                                 <!-- Profile Details -->
-                                <div class="text-muted small lh-lg" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
+                                <div class="text-muted small lh-lg"
+                                    style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
                                     <div class="text-nowrap">{{ candidate.years_of_experience }} Years Experience</div>
                                     <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
                                     <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0 }}/ INR {{ candidate.rate_card_inr }}</div>
@@ -314,135 +342,217 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const stackFilter = document.getElementById("stack_filter");
+    // Global filter function triggered onchange of select elements
+    function applyFilters(changedSelect) {
+        const form = document.getElementById("filter-form");
+        if (!form) return;
+
+        // Clear all other stack selects to avoid conflict
+        const selects = form.querySelectorAll('select[name="stack"]');
+        selects.forEach(select => {
+            if (select !== changedSelect) {
+                select.value = "";
+            }
+        });
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        // Check search query from both sources
+        const searchInput = document.querySelector('input[name="q"]');
+        if (searchInput && searchInput.value) {
+            params.set('q', searchInput.value);
+        } else {
+            const qVal = formData.get('q');
+            if (qVal) params.set('q', qVal);
+        }
+
+        // Set stack
+        if (changedSelect && changedSelect.value) {
+            params.set('stack', changedSelect.value);
+        }
+
+        const queryString = params.toString();
+        const targetUrl = `${form.getAttribute('action')}?${queryString}`;
+
+        history.pushState(null, '', targetUrl);
+
+        fetch(targetUrl)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const newGrid = doc.getElementById('candidates-grid');
+                const currentGrid = document.getElementById('candidates-grid');
+                if (newGrid && currentGrid) {
+                    currentGrid.innerHTML = newGrid.innerHTML;
+                }
+
+                const newForm = doc.getElementById('filter-form');
+                const currentForm = document.getElementById('filter-form');
+                if (newForm && currentForm) {
+                    currentForm.innerHTML = newForm.innerHTML;
+                }
+
+                // Re-run the filter logic hooks
+                initializeFilters();
+            })
+            .catch(err => console.error('Error fetching filtered candidates:', err));
+    }
+
+    // Helper functions for dynamic job titles and skills based on stack
+    let originalOptions = [];
+    let originalSkillOptions = [];
+    
+    const mlSkills = [
+        "Python", "ML", "DL", "TensorFlow", "PyTorch", "SQL", "MLOps", "Docker", "AWS",
+        "Model Deployment", "R", "Statistics", "Pandas", "NumPy", "Tableau", "Power BI",
+        "A/B Testing", "NLP", "CV", "APIs", "Experimentation", "Algorithms",
+        "Data Analysis", "Data Visualization", "Excel"
+    ];
+
+    const nnSkills = [
+        "Python", "Text Analytics", "NLP", "Data Processing", "Regex", "NLTK", "SpaCy", "SQL",
+        "Computer Vision", "OpenCV", "CNN", "Image Processing", "TensorFlow", "PyTorch",
+        "Deep Learning", "DL", "Image Annotation", "Bounding Box", "Segmentation",
+        "Speech Annotation", "Audio Labeling", "Transcription", "Speech Recognition",
+        "Phonetics Basics", "Neural Networks", "RNN", "Transformers", "Model Training", "Optimization"
+    ];
+
+    const naturalLearningSkills = [
+        "Python", "NLP", "Transformers", "BERT", "GPT", "NLTK", "SpaCy", "Hugging Face",
+        "ML", "DL", "Text Mining", "Research", "Text Analytics", "SQL", "Pandas",
+        "Data Visualization", "Pytorch", "PyTorch", "Retrieval Augmented Generation",
+        "Retrieval Augmented Generation (RAG)", "Text Annotation", "Named Entity Recognition (NER)",
+        "Sentiment Labeling", "Linguistics Basics"
+    ];
+
+    const dataEngineeringSkills = [
+        "Python", "SQL", "ETL", "Data Pipelines", "Spark", "Hadoop", "Airflow", "AWS",
+        "Data Warehousing", "Kafka", "Data Modeling", "dbt", "BI Tools", "Tableau", "Power BI",
+        "Big Data", "Java", "Hive", "HDFS", "Distributed Systems", "Informatica", "SSIS",
+        "Data Integration", "ML Basics", "ML", "Statistics", "Pandas", "NumPy", "Visualization",
+        "Data Visualization", "Data Annotation", "Data Labeling", "Image/Text Tagging", "QA",
+        "Tools (Labelbox/CVAT)", "Attention to Detail", "Data Validation", "Annotation Review",
+        "Accuracy Check", "Guidelines", "Reporting"
+    ];
+
+    const generativeAISkills = [
+        "Python", "Generative AI", "LLM", "Transformers", "OpenAI APIs", "Prompt Engineering",
+        "LangChain", "Fine-tuning", "GPT", "Hugging Face", "RAG", "Retrieval Augmented Generation (RAG)",
+        "AI Tools", "NLP Basics", "NLP", "Content Generation", "Testing & Iteration", "AI Integration",
+        "APIs", "ML", "Backend Development", "Cloud", "Deployment", "AI Solutions", "System Design",
+        "Client Requirements", "Chatbots", "Dialogflow", "Rasa", "Speech APIs", "Intent Recognition",
+        "Text Annotation", "Prompt Evaluation", "NER", "Named Entity Recognition (NER)",
+        "Sentiment Analysis", "Data Labeling", "LLM Evaluation", "Human Feedback", "RLHF",
+        "Quality Analysis", "QA", "Data Validation"
+    ];
+
+    const mlopsSkills = [
+        "Python", "MLOps", "CI/CD", "Docker", "Kubernetes", "Mlflow", "Kubeflow", "AWS",
+        "Model Deployment", "ML Platforms", "APIs", "Cloud (AWS/GCP/Azure)", "Cloud", "GCP", "Azure",
+        "Data Pipelines", "Scalability", "Infrastructure", "Distributed Systems", "Spark",
+        "System Design", "DevOps", "Monitoring", "Automation", "ML Deployment", "Flask", "FastAPI"
+    ];
+
+    const mlJobTitles = [
+        "Machine Learning Engineer",
+        "Data Scientist",
+        "AI Engineer",
+        "Applied Scientist",
+        "ML Analyst"
+    ];
+
+    const nnJobTitles = [
+        "Text Analytics Engineer",
+        "Computer Vision Engineer",
+        "Speech Annotation",
+        "Neural Network Engineer"
+    ];
+
+    const naturalLearningJobTitles = [
+        "NLP Engineer",
+        "NLP Scientist",
+        "Data Scientist (NLP)",
+        "NLP Annotator"
+    ];
+
+    const dataEngineeringJobTitles = [
+        "Data Engineer",
+        "Analytics Engineer",
+        "AI Data Engineer",
+        "Big Data Engineer",
+        "ETL Developer",
+        "Data Analyst (AI-focused)",
+        "Data Annotator/Annotation Specialist",
+        "Annotation Quality Analyst"
+    ];
+
+    const generativeAIJobTitles = [
+        "Generative AI Engineer (Gen AI)",
+        "LLM Engineer",
+        "Prompt Engineer",
+        "AI Application Engineer",
+        "AI Solutions Engineer",
+        "Conversational AI Developer",
+        "Text / LLM Annotation",
+        "Human Feedback / AI Evaluation"
+    ];
+
+    const mlopsJobTitles = [
+        "MLOps Engineer",
+        "AI Platform Engineer",
+        "ML Infrastructure Engineer",
+        "DevOps Engineer (AI/ML)",
+        "Model Deployment Engineer"
+    ];
+
+    function initializeFilters() {
+        // Find elements dynamically since form can be swapped
         const jobTitleFilter = document.getElementById("job_title_filter");
-
         const skillsFilter = document.getElementById("skills_filter");
+        
+        const stackFilters = [
+            document.getElementById("stack_filter"),
+            document.getElementById("new_stack_filter"),
+            document.getElementById("it_infrastructure_filter"),
+            document.getElementById("application_services_filter"),
+            document.getElementById("cloud_solutions_filter"),
+            document.getElementById("digital_services_filter"),
+            document.getElementById("engineering_services_filter")
+        ].filter(el => el !== null);
 
-        if (stackFilter && jobTitleFilter && skillsFilter) {
-            // Keep a copy of all original job title options
-            const originalOptions = Array.from(jobTitleFilter.options).map(opt => ({
-                value: opt.value,
-                text: opt.text,
-                selected: opt.selected
-            }));
+        if (stackFilters.length > 0 && jobTitleFilter && skillsFilter) {
+            // Store original options once
+            if (originalOptions.length === 0) {
+                originalOptions = Array.from(jobTitleFilter.options).map(opt => ({
+                    value: opt.value,
+                    text: opt.text,
+                    selected: opt.selected
+                }));
+            }
+            if (originalSkillOptions.length === 0) {
+                originalSkillOptions = Array.from(skillsFilter.options).map(opt => ({
+                    value: opt.value,
+                    text: opt.text,
+                    selected: opt.selected
+                }));
+            }
 
-            // Keep a copy of all original skill options
-            const originalSkillOptions = Array.from(skillsFilter.options).map(opt => ({
-                value: opt.value,
-                text: opt.text,
-                selected: opt.selected
-            }));
-
-            const mlSkills = [
-                "Python", "ML", "DL", "TensorFlow", "PyTorch", "SQL", "MLOps", "Docker", "AWS",
-                "Model Deployment", "R", "Statistics", "Pandas", "NumPy", "Tableau", "Power BI",
-                "A/B Testing", "NLP", "CV", "APIs", "Experimentation", "Algorithms",
-                "Data Analysis", "Data Visualization", "Excel"
-            ];
-
-            const nnSkills = [
-                "Python", "Text Analytics", "NLP", "Data Processing", "Regex", "NLTK", "SpaCy", "SQL",
-                "Computer Vision", "OpenCV", "CNN", "Image Processing", "TensorFlow", "PyTorch",
-                "Deep Learning", "DL", "Image Annotation", "Bounding Box", "Segmentation",
-                "Speech Annotation", "Audio Labeling", "Transcription", "Speech Recognition",
-                "Phonetics Basics", "Neural Networks", "RNN", "Transformers", "Model Training", "Optimization"
-            ];
-
-            const naturalLearningSkills = [
-                "Python", "NLP", "Transformers", "BERT", "GPT", "NLTK", "SpaCy", "Hugging Face",
-                "ML", "DL", "Text Mining", "Research", "Text Analytics", "SQL", "Pandas",
-                "Data Visualization", "Pytorch", "PyTorch", "Retrieval Augmented Generation",
-                "Retrieval Augmented Generation (RAG)", "Text Annotation", "Named Entity Recognition (NER)",
-                "Sentiment Labeling", "Linguistics Basics"
-            ];
-
-            const dataEngineeringSkills = [
-                "Python", "SQL", "ETL", "Data Pipelines", "Spark", "Hadoop", "Airflow", "AWS",
-                "Data Warehousing", "Kafka", "Data Modeling", "dbt", "BI Tools", "Tableau", "Power BI",
-                "Big Data", "Java", "Hive", "HDFS", "Distributed Systems", "Informatica", "SSIS",
-                "Data Integration", "ML Basics", "ML", "Statistics", "Pandas", "NumPy", "Visualization",
-                "Data Visualization", "Data Annotation", "Data Labeling", "Image/Text Tagging", "QA",
-                "Tools (Labelbox/CVAT)", "Attention to Detail", "Data Validation", "Annotation Review",
-                "Accuracy Check", "Guidelines", "Reporting"
-            ];
-
-            const generativeAISkills = [
-                "Python", "Generative AI", "LLM", "Transformers", "OpenAI APIs", "Prompt Engineering",
-                "LangChain", "Fine-tuning", "GPT", "Hugging Face", "RAG", "Retrieval Augmented Generation (RAG)",
-                "AI Tools", "NLP Basics", "NLP", "Content Generation", "Testing & Iteration", "AI Integration",
-                "APIs", "ML", "Backend Development", "Cloud", "Deployment", "AI Solutions", "System Design",
-                "Client Requirements", "Chatbots", "Dialogflow", "Rasa", "Speech APIs", "Intent Recognition",
-                "Text Annotation", "Prompt Evaluation", "NER", "Named Entity Recognition (NER)",
-                "Sentiment Analysis", "Data Labeling", "LLM Evaluation", "Human Feedback", "RLHF",
-                "Quality Analysis", "QA", "Data Validation"
-            ];
-
-            const mlopsSkills = [
-                "Python", "MLOps", "CI/CD", "Docker", "Kubernetes", "Mlflow", "Kubeflow", "AWS",
-                "Model Deployment", "ML Platforms", "APIs", "Cloud (AWS/GCP/Azure)", "Cloud", "GCP", "Azure",
-                "Data Pipelines", "Scalability", "Infrastructure", "Distributed Systems", "Spark",
-                "System Design", "DevOps", "Monitoring", "Automation", "ML Deployment", "Flask", "FastAPI"
-            ];
-
-            const mlJobTitles = [
-                "Machine Learning Engineer",
-                "Data Scientist",
-                "AI Engineer",
-                "Applied Scientist",
-                "ML Analyst"
-            ];
-
-            const nnJobTitles = [
-                "Text Analytics Engineer",
-                "Computer Vision Engineer",
-                "Speech Annotation",
-                "Neural Network Engineer"
-            ];
-
-            const naturalLearningJobTitles = [
-                "NLP Engineer",
-                "NLP Scientist",
-                "Data Scientist (NLP)",
-                "NLP Annotator"
-            ];
-
-            const dataEngineeringJobTitles = [
-                "Data Engineer",
-                "Analytics Engineer",
-                "AI Data Engineer",
-                "Big Data Engineer",
-                "ETL Developer",
-                "Data Analyst (AI-focused)",
-                "Data Annotator/Annotation Specialist",
-                "Annotation Quality Analyst"
-            ];
-
-            const generativeAIJobTitles = [
-                "Generative AI Engineer (Gen AI)",
-                "LLM Engineer",
-                "Prompt Engineer",
-                "AI Application Engineer",
-                "AI Solutions Engineer",
-                "Conversational AI Developer",
-                "Text / LLM Annotation",
-                "Human Feedback / AI Evaluation"
-            ];
-
-            const mlopsJobTitles = [
-                "MLOps Engineer",
-                "AI Platform Engineer",
-                "ML Infrastructure Engineer",
-                "DevOps Engineer (AI/ML)",
-                "Model Deployment Engineer"
-            ];
+            function getActiveStackText() {
+                for (let filter of stackFilters) {
+                    if (filter.value !== "") {
+                        return filter.options[filter.selectedIndex].text.trim().toLowerCase();
+                    }
+                }
+                return "";
+            }
 
             function updateJobTitles() {
-                const selectedText = stackFilter.options[stackFilter.selectedIndex].text.trim().toLowerCase();
+                const selectedText = getActiveStackText();
                 const currentSelectedValue = jobTitleFilter.value;
 
-                // Clear existing options
                 jobTitleFilter.innerHTML = "";
 
                 originalOptions.forEach(opt => {
@@ -452,71 +562,56 @@
                         const isMLTitle = mlJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isMLTitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("neural networks")) {
                         const isNNTitle = nnJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isNNTitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("natural learning")) {
                         const isNLTitle = naturalLearningJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isNLTitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("data engineering")) {
                         const isDETitle = dataEngineeringJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isDETitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("generative ai")) {
                         const isGenAITitle = generativeAIJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isGenAITitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("mlops")) {
                         const isMLOpsTitle = mlopsJobTitles.some(title => title.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isMLOpsTitle) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             jobTitleFilter.add(newOpt);
                         }
                     } else {
                         const newOpt = new Option(opt.text, opt.value);
-                        if (opt.value === currentSelectedValue) {
-                            newOpt.selected = true;
-                        }
+                        if (opt.value === currentSelectedValue) newOpt.selected = true;
                         jobTitleFilter.add(newOpt);
                     }
                 });
             }
 
             function updateSkills() {
-                const selectedText = stackFilter.options[stackFilter.selectedIndex].text.trim().toLowerCase();
+                const selectedText = getActiveStackText();
                 const currentSelectedValue = skillsFilter.value;
 
-                // Clear existing options
                 skillsFilter.innerHTML = "";
 
                 originalSkillOptions.forEach(opt => {
@@ -526,77 +621,82 @@
                         const isMLSkill = mlSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isMLSkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("neural networks")) {
                         const isNNSkill = nnSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isNNSkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("natural learning")) {
                         const isNLSkill = naturalLearningSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isNLSkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("data engineering")) {
                         const isDESkill = dataEngineeringSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isDESkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("generative ai")) {
                         const isGenAISkill = generativeAISkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isGenAISkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else if (selectedText.includes("mlops")) {
                         const isMLOpsSkill = mlopsSkills.some(skill => skill.toLowerCase() === opt.text.trim().toLowerCase());
                         if (isAllOption || isMLOpsSkill) {
                             const newOpt = new Option(opt.text, opt.value);
-                            if (opt.value === currentSelectedValue) {
-                                newOpt.selected = true;
-                            }
+                            if (opt.value === currentSelectedValue) newOpt.selected = true;
                             skillsFilter.add(newOpt);
                         }
                     } else {
                         const newOpt = new Option(opt.text, opt.value);
-                        if (opt.value === currentSelectedValue) {
-                            newOpt.selected = true;
-                        }
+                        if (opt.value === currentSelectedValue) newOpt.selected = true;
                         skillsFilter.add(newOpt);
                     }
                 });
             }
 
-
-
-            stackFilter.addEventListener("change", function () {
-                updateJobTitles();
-                updateSkills();
+            stackFilters.forEach(filter => {
+                filter.removeEventListener("change", updateJobTitles);
+                filter.removeEventListener("change", updateSkills);
+                filter.addEventListener("change", function () {
+                    updateJobTitles();
+                    updateSkills();
+                });
             });
 
-            // Run once on load to handle pre-selected stack
             updateJobTitles();
             updateSkills();
         }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeFilters();
+
+        // Intercept search form submissions to make them dynamic (AJAX)
+        document.addEventListener("submit", function (e) {
+            const form = e.target.closest("form");
+            if (form && form.method.toLowerCase() === "get") {
+                const action = form.getAttribute("action");
+                if (action && (action.includes("client") || action.includes("dashboard") || action === "")) {
+                    e.preventDefault();
+                    // Use applyFilters with the active select element to query everything
+                    const activeSelect = document.querySelector('select[name="stack"]:not([value=""])') || document.querySelector('select[name="stack"]');
+                    applyFilters(activeSelect);
+                }
+            }
+        });
     });
 </script>
 {% endblock %}

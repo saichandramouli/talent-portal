@@ -73,6 +73,9 @@ def cart_view(request):
     # Map credential request status
     candidate_ids = [item.candidate.id for item in cart_items]
     from candidates.models import CredentialRequest
+    for item in cart_items:
+        CredentialRequest.objects.get_or_create(client=client, candidate=item.candidate)
+
     credential_requests = {
         req.candidate_id: req
         for req in CredentialRequest.objects.filter(client=client, candidate_id__in=candidate_ids)
@@ -95,15 +98,22 @@ def add_to_cart(request, candidate_id):
     # Prevent duplicates
     cart_item, created = Cart.objects.get_or_create(client=client, candidate=candidate)
     
+    # Automatically send credential request to the recruiter
+    from candidates.models import CredentialRequest
+    req, req_created = CredentialRequest.objects.get_or_create(client=client, candidate=candidate)
+    if not req_created and req.status == 'rejected':
+        req.status = 'pending'
+        req.save()
+
     if created:
         # Trigger email notification to the recruiter asynchronously
         try:
             send_cart_notification_task.delay(client.id, candidate.id)
-            messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. A notification email was sent to their recruiter, {candidate.recruiter.full_name}.")
+            messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. A credential request has been sent to their recruiter, {candidate.recruiter.full_name}.")
         except Exception as e:
             print(f"Celery task dispatch failed: {e}")
             # Fallback to direct call in debug mode, or just gracefully succeed without crashing
-            messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. (Recruiter email notification will be sent shortly).")
+            messages.success(request, f"Candidate {candidate.full_name} has been added to your cart. (A credential request has been sent to their recruiter).")
     else:
         messages.warning(request, f"Candidate {candidate.full_name} is already in your cart.")
         

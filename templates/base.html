@@ -65,9 +65,11 @@
                 </li>
                 {% endif %}
 
-                <p>System</p>
                 <li>
-                    <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    <form method="post" action="{% url 'logout' %}" id="logout-sidebar-form" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                    <a href="#" onclick="document.getElementById('logout-sidebar-form').submit(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </li>
             </ul>
         </nav>
@@ -126,7 +128,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-outline-danger btn-sm px-3" href="{% url 'logout' %}">
+                                <form method="post" action="{% url 'logout' %}" id="logout-client-form" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                <a class="btn btn-outline-danger btn-sm px-3" href="#" onclick="document.getElementById('logout-client-form').submit(); return false;">
                                     <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
                                 </a>
                             </li>
@@ -142,7 +147,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-outline-danger btn-sm px-3" href="{% url 'logout' %}">
+                                <form method="post" action="{% url 'logout' %}" id="logout-recruiter-form" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                <a class="btn btn-outline-danger btn-sm px-3" href="#" onclick="document.getElementById('logout-recruiter-form').submit(); return false;">
                                     <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
                                 </a>
                             </li>
