@@ -226,21 +226,30 @@ button,
 }
 
 .top-navbar {
-    background: #ffffff;
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.85) !important; /* Premium Dark Slate */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     padding: 22px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .top-navbar,
 .top-navbar .navbar-text,
-.top-navbar .navbar-text strong,
 .top-navbar .nav-link {
-    color: var(--text-main) !important;
+    color: rgba(241, 245, 249, 0.9) !important; /* Very light slate */
     font-size: 0.95rem;
 }
 
-.top-navbar .nav-link:hover {
-    color: var(--primary-color) !important;
+.top-navbar .navbar-text strong {
+    color: #ffffff !important;
+}
+
+.top-navbar .nav-link:hover,
+.top-navbar .nav-link.active {
+    color: #3b82f6 !important; /* Soft blue */
 }
 
 .top-navbar .navbar-brand,
