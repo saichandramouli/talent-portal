@@ -12,7 +12,7 @@ from notifications.tasks import send_cart_notification_task
 @client_required
 def client_dashboard(request):
     client = request.user
-    candidates = Candidate.objects.filter(is_on_hold=False).order_by('-created_at')
+    candidates = Candidate.objects.filter(is_on_hold=False).select_related('job_title', 'recruiter').prefetch_related('technical_stack', 'skills').order_by('-created_at')
     
     # Get all tech stacks, job titles, and skills for filter dropdowns
     all_stacks = TechnologyStack.objects.all()

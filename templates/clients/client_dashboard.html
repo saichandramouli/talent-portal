@@ -86,7 +86,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1">Browse Professional Talent</h1>
+            <h1 class="h3 mb-1">Hire Instantly</h1>
             <p class="text-muted mb-0">Search and filter candidates. Add them to your cart to request details.</p>
         </div>
         <a href="{% url 'cart_view' %}" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2">
@@ -303,8 +303,8 @@
                         <div class="card-image-wrap d-flex justify-content-center align-items-center py-3"
                             style="background: transparent;">
                             {% if candidate.profile_photo %}
-                            <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}"
-                                class="candidate-img-full"
+                            <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}"
+                                class="candidate-img-full" loading="lazy"
                                 style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                             {% else %}
                             <div class="avatar-fallback-full d-flex align-items-center justify-content-center"

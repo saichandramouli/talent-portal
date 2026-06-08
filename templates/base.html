@@ -88,7 +88,7 @@
 
                     {% if user.is_authenticated %}
                     <span class="navbar-text {% if user.role == 'client' or user.role == 'recruiter' %}ms-3{% endif %}">
-                        Welcome, <strong>{{ user.full_name }}</strong>
+                        Welcome, <strong>{{ user.full_name|capfirst }}</strong>
                         <span class="badge bg-secondary ms-1">{{ user.role|title }}</span>
                         {% if user.team %}
                         <span class="badge bg-primary ms-1">{{ user.team.name }}</span>
@@ -151,6 +151,59 @@
                                     {% csrf_token %}
                                 </form>
                                 <a class="btn btn-outline-danger btn-sm px-3" href="#" onclick="document.getElementById('logout-recruiter-form').submit(); return false;">
+                                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                                </a>
+                            </li>
+                            {% elif user.role == 'admin' or user.is_superuser %}
+                            <!-- Mobile-only Admin Sidebar links inside Top Nav Collapse -->
+                            <li class="nav-item d-lg-none border-bottom w-100 py-2 mb-2">
+                                <span class="text-white-50 small fw-bold text-uppercase">Admin Operations</span>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">
+                                    <i class="fa-solid fa-chart-line me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'recruiter_list' %}active{% endif %}" href="{% url 'recruiter_list' %}">
+                                    <i class="fa-solid fa-user-tie me-2"></i> Recruiters
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'client_list' %}active{% endif %}" href="{% url 'client_list' %}">
+                                    <i class="fa-solid fa-users me-2"></i> Clients
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'team_list' %}active{% endif %}" href="{% url 'team_list' %}">
+                                    <i class="fa-solid fa-people-group me-2"></i> Teams
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'stack_list' %}active{% endif %}" href="{% url 'stack_list' %}">
+                                    <i class="fa-solid fa-layer-group me-2"></i> Tech Stacks
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'job_title_list' %}active{% endif %}" href="{% url 'job_title_list' %}">
+                                    <i class="fa-solid fa-briefcase me-2"></i> Job Titles
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'skill_list' %}active{% endif %}" href="{% url 'skill_list' %}">
+                                    <i class="fa-solid fa-screwdriver-wrench me-2"></i> Skills
+                                </a>
+                            </li>
+                            <li class="nav-item d-lg-none w-100 mb-3 border-bottom pb-2">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'admin_candidate_list' %}active{% endif %}" href="{% url 'admin_candidate_list' %}">
+                                    <i class="fa-solid fa-user-group me-2"></i> Candidates
+                                </a>
+                            </li>
+                            <li class="nav-item w-100">
+                                <form method="post" action="{% url 'logout' %}" id="logout-admin-form" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                <a class="btn btn-outline-danger btn-sm px-3 w-100 text-center" href="#" onclick="document.getElementById('logout-admin-form').submit(); return false;">
                                     <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
                                 </a>
                             </li>

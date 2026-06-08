@@ -33,7 +33,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     {% if candidate.profile_photo %}
-                                        <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-card-avatar me-3">
+                                        <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}" class="candidate-card-avatar me-3" loading="lazy">
                                     {% else %}
                                         <div class="avatar-circle-sm bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px; font-weight: 600;">
                                             {{ candidate.full_name|slice:":2"|upper }}

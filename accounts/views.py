@@ -67,7 +67,7 @@ def admin_dashboard(request):
     total_stacks = TechnologyStack.objects.count()
     active_carts = Cart.objects.count()
     
-    recent_candidates = Candidate.objects.order_by('-created_at')[:5]
+    recent_candidates = Candidate.objects.select_related('recruiter').order_by('-created_at')[:5]
     recruiters = User.objects.filter(role='recruiter').order_by('-created_at')
     clients = User.objects.filter(role='client').order_by('-created_at')
     

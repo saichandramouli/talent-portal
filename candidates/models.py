@@ -95,6 +95,24 @@ class Candidate(models.Model):
     def rate_card_inr(self):
         return int(float(self.rate_card) * 95.75)
 
+    @property
+    def profile_photo_optimized_url(self):
+        if not self.profile_photo:
+            return ""
+        url = self.profile_photo.url
+        if "upload/" in url:
+            return url.replace("upload/", "upload/f_auto,q_auto/")
+        return url
+
+    @property
+    def profile_photo_thumbnail_url(self):
+        if not self.profile_photo:
+            return ""
+        url = self.profile_photo.url
+        if "upload/" in url:
+            return url.replace("upload/", "upload/f_auto,q_auto,w_150,h_150,c_fill/")
+        return url
+
     class Meta:
         ordering = ['-created_at']
 

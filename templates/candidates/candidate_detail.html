@@ -25,7 +25,7 @@
             <div class="col-md-4 text-center border-end mb-4 mb-md-0">
                 <div class="py-3">
                     {% if candidate.profile_photo %}
-                        <img src="{{ candidate.profile_photo.url }}" alt="{{ candidate.full_name }}" class="candidate-avatar-large mb-3">
+                        <img src="{{ candidate.profile_photo_optimized_url }}" alt="{{ candidate.full_name }}" class="candidate-avatar-large mb-3" loading="lazy">
                     {% else %}
                         <div class="avatar-circle-lg bg-indigo text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem; font-weight: 700;">
                             {{ candidate.full_name|slice:":2"|upper }}

@@ -13,7 +13,7 @@ def recruiter_dashboard(request):
     recruiter = request.user
     
     # Stats
-    own_candidates = Candidate.objects.filter(recruiter=recruiter)
+    own_candidates = Candidate.objects.filter(recruiter=recruiter).prefetch_related('technical_stack', 'skills')
     total_own = own_candidates.count()
     
     if recruiter.team:
@@ -104,7 +104,7 @@ def candidate_delete(request, pk):
 @login_required
 @role_required(['admin'])
 def admin_candidate_list(request):
-    candidates = Candidate.objects.all().order_by('-created_at')
+    candidates = Candidate.objects.all().select_related('recruiter', 'recruiter__team').prefetch_related('technical_stack', 'skills').order_by('-created_at')
     return render(request, 'admin/candidate_list.html', {'candidates': candidates})
 
 @login_required

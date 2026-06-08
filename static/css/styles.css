@@ -226,7 +226,8 @@ button,
 }
 
 .top-navbar {
-    background: rgba(15, 23, 42, 0.85) !important; /* Premium Dark Slate */
+    background: rgba(15, 23, 42, 0.85) !important;
+    /* Premium Dark Slate */
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -239,7 +240,8 @@ button,
 .top-navbar,
 .top-navbar .navbar-text,
 .top-navbar .nav-link {
-    color: rgba(241, 245, 249, 0.9) !important; /* Very light slate */
+    color: rgba(241, 245, 249, 0.9) !important;
+    /* Very light slate */
     font-size: 0.95rem;
 }
 
@@ -249,7 +251,8 @@ button,
 
 .top-navbar .nav-link:hover,
 .top-navbar .nav-link.active {
-    color: #3b82f6 !important; /* Soft blue */
+    color: #3b82f6 !important;
+    /* Soft blue */
 }
 
 .top-navbar .navbar-brand,
@@ -930,4 +933,20 @@ footer {
     background-color: var(--warning-bg) !important;
     color: #000000 !important;
     border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+/* --- Mobile and Tablet Responsiveness --- */
+@media (max-width: 991.98px) {
+    .wrapper {
+        display: block !important;
+    }
+    #sidebar {
+        display: none !important;
+    }
+    .content-body {
+        padding: 20px 15px !important;
+    }
+    .top-navbar {
+        padding: 15px 20px !important;
+    }
 }
