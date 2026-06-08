@@ -77,7 +77,7 @@ def send_recruiter_creation_email(recruiter, password):
         f"Email Address: {recruiter.email}\n"
         f"Password: {password}\n\n"
         f"You can log in to your dashboard here:\n"
-        f"http://127.0.0.1:8000/accounts/login/\n\n"
+        f"https://talentplatform.people-prime.com/accounts/login/\n\n"
         f"Thank you,\n"
         f"Talent Management Portal Team"
     )
