@@ -1,0 +1,81 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Corporate Clients – My Space Admin{% endblock %}
+{% block page_title %}Corporate Clients{% endblock %}
+{% block page_subtitle %}My Space Administration{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 fw-bold mb-0">Corporate Clients</h1>
+    <a href="{% url 'admin_corporate_client_create' %}" class="btn-ms-primary">
+        <i class="fa-solid fa-plus me-1"></i> Create Client
+    </a>
+</div>
+
+{% if clients %}
+<div class="ms-card overflow-hidden">
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Contact Person</th>
+                <th>Assigned Recruiters</th>
+                <th>Jobs</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>
+                    <div class="fw-semibold">{{ client.company_name }}</div>
+                    {% if client.industry %}<div class="text-muted" style="font-size:0.72rem;">{{ client.industry }}</div>{% endif %}
+                </td>
+                <td>
+                    <div>{{ client.user.full_name }}</div>
+                    <div class="text-muted" style="font-size:0.72rem;">{{ client.user.email }}</div>
+                </td>
+                <td>
+                    {% for assignment in client.recruiter_assignments.all %}
+                    <span class="badge bg-primary bg-opacity-10 text-primary me-1 mb-1">{{ assignment.recruiter.full_name }}</span>
+                    {% empty %}
+                    <span class="text-muted small">None assigned</span>
+                    {% endfor %}
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-secondary">{{ client.job_requirements.count }}</span>
+                </td>
+                <td>
+                    <span class="ms-badge {% if client.is_active %}ms-badge-active{% else %}ms-badge-inactive{% endif %}">
+                        {% if client.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </td>
+                <td class="text-end text-nowrap">
+                    <a href="{% url 'admin_assign_recruiters' client.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Assign Recruiters">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </a>
+                    <a href="{% url 'admin_corporate_client_edit' client.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="{% url 'admin_corporate_client_toggle_active' client.pk %}"
+                       class="btn btn-sm {% if client.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                       title="{% if client.is_active %}Deactivate{% else %}Activate{% endif %}"
+                       onclick="return confirm('{% if client.is_active %}Deactivate{% else %}Activate{% endif %} {{ client.company_name }}?')">
+                        <i class="fa-solid fa-{% if client.is_active %}ban{% else %}circle-check{% endif %}"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-building fa-3x text-muted mb-3 d-block opacity-50"></i>
+    <h5 class="text-muted fw-semibold">No Corporate Clients Yet</h5>
+    <a href="{% url 'admin_corporate_client_create' %}" class="btn-ms-primary mt-2">
+        <i class="fa-solid fa-plus me-1"></i> Create First Client
+    </a>
+</div>
+{% endif %}
+{% endblock %}

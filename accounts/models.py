@@ -30,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
         ('recruiter', 'Recruiter'),
         ('client', 'Client'),
+        ('corporate_client', 'Corporate Client'),
     )
 
     email = models.EmailField(unique=True)

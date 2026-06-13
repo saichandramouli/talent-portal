@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'clients',
     'notifications',
     'core',
+    'myspace',
 ]
 
 CLOUDINARY_STORAGE = {

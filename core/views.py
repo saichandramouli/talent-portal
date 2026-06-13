@@ -12,6 +12,8 @@ def home_redirect_view(request):
         return redirect('recruiter_dashboard')
     elif request.user.role == 'client':
         return redirect('client_dashboard')
+    elif request.user.role == 'corporate_client':
+        return redirect('corporate_client_dashboard')
     else:
         # Default fallback
         return redirect('login')

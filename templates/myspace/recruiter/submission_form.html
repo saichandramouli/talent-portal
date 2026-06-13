@@ -1,0 +1,67 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Submit Candidates – {{ job.job_title }}{% endblock %}
+{% block page_title %}Submit Candidates{% endblock %}
+{% block page_subtitle %}{{ job.job_title }} @ {{ client.company_name }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'recruiter_my_space' %}">My Space</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'recruiter_job_list' client_pk=client.pk %}">{{ client.company_name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}">{{ job.job_title }}</a></li>
+        <li class="breadcrumb-item active">Submit Candidates</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="ms-card">
+            <div class="ms-card-header">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-paper-plane text-primary me-2"></i>Select Candidates to Submit</h5>
+                <span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span>
+            </div>
+            <div class="ms-card-body">
+                <div class="alert alert-info d-flex gap-2 align-items-start" style="font-size:0.85rem;">
+                    <i class="fa-solid fa-info-circle mt-1 flex-shrink-0"></i>
+                    <span>Only your active candidates that haven't already been submitted to this job are shown below.</span>
+                </div>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% if form.candidates.field.queryset.count > 0 %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.candidates.label }}</label>
+                        <div class="border rounded p-3" style="max-height:400px;overflow-y:auto;background:#f8fafc;">
+                            {% for checkbox in form.candidates %}
+                            <div class="form-check py-2 border-bottom">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label ms-2" for="{{ checkbox.id_for_label }}">
+                                    <span class="fw-semibold">{{ checkbox.choice_label }}</span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% for error in form.candidates.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn-ms-primary">
+                            <i class="fa-solid fa-paper-plane me-1"></i> Submit Selected
+                        </button>
+                        <a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="fa-solid fa-users-slash fa-2x mb-2 d-block opacity-50"></i>
+                        <p class="mb-2">No eligible candidates available to submit.</p>
+                        <a href="{% url 'recruiter_corporate_candidate_create' %}" class="btn-ms-outline text-decoration-none">
+                            <i class="fa-solid fa-user-plus me-1"></i> Add a Candidate First
+                        </a>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

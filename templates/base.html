@@ -23,7 +23,7 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        {% if user.is_authenticated and user.role != 'client' and user.role != 'recruiter' %}
+        {% if user.is_authenticated and user.role != 'client' and user.role != 'recruiter' and user.role != 'corporate_client' %}
         <nav id="sidebar">
             <div class="sidebar-header d-flex align-items-center justify-content-center">
                 <a href="{% url 'admin_dashboard' %}" class="d-block w-100 text-center logo-hover">
@@ -63,6 +63,9 @@
                 <li class="{% if request.resolver_match.url_name == 'admin_candidate_list' %}active{% endif %}">
                     <a href="{% url 'admin_candidate_list' %}"><i class="fa-solid fa-user-group"></i> Candidates</a>
                 </li>
+                <li class="{% if 'corporate_client' in request.resolver_match.url_name or 'myspace' in request.resolver_match.url_name %}active{% endif %}">
+                    <a href="{% url 'admin_corporate_client_list' %}"><i class="fa-solid fa-building"></i> My Space</a>
+                </li>
                 {% endif %}
 
                 <li>
@@ -80,8 +83,8 @@
             <!-- Top Header Navbar -->
             <nav class="navbar navbar-expand-lg top-navbar navbar-light">
                 <div class="container-fluid">
-                    {% if not user.is_authenticated or user.role == 'client' or user.role == 'recruiter' %}
-                    <a class="navbar-brand d-flex align-items-center" href="{% if user.role == 'recruiter' %}{% url 'recruiter_dashboard' %}{% elif user.role == 'client' %}{% url 'client_dashboard' %}{% else %}{% url 'login' %}{% endif %}" style="transition: var(--transition-smooth); display: inline-flex;">
+                    {% if not user.is_authenticated or user.role == 'client' or user.role == 'recruiter' or user.role == 'corporate_client' %}
+                    <a class="navbar-brand d-flex align-items-center" href="{% if user.role == 'recruiter' %}{% url 'recruiter_dashboard' %}{% elif user.role == 'client' %}{% url 'client_dashboard' %}{% elif user.role == 'corporate_client' %}{% url 'corporate_client_dashboard' %}{% else %}{% url 'login' %}{% endif %}" style="transition: var(--transition-smooth); display: inline-flex;">
                         <img src="{% static 'images/people_prime_logo.png' %}" alt="People Prime" style="height: 40px; width: auto; object-fit: contain;">
                     </a>
                     {% endif %}
@@ -146,6 +149,11 @@
                                     <i class="fa-solid fa-user-plus me-1"></i> Add Candidate
                                 </a>
                             </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link {% if 'my_space' in request.resolver_match.url_name or 'recruiter_job' in request.resolver_match.url_name or 'corporate_candidate' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'recruiter_my_space' %}">
+                                    <i class="fa-solid fa-building me-1"></i> My Space
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <form method="post" action="{% url 'logout' %}" id="logout-recruiter-form" style="display: none;">
                                     {% csrf_token %}
@@ -204,6 +212,30 @@
                                     {% csrf_token %}
                                 </form>
                                 <a class="btn btn-outline-danger btn-sm px-3 w-100 text-center" href="#" onclick="document.getElementById('logout-admin-form').submit(); return false;">
+                                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                                </a>
+                            </li>
+                            {% elif user.role == 'corporate_client' %}
+                            <li class="nav-item me-3">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'corporate_client_dashboard' %}active{% endif %}" href="{% url 'corporate_client_dashboard' %}">
+                                    <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link {% if 'jobs' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'corporate_client_my_jobs' %}">
+                                    <i class="fa-solid fa-briefcase me-1"></i> My Jobs
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link {% if request.resolver_match.url_name == 'corporate_client_cart' %}active{% endif %}" href="{% url 'corporate_client_cart' %}">
+                                    <i class="fa-solid fa-star me-1"></i> Shortlist
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'logout' %}" id="logout-corp-form" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                <a class="btn btn-outline-danger btn-sm px-3" href="#" onclick="document.getElementById('logout-corp-form').submit(); return false;">
                                     <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
                                 </a>
                             </li>

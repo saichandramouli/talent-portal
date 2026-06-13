@@ -27,6 +27,7 @@ urlpatterns = [
     path('candidates/', include('candidates.urls')),
     path('clients/', include('clients.urls')),
     path('notifications/', include('notifications.urls')),
+    path('myspace/', include('myspace.urls')),
 ]
 
 if settings.DEBUG:

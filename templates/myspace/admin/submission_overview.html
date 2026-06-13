@@ -1,0 +1,48 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}All Submissions – My Space Admin{% endblock %}
+{% block page_title %}All Candidate Submissions{% endblock %}
+{% block page_subtitle %}My Space Administration{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 fw-bold mb-0">All Submissions</h1>
+    <div class="d-flex gap-1 flex-wrap">
+        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+        {% for val, label in status_choices %}
+        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="ms-card overflow-hidden">
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Job</th>
+                <th>Client</th>
+                <th>Submitted By</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in submissions %}
+            <tr>
+                <td>
+                    <div class="fw-semibold">{{ sub.candidate.full_name }}</div>
+                    <div class="text-muted" style="font-size:0.72rem;">{{ sub.candidate.technology_stack|truncatechars:25 }}</div>
+                </td>
+                <td class="fw-semibold">{{ sub.job.job_title }}</td>
+                <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ sub.job.client.company_name }}</span></td>
+                <td class="text-muted">{{ sub.submitted_by.full_name }}</td>
+                <td><span class="ms-badge ms-badge-{{ sub.status }}">{{ sub.get_status_display }}</span></td>
+                <td class="text-muted">{{ sub.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center py-4 text-muted">No submissions found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

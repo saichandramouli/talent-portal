@@ -1,0 +1,121 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}{{ job.job_title }} – Candidates{% endblock %}
+{% block page_title %}{{ job.job_title }}{% endblock %}
+{% block page_subtitle %}Submitted Candidates{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'corporate_client_my_jobs' %}">My Jobs</a></li>
+        <li class="breadcrumb-item active">{{ job.job_title }}</li>
+    </ol>
+</nav>
+
+<!-- Job Info Horizontal Header -->
+<div class="ms-card mb-4">
+    <div class="ms-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h6 class="fw-bold mb-0">Job Details: {{ job.job_title }}</h6>
+        <a href="{% url 'corporate_client_cart' %}" class="btn-ms-outline text-decoration-none py-1 px-3" style="border-radius:8px; font-size:0.8rem;">
+            <i class="fa-solid fa-star me-1"></i> My Shortlist
+        </a>
+    </div>
+    <div class="ms-card-body" style="max-height: 150px; overflow-y: auto;">
+        <div class="row g-3">
+            <div class="col-md-9">
+                <div class="d-flex flex-wrap gap-4 text-nowrap align-items-center">
+                    <div><span class="text-muted me-1">Status:</span> <span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></div>
+                    <div><span class="text-muted me-1">Type:</span> <strong>{{ job.employment_type }}</strong></div>
+                    <div><span class="text-muted me-1">Exp:</span> <strong>{{ job.experience }}</strong></div>
+                    <div><span class="text-muted me-1">Location:</span> <strong>{{ job.location }}</strong></div>
+                    <div><span class="text-muted me-1">Rate:</span> <strong>{{ job.rate_card }}</strong></div>
+                </div>
+                <div class="mt-3">
+                    <span class="fw-semibold text-dark me-2">Required Skills:</span>
+                    <span class="text-muted small">{{ job.required_skills }}</span>
+                </div>
+                <div class="mt-3">
+                    <span class="fw-semibold text-dark me-2">Job Description:</span>
+                    <p class="text-muted small mt-1 mb-0" style="white-space: pre-line;">{{ job.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Candidates -->
+<h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>Candidates <span class="badge bg-primary">{{ submissions.count }}</span></h5>
+
+{% if submissions %}
+<div class="row g-4">
+    {% for sub in submissions %}
+    {% with candidate=sub.candidate %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column text-center px-2 py-3">
+            <!-- Top Image Section (Centered) -->
+            <div class="card-image-wrap d-flex justify-content-center align-items-center py-3" style="background: transparent;">
+                {% if candidate.profile_photo %}
+                <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                {% else %}
+                <div class="avatar-fallback-full d-flex align-items-center justify-content-center" style="width: 140px; height: 140px; background: #fff; border: 1px solid #ddd; border-radius: 12px; color: #333;">
+                    <i class="fa-solid fa-laptop-code" style="font-size: 5rem;"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Card Content Section (Centered) -->
+            <div class="card-content flex-grow-1 d-flex flex-column justify-content-between">
+                <div class="mb-3">
+                    <!-- Name -->
+                    <h5 class="fw-bold mb-1" style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
+                        {{ candidate.full_name }}
+                    </h5>
+
+                    <!-- Technical Stack / Job Title -->
+                    <div class="mb-2 fw-semibold" style="color: #2563eb !important; font-size: 0.95rem;">
+                        {{ candidate.technology_stack|default:"Professional" }}
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="text-muted small lh-lg" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
+                        <div class="text-nowrap">{{ candidate.total_experience }} Experience</div>
+                        <div class="text-nowrap">Location : {{ candidate.current_location }}{% if "remote" not in candidate.current_location|lower %}/Remote{% endif %}</div>
+                        <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0 }}/ INR {{ candidate.rate_card_inr }}</div>
+                        <div class="text-nowrap">Notice Period : Immediate</div>
+                        <div class="text-nowrap">Resume : Shortlist to View</div>
+                        <div class="text-nowrap">Interviewed Sheet : Shortlist to View</div>
+                        <div class="text-nowrap">Background Verification Clearance : Yes</div>
+                    </div>
+                </div>
+
+                <!-- Interactive Buttons -->
+                <div class="pt-3 border-top d-flex justify-content-between gap-2 mt-auto">
+                    <a href="{% url 'corporate_candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-primary w-50 text-nowrap">
+                        <i class="fa-solid fa-circle-info me-1"></i>Details
+                    </a>
+                    {% if candidate.id in cart_candidate_ids %}
+                    <form method="post" action="{% url 'corporate_client_remove_from_cart' job.pk candidate.id %}" class="w-50 m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success w-100 text-nowrap">
+                            <i class="fa-solid fa-circle-check me-1"></i>In Cart
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'corporate_client_add_to_cart' job.pk candidate.id %}" class="btn btn-sm btn-primary-custom w-50 text-nowrap">
+                        <i class="fa-regular fa-star me-1"></i>Shortlist
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-user-group fa-3x mb-3 d-block opacity-50"></i>
+    <h5 class="fw-semibold">No Candidates Submitted Yet</h5>
+    <p class="mb-0 text-muted">Your recruiter will submit candidates for this job requirement.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Cart Activity – My Space Admin{% endblock %}
+{% block page_title %}Corporate Cart Activity{% endblock %}
+{% block page_subtitle %}Candidates shortlisted by Corporate Clients{% endblock %}
+
+{% block content %}
+<div class="ms-card overflow-hidden">
+    <div class="ms-card-header">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-star text-warning me-2"></i>All Cart Activity <span class="badge bg-warning text-dark ms-1">{{ cart_items.count }}</span></h6>
+    </div>
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Corporate Client</th>
+                <th>Candidate</th>
+                <th>Job</th>
+                <th>Stack</th>
+                <th>Recruiter</th>
+                <th>Shortlisted On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td class="fw-semibold">{{ item.client.company_name }}</td>
+                <td>
+                    <div class="fw-semibold">{{ item.candidate.full_name }}</div>
+                    <div class="text-muted" style="font-size:0.72rem;">{{ item.candidate.email }}</div>
+                </td>
+                <td>{{ item.job.job_title }}</td>
+                <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.candidate.technology_stack|truncatechars:20 }}</span></td>
+                <td class="text-muted">{{ item.candidate.recruiter.full_name }}</td>
+                <td class="text-muted">{{ item.created_at|date:"M d, Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center py-4 text-muted">No cart activity yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

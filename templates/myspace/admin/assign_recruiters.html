@@ -1,0 +1,54 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Assign Recruiters – {{ client_profile.company_name }}{% endblock %}
+{% block page_title %}Assign Recruiters{% endblock %}
+{% block page_subtitle %}{{ client_profile.company_name }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'admin_corporate_client_list' %}">Corporate Clients</a></li>
+        <li class="breadcrumb-item active">Assign Recruiters</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="ms-card">
+            <div class="ms-card-header">
+                <h5 class="fw-bold mb-0">
+                    <i class="fa-solid fa-user-tie text-primary me-2"></i>
+                    Recruiter Assignments for {{ client_profile.company_name }}
+                </h5>
+            </div>
+            <div class="ms-card-body">
+                <div class="alert alert-info d-flex gap-2 align-items-start" style="font-size:0.85rem;">
+                    <i class="fa-solid fa-info-circle mt-1 flex-shrink-0"></i>
+                    <span>Check the recruiters to assign to this client. Unchecked recruiters will be removed from the assignment.</span>
+                </div>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="border rounded p-3 mb-3" style="background:#f8fafc;">
+                        {% for checkbox in form.recruiters %}
+                        <div class="form-check py-2 border-bottom">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label ms-2 fw-semibold" for="{{ checkbox.id_for_label }}">
+                                {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center py-3">No active recruiters available.</p>
+                        {% endfor %}
+                    </div>
+                    {% for error in form.recruiters.errors %}
+                    <div class="text-danger small mb-2">{{ error }}</div>
+                    {% endfor %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn-ms-primary"><i class="fa-solid fa-check me-1"></i>Save Assignments</button>
+                        <a href="{% url 'admin_corporate_client_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

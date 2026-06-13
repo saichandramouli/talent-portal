@@ -1,0 +1,53 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Status History{% endblock %}
+{% block page_title %}Submission Status History{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'corporate_client_job_candidates' submission.job.pk %}">{{ submission.job.job_title }}</a></li>
+        <li class="breadcrumb-item active">Status History</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="ms-card mb-3">
+            <div class="ms-card-body">
+                <div class="fw-semibold">{{ submission.candidate.full_name }}</div>
+                <div class="text-muted small">{{ submission.job.job_title }} @ {{ submission.job.client.company_name }}</div>
+                <span class="ms-badge ms-badge-{{ submission.status }} mt-1 d-inline-block">{{ submission.get_status_display }}</span>
+            </div>
+        </div>
+
+        <div class="ms-card overflow-hidden">
+            <div class="ms-card-header"><h6 class="fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Status Timeline</h6></div>
+            {% if history %}
+            <div class="ms-card-body p-0">
+                {% for h in history %}
+                <div class="d-flex gap-3 p-3 border-bottom">
+                    <div class="flex-shrink-0 mt-1">
+                        <span class="ms-badge ms-badge-{{ h.status }}">{{ h.status|title }}</span>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="fw-semibold text-dark">{{ h.status|title }}</div>
+                            <small class="text-muted text-nowrap">{{ h.changed_at|date:"M d, Y H:i" }}</small>
+                        </div>
+                        <div class="text-muted small">by {{ h.changed_by.full_name }}</div>
+                        {% if h.comments %}<div class="text-muted small mt-1 fst-italic">{{ h.comments }}</div>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4 text-muted">No history available.</div>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'corporate_client_job_candidates' submission.job.pk %}" class="btn btn-outline-secondary mt-3">
+            <i class="fa-solid fa-arrow-left me-1"></i> Back to Candidates
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}All Jobs – My Space Admin{% endblock %}
+{% block page_title %}All Job Requirements{% endblock %}
+{% block page_subtitle %}My Space Administration{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 fw-bold mb-0">All Job Requirements</h1>
+    <div class="d-flex gap-1 flex-wrap">
+        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+        {% for val, label in status_choices %}
+        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="ms-card overflow-hidden">
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Client</th>
+                <th>Created By</th>
+                <th>Type</th>
+                <th>Experience</th>
+                <th>Status</th>
+                <th>Submissions</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td class="fw-semibold">{{ job.job_title }}</td>
+                <td>
+                    <span class="badge bg-primary bg-opacity-10 text-primary">{{ job.client.company_name }}</span>
+                </td>
+                <td class="text-muted">{{ job.creator.full_name }}</td>
+                <td>{{ job.employment_type }}</td>
+                <td>{{ job.experience }}</td>
+                <td><span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+                <td class="text-center"><span class="badge bg-secondary">{{ job.submissions.count }}</span></td>
+                <td class="text-muted">{{ job.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-center py-4 text-muted">No job requirements found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

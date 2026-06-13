@@ -1,0 +1,115 @@
+from django.urls import path
+from myspace.views import admin_views, recruiter_views, client_views
+
+urlpatterns = [
+
+    # ── Admin: Corporate Clients ───────────────────────────────────────────────
+    path('admin/corporate-clients/',
+         admin_views.admin_corporate_client_list,
+         name='admin_corporate_client_list'),
+    path('admin/corporate-clients/create/',
+         admin_views.admin_corporate_client_create,
+         name='admin_corporate_client_create'),
+    path('admin/corporate-clients/<int:pk>/edit/',
+         admin_views.admin_corporate_client_edit,
+         name='admin_corporate_client_edit'),
+    path('admin/corporate-clients/<int:pk>/toggle-active/',
+         admin_views.admin_corporate_client_toggle_active,
+         name='admin_corporate_client_toggle_active'),
+    path('admin/corporate-clients/<int:pk>/assign-recruiters/',
+         admin_views.admin_assign_recruiters,
+         name='admin_assign_recruiters'),
+
+    # ── Admin: Overview ────────────────────────────────────────────────────────
+    path('admin/jobs/',
+         admin_views.admin_job_overview,
+         name='admin_myspace_job_overview'),
+    path('admin/submissions/',
+         admin_views.admin_submission_overview,
+         name='admin_myspace_submission_overview'),
+    path('admin/cart/',
+         admin_views.admin_cart_overview,
+         name='admin_myspace_cart_overview'),
+
+    # ── Recruiter: My Space Home ───────────────────────────────────────────────
+    path('recruiter/',
+         recruiter_views.recruiter_my_space,
+         name='recruiter_my_space'),
+
+    # ── Recruiter: Jobs ────────────────────────────────────────────────────────
+    path('recruiter/client/<int:client_pk>/jobs/',
+         recruiter_views.recruiter_job_list,
+         name='recruiter_job_list'),
+    path('recruiter/client/<int:client_pk>/jobs/create/',
+         recruiter_views.recruiter_job_create,
+         name='recruiter_job_create'),
+    path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/edit/',
+         recruiter_views.recruiter_job_edit,
+         name='recruiter_job_edit'),
+    path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/',
+         recruiter_views.recruiter_job_detail,
+         name='recruiter_job_detail'),
+
+    # ── Recruiter: Corporate Candidates ───────────────────────────────────────
+    path('recruiter/candidates/',
+         recruiter_views.recruiter_candidate_list,
+         name='recruiter_corporate_candidate_list'),
+    path('recruiter/candidates/create/',
+         recruiter_views.recruiter_candidate_create,
+         name='recruiter_corporate_candidate_create'),
+    path('recruiter/candidates/<int:candidate_pk>/edit/',
+         recruiter_views.recruiter_candidate_edit,
+         name='recruiter_corporate_candidate_edit'),
+    path('recruiter/candidates/<int:candidate_pk>/delete/',
+         recruiter_views.recruiter_candidate_delete,
+         name='recruiter_corporate_candidate_delete'),
+
+    # ── Recruiter: Submissions ────────────────────────────────────────────────
+    path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/submit/',
+         recruiter_views.recruiter_submit_candidates,
+         name='recruiter_submit_candidates'),
+    path('recruiter/submissions/<int:submission_pk>/update-status/',
+         recruiter_views.recruiter_update_submission_status,
+         name='recruiter_update_submission_status'),
+
+    # ── Corporate Client ───────────────────────────────────────────────────────
+    path('client/dashboard/',
+         client_views.corporate_client_dashboard,
+         name='corporate_client_dashboard'),
+    path('client/jobs/',
+         client_views.corporate_client_my_jobs,
+         name='corporate_client_my_jobs'),
+    path('client/jobs/<int:job_pk>/candidates/',
+         client_views.corporate_client_job_candidates,
+         name='corporate_client_job_candidates'),
+    path('client/jobs/<int:job_pk>/candidates/<int:candidate_pk>/add-to-cart/',
+         client_views.corporate_client_add_to_cart,
+         name='corporate_client_add_to_cart'),
+    path('client/jobs/<int:job_pk>/candidates/<int:candidate_pk>/remove-from-cart/',
+         client_views.corporate_client_remove_from_cart,
+         name='corporate_client_remove_from_cart'),
+    path('client/cart/',
+         client_views.corporate_client_cart,
+         name='corporate_client_cart'),
+    path('client/candidates/<int:candidate_pk>/',
+         client_views.corporate_candidate_detail,
+         name='corporate_candidate_detail'),
+    path('client/submissions/<int:submission_pk>/history/',
+         client_views.corporate_client_submission_history,
+         name='corporate_client_submission_history'),
+    path('client/profile/',
+         client_views.corporate_client_profile,
+         name='corporate_client_profile'),
+
+    # ── Corporate Credential Requests ──────────────────────────────────────────
+    path('recruiter/credential-requests/<int:request_id>/approve/',
+         recruiter_views.approve_corporate_credential_request,
+         name='approve_corporate_credential_request'),
+    path('recruiter/credential-requests/<int:request_id>/reject/',
+         recruiter_views.reject_corporate_credential_request,
+         name='reject_corporate_credential_request'),
+    path('client/candidates/<int:candidate_id>/resume/',
+         client_views.download_corporate_candidate_resume,
+         name='download_corporate_candidate_resume'),
+]
+

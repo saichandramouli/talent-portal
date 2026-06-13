@@ -1,0 +1,118 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}My Space – My Clients{% endblock %}
+{% block page_title %}My Space{% endblock %}
+{% block page_subtitle %}Your assigned Corporate Clients{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h4 fw-bold mb-1">My Corporate Clients</h1>
+        <p class="text-muted mb-0">Clients assigned to you by Admin.</p>
+    </div>
+    <a href="{% url 'recruiter_corporate_candidate_create' %}" class="btn-ms-primary">
+        <i class="fa-solid fa-user-plus me-1"></i> Add Candidate
+    </a>
+</div>
+
+{% if pending_requests %}
+<div class="ms-card mb-4 overflow-hidden border border-warning" style="border-width: 2px !important;">
+    <div class="ms-card-header bg-warning text-dark py-2 px-3 d-flex align-items-center justify-content-between">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-key me-2"></i>Pending Credential Requests</h6>
+        <span class="badge bg-dark text-warning">{{ pending_requests.count }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="ms-table mb-0">
+            <thead>
+                <tr>
+                    <th>Corporate Client</th>
+                    <th>Candidate</th>
+                    <th>Requested On</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in pending_requests %}
+                <tr>
+                    <td>
+                        <div class="fw-semibold">{{ req.client.company_name }}</div>
+                        <div class="text-muted" style="font-size:0.72rem;">{{ req.client.user.email }}</div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold text-dark">{{ req.candidate.full_name }}</div>
+                        <div class="text-muted" style="font-size:0.72rem;">{{ req.candidate.technology_stack }}</div>
+                    </td>
+                    <td class="text-muted small">{{ req.created_at|date:"M d, Y H:i" }}</td>
+                    <td class="text-end text-nowrap">
+                        <form action="{% url 'approve_corporate_credential_request' req.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success py-1 px-3" style="border-radius:6px;">
+                                <i class="fa-solid fa-check me-1"></i>Approve
+                            </button>
+                        </form>
+                        <form action="{% url 'reject_corporate_credential_request' req.id %}" method="POST" class="d-inline ms-1">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-3" style="border-radius:6px;">
+                                <i class="fa-solid fa-xmark me-1"></i>Reject
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if clients %}
+
+<div class="row g-4">
+    {% for client in clients %}
+    <div class="col-md-6 col-lg-4">
+        <div class="ms-card h-100">
+            <div class="ms-card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="ms-avatar-placeholder" style="width:48px;height:48px;font-size:1.1rem;">
+                        {{ client.company_name|slice:":2"|upper }}
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0" style="font-size:1rem;">{{ client.company_name }}</h5>
+                        {% if client.industry %}
+                        <small class="text-muted"><i class="fa-solid fa-industry me-1"></i>{{ client.industry }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if client.description %}
+                <p class="text-muted small mb-3" style="line-height:1.4;">{{ client.description|truncatechars:100 }}</p>
+                {% endif %}
+
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="ms-badge {% if client.is_active %}ms-badge-active{% else %}ms-badge-inactive{% endif %}">
+                        <i class="fa-solid fa-circle" style="font-size:0.5rem;"></i>
+                        {% if client.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                    <span class="ms-badge ms-badge-open">
+                        <i class="fa-solid fa-briefcase"></i>
+                        {{ client.job_requirements.count }} Jobs
+                    </span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{% url 'recruiter_job_list' client_pk=client.pk %}" class="btn-ms-primary flex-grow-1 text-center text-decoration-none py-2" style="border-radius:8px;">
+                        <i class="fa-solid fa-briefcase me-1"></i> View Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-building fa-3x text-muted mb-3 d-block opacity-50"></i>
+    <h5 class="text-muted fw-semibold">No Clients Assigned</h5>
+    <p class="text-muted mb-0">Ask your Admin to assign you to a Corporate Client.</p>
+</div>
+{% endif %}
+{% endblock %}

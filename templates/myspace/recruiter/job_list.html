@@ -1,0 +1,94 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}{{ client.company_name }} – Jobs{% endblock %}
+{% block page_title %}{{ client.company_name }}{% endblock %}
+{% block page_subtitle %}Job Requirements{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'recruiter_my_space' %}">My Space</a></li>
+        <li class="breadcrumb-item active">{{ client.company_name }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h4 fw-bold mb-1">{{ client.company_name }} – Jobs</h1>
+        <p class="text-muted mb-0">Manage job requirements for this client.</p>
+    </div>
+    <a href="{% url 'recruiter_job_create' client_pk=client.pk %}" class="btn-ms-primary">
+        <i class="fa-solid fa-plus me-1"></i> New Job
+    </a>
+</div>
+
+<!-- Status filter -->
+<div class="ms-card mb-4">
+    <div class="ms-card-body py-2">
+        <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+            <label class="fw-semibold text-muted small mb-0">Filter:</label>
+            {% for val, label in status_choices %}
+            <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+            {% endfor %}
+            <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+        </form>
+    </div>
+</div>
+
+{% if jobs %}
+<div class="ms-card overflow-hidden">
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Employment Type</th>
+                <th>Experience</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Submissions</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>
+                    <a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}" class="fw-semibold text-decoration-none text-dark">
+                        {{ job.job_title }}
+                    </a>
+                    <div class="text-muted" style="font-size:0.75rem;">{{ job.rate_card }}</div>
+                </td>
+                <td><span class="badge bg-light text-dark">{{ job.employment_type }}</span></td>
+                <td>{{ job.experience }}</td>
+                <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
+                <td><span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+                <td class="text-center">
+                    <span class="fw-bold">{{ job.submissions.count }}</span>
+                </td>
+                <td class="text-end text-nowrap">
+                    <a href="{% url 'recruiter_submit_candidates' client_pk=client.pk job_pk=job.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Submit Candidates">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </a>
+                    <a href="{% url 'recruiter_job_edit' client_pk=client.pk job_pk=job.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}" class="btn btn-sm btn-outline-info" title="View">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-briefcase fa-3x text-muted mb-3 d-block opacity-50"></i>
+    <h5 class="text-muted fw-semibold">No Job Requirements Yet</h5>
+    <p class="text-muted mb-3">Create the first job requirement for {{ client.company_name }}.</p>
+    <a href="{% url 'recruiter_job_create' client_pk=client.pk %}" class="btn-ms-primary">
+        <i class="fa-solid fa-plus me-1"></i> Create Job
+    </a>
+</div>
+{% endif %}
+{% endblock %}

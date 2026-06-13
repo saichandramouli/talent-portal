@@ -1,0 +1,112 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Dashboard – {{ corp.company_name }}{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Welcome, {{ user.full_name|capfirst }}{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="ms-stat">
+            <div style="font-size:0.72rem;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;">Total Jobs</div>
+            <h2>{{ total_jobs }}</h2>
+            <div class="ms-stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="ms-stat" style="background:linear-gradient(135deg,#059669,#34d399);">
+            <div style="font-size:0.72rem;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;">Open Jobs</div>
+            <h2>{{ open_jobs }}</h2>
+            <div class="ms-stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="ms-stat" style="background:linear-gradient(135deg,#d97706,#fbbf24);">
+            <div style="font-size:0.72rem;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;">Submissions</div>
+            <h2>{{ total_submissions }}</h2>
+            <div class="ms-stat-icon"><i class="fa-solid fa-paper-plane"></i></div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="ms-stat" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">
+            <div style="font-size:0.72rem;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;">Shortlisted</div>
+            <h2>{{ cart_count }}</h2>
+            <div class="ms-stat-icon"><i class="fa-solid fa-star"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="ms-card mb-4">
+    <div class="ms-card-body">
+        <h6 class="fw-bold mb-3"><i class="fa-solid fa-bolt text-warning me-2"></i>Quick Actions</h6>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'corporate_client_my_jobs' %}" class="btn-ms-primary text-decoration-none py-2 px-3">
+                <i class="fa-solid fa-briefcase me-1"></i> View All Jobs
+            </a>
+            <a href="{% url 'corporate_client_cart' %}" class="btn-ms-outline text-decoration-none py-2 px-3">
+                <i class="fa-solid fa-star me-1"></i> My Shortlist
+            </a>
+            <a href="{% url 'corporate_client_profile' %}" class="btn btn-outline-secondary btn-sm py-2 px-3">
+                <i class="fa-solid fa-user-circle me-1"></i> My Profile
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Jobs -->
+    <div class="col-lg-6">
+        <div class="ms-card overflow-hidden h-100">
+            <div class="ms-card-header">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-briefcase text-primary me-2"></i>Recent Jobs</h6>
+                <a href="{% url 'corporate_client_my_jobs' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            {% if recent_jobs %}
+            <table class="ms-table">
+                <thead><tr><th>Job</th><th>Status</th><th>Date</th></tr></thead>
+                <tbody>
+                    {% for job in recent_jobs %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="fw-semibold text-decoration-none text-dark">{{ job.job_title }}</a>
+                            <div class="text-muted" style="font-size:0.72rem;">{{ job.employment_type }}</div>
+                        </td>
+                        <td><span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+                        <td class="text-muted" style="font-size:0.8rem;">{{ job.created_at|date:"M d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="text-center py-4 text-muted">No jobs yet.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Submissions -->
+    <div class="col-lg-6">
+        <div class="ms-card overflow-hidden h-100">
+            <div class="ms-card-header">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-users text-primary me-2"></i>Recent Submissions</h6>
+            </div>
+            {% if recent_submissions %}
+            <table class="ms-table">
+                <thead><tr><th>Candidate</th><th>Job</th><th>Status</th></tr></thead>
+                <tbody>
+                    {% for sub in recent_submissions %}
+                    <tr>
+                        <td class="fw-semibold">{{ sub.candidate.full_name }}</td>
+                        <td class="text-muted" style="font-size:0.8rem;">{{ sub.job.job_title|truncatechars:25 }}</td>
+                        <td><span class="ms-badge ms-badge-{{ sub.status }}">{{ sub.get_status_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="text-center py-4 text-muted">No submissions yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
