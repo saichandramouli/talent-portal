@@ -119,7 +119,8 @@ class CorporateCandidateForm(forms.ModelForm):
         fields = [
             'profile_photo', 'full_name', 'email', 'phone',
             'total_experience', 'current_location', 'technology_stack',
-            'current_company', 'rate_card', 'resume', 'notes', 'status'
+            'current_company', 'rate_card', 'resume', 'bgv_verification',
+            'evaluation_certificate', 'notes', 'status'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
@@ -135,7 +136,27 @@ class CorporateCandidateForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-select'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
         }
+
+    def _validate_pdf_only(self, file_obj, field_name):
+        if file_obj:
+            if file_obj.size > 10 * 1024 * 1024:
+                raise forms.ValidationError(f"{field_name} file size should not exceed 10MB.")
+            ext = file_obj.name.split('.')[-1].lower()
+            if ext != 'pdf':
+                raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
+        return file_obj
+
+    def clean_resume(self):
+        return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')
+
+    def clean_bgv_verification(self):
+        return self._validate_pdf_only(self.cleaned_data.get('bgv_verification'), 'BGV Verification')
+
+    def clean_evaluation_certificate(self):
+        return self._validate_pdf_only(self.cleaned_data.get('evaluation_certificate'), 'Evaluation Certificate')
 
 
 class CandidateSubmissionForm(forms.Form):

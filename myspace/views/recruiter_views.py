@@ -127,6 +127,23 @@ def recruiter_job_detail(request, client_pk, job_pk):
     })
 
 
+@login_required
+@recruiter_required
+def recruiter_job_delete(request, client_pk, job_pk):
+    """Delete a Job Requirement."""
+    client = _get_assigned_client_or_404(request.user, client_pk)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=client)
+    if request.method == 'POST':
+        title = job.job_title
+        job.delete()
+        messages.success(request, f"Job '{title}' deleted.")
+        return redirect('recruiter_job_list', client_pk=client_pk)
+    return render(request, 'myspace/recruiter/job_confirm_delete.html', {
+        'client': client,
+        'job': job,
+    })
+
+
 # ─── Corporate Candidates ─────────────────────────────────────────────────────
 
 @login_required

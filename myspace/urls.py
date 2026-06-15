@@ -46,6 +46,9 @@ urlpatterns = [
     path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/edit/',
          recruiter_views.recruiter_job_edit,
          name='recruiter_job_edit'),
+    path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/delete/',
+         recruiter_views.recruiter_job_delete,
+         name='recruiter_job_delete'),
     path('recruiter/client/<int:client_pk>/jobs/<int:job_pk>/',
          recruiter_views.recruiter_job_detail,
          name='recruiter_job_detail'),
@@ -111,5 +114,7 @@ urlpatterns = [
     path('client/candidates/<int:candidate_id>/resume/',
          client_views.download_corporate_candidate_resume,
          name='download_corporate_candidate_resume'),
+    path('client/candidates/<int:candidate_id>/document/<str:doc_type>/',
+         client_views.download_corporate_candidate_document,
+         name='download_corporate_candidate_document'),
 ]
-

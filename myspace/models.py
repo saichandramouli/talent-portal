@@ -113,6 +113,18 @@ class CorporateCandidate(models.Model):
         blank=True,
         validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
     )
+    bgv_verification = models.FileField(
+        upload_to='corporate_candidates/bgv_verifications/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
+    evaluation_certificate = models.FileField(
+        upload_to='corporate_candidates/evaluation_certificates/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+    )
     notes = models.TextField(blank=True, default='')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
     created_at = models.DateTimeField(auto_now_add=True)

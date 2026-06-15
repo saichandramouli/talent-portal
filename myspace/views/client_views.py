@@ -227,9 +227,9 @@ def corporate_client_profile(request):
 
 
 @login_required
-def download_corporate_candidate_resume(request, candidate_id):
+def download_corporate_candidate_document(request, candidate_id, doc_type):
     from django.core.exceptions import PermissionDenied
-    from django.http import FileResponse
+    from django.http import FileResponse, Http404
 
     candidate = get_object_or_404(CorporateCandidate, id=candidate_id)
     
@@ -254,9 +254,20 @@ def download_corporate_candidate_resume(request, candidate_id):
     if not has_access:
         raise PermissionDenied("You do not have access to these credentials.")
         
-    file_field = candidate.resume
+    if doc_type == 'resume':
+        file_field = candidate.resume
+        label = "resume"
+    elif doc_type == 'bgv':
+        file_field = candidate.bgv_verification
+        label = "BGV verification"
+    elif doc_type == 'evaluation':
+        file_field = candidate.evaluation_certificate
+        label = "evaluation certificate"
+    else:
+        raise Http404("Document type not found.")
+        
     if not file_field or not file_field.name:
-        messages.error(request, f"No resume uploaded for candidate {candidate.full_name}.")
+        messages.error(request, f"No {label} uploaded for candidate {candidate.full_name}.")
         return redirect(request.META.get('HTTP_REFERER', 'corporate_client_dashboard'))
         
     if hasattr(file_field, 'url') and file_field.url.startswith(('http://', 'https://')):
@@ -270,6 +281,11 @@ def download_corporate_candidate_resume(request, candidate_id):
         if hasattr(file_field, 'url'):
             return redirect(file_field.url)
         raise
+
+
+@login_required
+def download_corporate_candidate_resume(request, candidate_id):
+    return download_corporate_candidate_document(request, candidate_id, 'resume')
 
 
 @login_required

@@ -34,7 +34,7 @@ def recruiter_required(view_func):
     return role_required(['recruiter'])(view_func)
 
 def client_required(view_func):
-    return role_required(['client'])(view_func)
+    return role_required(['client', 'corporate_client'])(view_func)
 
 def corporate_client_required(view_func):
     return role_required(['corporate_client'])(view_func)
