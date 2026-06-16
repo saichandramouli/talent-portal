@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Talent Directory - Client Portal{% endblock %}
 
 {% block extra_css %}
@@ -328,10 +329,9 @@
                         class="candidate-img-full" loading="lazy"
                         style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                     {% else %}
-                    <div class="avatar-fallback-full d-flex align-items-center justify-content-center"
-                        style="width: 140px; height: 140px; background: #fff; border: 1px solid #ddd; border-radius: 12px; color: #333;">
-                        <i class="fa-solid fa-laptop-code" style="font-size: 5rem;"></i>
-                    </div>
+                    <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}"
+                        class="candidate-img-full" loading="lazy"
+                        style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                     {% endif %}
                 </div>
 
@@ -350,16 +350,15 @@
                         </div>
 
                         <!-- Profile Details -->
-                        <div class="text-muted small lh-lg"
+                        <div class="text-muted small lh-base text-start px-2 mt-2"
                             style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
-                            <div class="text-nowrap">{{ candidate.years_of_experience }} Years Experience</div>
-                            <div class="text-nowrap">Location : {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
-                            <div class="text-nowrap">Rate Per Hour : USD {{ candidate.rate_card|floatformat:0 }}/ INR {{
-                                candidate.rate_card_inr }}</div>
-                            <div class="text-nowrap">Notice Period : {{ candidate.availability }}</div>
-                            <div class="text-nowrap">Resume : Shortlist to View</div>
-                            <div class="text-nowrap">Interviewed Sheet : Shortlist to View</div>
-                            <div class="text-nowrap">Background Verification Clearance : Yes</div>
+                            <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.years_of_experience }} Years</div>
+                            <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
+                            <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate:</strong> USD {{ candidate.rate_card|floatformat:0 }}/hr / INR {{ candidate.rate_card_inr }}</div>
+                            <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.availability }}</div>
+                            <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Shortlist to View</div>
+                            <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet On Demand:</strong> Shortlist to View</div>
+                            <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance On Demand:</strong> Yes</div>
                         </div>
                     </div>
 

@@ -131,7 +131,15 @@ def candidate_detail(request, pk):
         return redirect('client_dashboard')
 
     # Client has full read access to approved candidates (all candidates since approval is disabled)
-    return render(request, 'candidates/candidate_detail.html', {'candidate': candidate})
+    cart_candidate_ids = set()
+    if request.user.role in ['client', 'corporate_client']:
+        from clients.models import Cart
+        cart_candidate_ids = set(Cart.objects.filter(client=request.user).values_list('candidate_id', flat=True))
+
+    return render(request, 'candidates/candidate_detail.html', {
+        'candidate': candidate,
+        'cart_candidate_ids': cart_candidate_ids,
+    })
 
 @login_required
 @role_required(['recruiter', 'admin'])

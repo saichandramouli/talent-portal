@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ candidate.full_name }} - Details{% endblock %}
 
 {% block content %}
@@ -20,99 +21,109 @@
     </div>
 
     <div class="card card-premium p-4 shadow-sm">
-        <div class="row">
-            <!-- Left Profile Card -->
-            <div class="col-md-4 text-center border-end mb-4 mb-md-0">
-                <div class="py-3">
+        <div class="row g-4">
+            <!-- Left Column: Photo & Action Footer -->
+            <div class="col-md-5 d-flex flex-column justify-content-between border-bottom border-md-bottom-0 border-md-end pb-4 pb-md-0 pe-md-4">
+                <div class="text-center">
                     {% if candidate.profile_photo %}
-                        <img src="{{ candidate.profile_photo_optimized_url }}" alt="{{ candidate.full_name }}" class="candidate-avatar-large mb-3" loading="lazy">
+                        <img src="{{ candidate.profile_photo_optimized_url }}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% else %}
-                        <div class="avatar-circle-lg bg-indigo text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem; font-weight: 700;">
-                            {{ candidate.full_name|slice:":2"|upper }}
-                        </div>
+                        <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% endif %}
                     
-                    <h3 class="fw-bold mb-1">{{ candidate.full_name }}</h3>
-                    {% if candidate.job_title %}
-                        <h5 class="text-primary fw-semibold mb-2">{{ candidate.job_title }}</h5>
-                    {% endif %}
-                    {% if user.role != 'client' %}
-                    <p class="text-muted"><i class="fa-solid fa-location-dot me-1 text-danger"></i>{{ candidate.location }}</p>
-                    {% endif %}
-                    
-                    <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
-                        <span class="badge bg-primary px-3 py-2 fs-6">${{ candidate.rate_card }}/hr</span>
-                        <span class="badge bg-success availability-badge px-3 py-2 fs-6">{{ candidate.availability }}</span>
-                        {% if candidate.is_on_hold %}
-                            <span class="badge bg-warning text-dark px-3 py-2 fs-6"><i class="fa-solid fa-pause me-1"></i>On Hold</span>
+                    <!-- Shortlist / Add to Cart Button directly under the image -->
+                    <div class="mt-3 d-flex justify-content-center">
+                        {% if user.role == 'client' or user.role == 'corporate_client' %}
+                            {% if candidate.id in cart_candidate_ids %}
+                                <button class="btn btn-success px-4 py-2 w-100" style="max-width: 320px; border-radius: 6px; font-weight: 600;" disabled>
+                                    <i class="fa-solid fa-circle-check me-1"></i> In Cart
+                                </button>
+                            {% else %}
+                                <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary px-4 py-2 w-100" style="max-width: 320px; border-radius: 6px; font-weight: 600; background-color: #2563eb; border-color: #2563eb;">
+                                    <i class="fa-solid fa-cart-plus me-1"></i> Add to Cart
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top flex-wrap gap-3">
+                    <div class="d-flex align-items-center ps-3 border-start border-success border-4" style="min-height: 38px;">
+                        <span class="small text-muted">
+                            {{ candidate.full_name }} is <span class="text-success fw-semibold">{{ candidate.availability|lower }}</span> for hire
+                        </span>
+                    </div>
+                    <div>
+                        {% if user.role == 'admin' or user == candidate.recruiter %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-outline-primary btn-sm px-3 py-2" style="border-radius: 4px;">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+                                <form action="{% url 'candidate_toggle_hold' candidate.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if candidate.is_on_hold %}btn-warning text-dark{% else %}btn-outline-warning{% endif %} px-3 py-2" style="border-radius: 4px;">
+                                        {% if candidate.is_on_hold %}Remove Hold{% else %}Hold{% endif %}
+                                    </button>
+                                </form>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Right Details Card -->
-            <div class="col-md-8 px-md-4">
-                <h4 class="fw-bold mb-3 border-bottom pb-2">Professional Profile</h4>
-                
-                <div class="row mb-4">
-                    <div class="col-6 col-sm-4 mb-3" style="color: #0f172a !important;">
-                        <div class="small" style="color: rgba(15, 23, 42, 0.7) !important;">Experience</div>
-                        <div class="fw-bold fs-5">{{ candidate.years_of_experience }} Years</div>
+            <!-- Right Column: Name, Meta, Skills, Bio -->
+            <div class="col-md-7 ps-md-4 pt-4 pt-md-0 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Name -->
+                    <h2 class="fw-bold mb-1" style="color: #1e40af; font-size: 2rem;">{{ candidate.full_name }}</h2>
+                    
+                    <!-- Verified status -->
+                    <div class="text-success small fw-semibold mb-3 d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-circle-check"></i> Verified Expert in {{ candidate.technical_stack.first.name|default:"Engineering" }}
                     </div>
-                    <div class="col-6 col-sm-4 mb-3" style="color: #0f172a !important;">
-                        <div class="small" style="color: rgba(15, 23, 42, 0.7) !important;">Assigned Recruiter</div>
-                        <div class="fw-semibold">{{ candidate.recruiter.full_name }}</div>
-                        <div class="small" style="color: rgba(15, 23, 42, 0.7) !important;">{{ candidate.recruiter.email }}</div>
+
+                    <!-- Role, Location, Date Meta -->
+                    <div class="mb-4">
+                        {% if candidate.job_title %}
+                            <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                                <i class="fa-solid fa-code text-muted" style="width: 16px;"></i> {{ candidate.job_title.name }}
+                            </div>
+                        {% endif %}
+                        <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-location-dot text-muted" style="width: 16px;"></i> {{ candidate.location }}
+                        </div>
+                        <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-user-tie text-muted" style="width: 16px;"></i> Recruiter: {{ candidate.recruiter.full_name }} ({{ candidate.recruiter.email }})
+                        </div>
+                        <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-calendar-days text-muted" style="width: 16px;"></i> Member since {{ candidate.created_at|date:"F j, Y" }}
+                        </div>
+                        <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-dollar-to-slot text-muted" style="width: 16px;"></i> Rate: ${{ candidate.rate_card }}/hr
+                        </div>
                     </div>
-                    <div class="col-6 col-sm-4 mb-3" style="color: #0f172a !important;">
-                        <div class="small" style="color: rgba(15, 23, 42, 0.7) !important;">Created Date</div>
-                        <div class="fw-semibold">{{ candidate.created_at|date:"M d, Y" }}</div>
+
+                    <!-- Expertise -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase text-muted small tracking-wider mb-2" style="font-size: 0.75rem;">Expertise</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for stack in candidate.technical_stack.all %}
+                                <span class="badge rounded-pill border border-primary text-primary bg-transparent px-3 py-1.5" style="font-weight: 500; font-size: 0.8rem;">{{ stack.name }}</span>
+                            {% endfor %}
+                            {% for skill in candidate.skills.all %}
+                                <span class="badge rounded-pill border border-secondary text-secondary bg-transparent px-3 py-1.5" style="font-weight: 500; font-size: 0.8rem;">{{ skill.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase text-muted small tracking-wider mb-2" style="font-size: 0.75rem;">Bio</h6>
+                        <p class="text-muted lh-lg" style="font-size: 0.9rem;">
+                            {{ candidate.summary|default:"No bio description available for this candidate." }}
+                        </p>
                     </div>
                 </div>
-
-                <h5 class="fw-bold mb-2">Technical Skills & Stacks</h5>
-                <div class="mb-4">
-                    {% for stack in candidate.technical_stack.all %}
-                        <span class="badge bg-primary fs-6 px-3 py-2 me-2 mb-2"><i class="fa-solid fa-tag me-1"></i>{{ stack.name }}</span>
-                    {% empty %}
-                        <span class="text-muted">No tech stacks mapped.</span>
-                    {% endfor %}
-                </div>
-
-                {% if candidate.skills.all %}
-                <h5 class="fw-bold mb-2">Key Skills</h5>
-                <div class="mb-4 text-dark fs-6 d-flex flex-wrap gap-2">
-                    {% for skill in candidate.skills.all %}
-                        <span class="badge bg-primary fs-6 px-3 py-2 me-2 mb-2"><i class="fa-solid fa-screwdriver-wrench me-1"></i>{{ skill.name }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-
-                
-                {% if user.role == 'client' %}
-                    <div class="mt-4">
-                        <a href="{% url 'add_to_cart' candidate.id %}" class="btn btn-primary-custom px-4 py-2">
-                            <i class="fa-solid fa-cart-plus me-2"></i>Add Candidate to Cart
-                        </a>
-                    </div>
-                {% elif user.role == 'admin' or user == candidate.recruiter %}
-                    <div class="mt-4 d-flex gap-2">
-                        <a href="{% url 'candidate_edit' candidate.id %}" class="btn btn-primary-custom px-4 py-2">
-                            <i class="fa-solid fa-pen me-2"></i>Edit Candidate
-                        </a>
-                        <form action="{% url 'candidate_toggle_hold' candidate.id %}" method="POST" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn {% if candidate.is_on_hold %}btn-warning text-dark{% else %}btn-outline-warning{% endif %} px-4 py-2">
-                                {% if candidate.is_on_hold %}
-                                    <i class="fa-solid fa-play me-2"></i>Remove Hold
-                                {% else %}
-                                    <i class="fa-solid fa-pause me-2"></i>Put on Hold
-                                {% endif %}
-                            </button>
-                        </form>
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>

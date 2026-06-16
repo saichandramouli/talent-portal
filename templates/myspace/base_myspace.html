@@ -19,7 +19,7 @@
             --ms-border: var(--border-color, rgba(226, 232, 240, 0.8));
             --ms-text: var(--text-main, #0f172a);
             --ms-muted: var(--text-muted, #64748b);
-            --ms-sidebar-width: 280px;
+            --ms-sidebar-width: 220px;
             --transition: var(--transition-smooth, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
         }
         * { box-sizing: border-box; }
@@ -35,6 +35,10 @@
             display: flex; flex-direction: column;
             z-index: 1000; overflow-y: auto;
             transition: transform 0.3s ease;
+            transform: translateX(-100%);
+        }
+        .ms-sidebar.open {
+            transform: translateX(0);
         }
         .ms-sidebar-header {
             padding: 1.5rem;
@@ -85,7 +89,7 @@
         }
 
         /* ── Main Content ─────────────────────────────────────── */
-        .ms-main { margin-left: var(--ms-sidebar-width); display: flex; flex-direction: column; min-height: 100vh; width: calc(100% - var(--ms-sidebar-width)); }
+        .ms-main { margin-left: 0; display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
         .ms-topbar {
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(12px);
@@ -311,7 +315,7 @@
         <!-- Topbar -->
         <div class="ms-topbar">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-light d-lg-none" onclick="document.getElementById('msSidebar').classList.toggle('open'); document.getElementById('sidebarBackdrop').classList.toggle('show');">
+                <button class="btn btn-sm btn-light" onclick="document.getElementById('msSidebar').classList.toggle('open'); document.getElementById('sidebarBackdrop').classList.toggle('show');">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div>
@@ -320,6 +324,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center gap-2">
+                {% block topbar_actions %}{% endblock %}
                 <span class="badge rounded-pill" style="background:var(--ms-primary);font-size:0.72rem;">
                     <i class="fa-solid fa-user-circle me-1"></i>{{ user.full_name|truncatechars:20 }}
                 </span>

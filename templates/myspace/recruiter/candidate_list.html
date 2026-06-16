@@ -4,12 +4,12 @@
 {% block page_subtitle %}My Space – candidate pool (no stack restrictions){% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
         <h1 class="h4 fw-bold mb-1">My Corporate Candidates</h1>
         <p class="text-muted mb-0">Add any candidate, regardless of technology stack.</p>
     </div>
-    <a href="{% url 'recruiter_corporate_candidate_create' %}" class="btn-ms-primary">
+    <a href="{% url 'recruiter_corporate_candidate_create' %}" class="btn-ms-primary text-decoration-none">
         <i class="fa-solid fa-user-plus me-1"></i> Add Candidate
     </a>
 </div>
@@ -36,47 +36,49 @@
 
 {% if candidates %}
 <div class="ms-card overflow-hidden">
-    <table class="ms-table">
-        <thead>
-            <tr>
-                <th>Candidate</th>
-                <th>Stack</th>
-                <th>Experience</th>
-                <th>Rate</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for cand in candidates %}
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center gap-2">
-                        {% if cand.profile_photo %}
-                        <img src="{{ cand.profile_photo_thumbnail_url }}" class="ms-avatar" alt="{{ cand.full_name }}">
-                        {% else %}
-                        <span class="ms-avatar-placeholder">{{ cand.full_name|slice:":2"|upper }}</span>
-                        {% endif %}
-                        <div>
-                            <div class="fw-semibold">{{ cand.full_name }}</div>
-                            <div class="text-muted" style="font-size:0.72rem;">{{ cand.email }}</div>
+    <div class="table-responsive">
+        <table class="ms-table">
+            <thead>
+                <tr>
+                    <th>Candidate</th>
+                    <th>Stack</th>
+                    <th>Experience</th>
+                    <th>Rate</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cand in candidates %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if cand.profile_photo %}
+                            <img src="{{ cand.profile_photo_thumbnail_url }}" class="ms-avatar" alt="{{ cand.full_name }}">
+                            {% else %}
+                            <span class="ms-avatar-placeholder">{{ cand.full_name|slice:":2"|upper }}</span>
+                            {% endif %}
+                            <div>
+                                <div class="fw-semibold">{{ cand.full_name }}</div>
+                                <div class="text-muted" style="font-size:0.72rem;">{{ cand.email }}</div>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ cand.technology_stack|truncatechars:30 }}</span></td>
-                <td>{{ cand.total_experience }}</td>
-                <td>${{ cand.rate_card }}/hr</td>
-                <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ cand.current_location }}</td>
-                <td><span class="ms-badge ms-badge-{{ cand.status }}">{{ cand.get_status_display }}</span></td>
-                <td class="text-end text-nowrap">
-                    <a href="{% url 'recruiter_corporate_candidate_edit' cand.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
-                    <a href="{% url 'recruiter_corporate_candidate_delete' cand.pk %}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </td>
+                    <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ cand.technology_stack|truncatechars:30 }}</span></td>
+                    <td>{{ cand.total_experience }}</td>
+                    <td>${{ cand.rate_card }}/hr</td>
+                    <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ cand.current_location }}</td>
+                    <td><span class="ms-badge ms-badge-{{ cand.status }}">{{ cand.get_status_display }}</span></td>
+                    <td class="text-end text-nowrap">
+                        <a href="{% url 'recruiter_corporate_candidate_edit' cand.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
+                        <a href="{% url 'recruiter_corporate_candidate_delete' cand.pk %}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% else %}
 <div class="ms-card text-center py-5">

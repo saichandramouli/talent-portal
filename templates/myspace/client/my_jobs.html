@@ -8,43 +8,60 @@
     <h1 class="h4 fw-bold mb-0">My Job Requirements</h1>
     <div class="d-flex align-items-center gap-2 flex-wrap">
         {% for val, label in status_choices %}
-        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+        <a href="?status={{ val }}"
+            class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
         {% endfor %}
-        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+        <a href="?"
+            class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
     </div>
 </div>
 
 {% if jobs %}
-<div class="row g-4">
-    {% for job in jobs %}
-    <div class="col-md-6 col-lg-4">
-        <div class="ms-card h-100">
-            <div class="ms-card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="fw-bold mb-0">{{ job.job_title }}</h6>
-                    <span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span>
-                </div>
-                <div class="text-muted small mb-3">
-                    <i class="fa-solid fa-location-dot me-1"></i>{{ job.location }}
-                    &nbsp;·&nbsp;
-                    <i class="fa-solid fa-clock me-1"></i>{{ job.employment_type }}
-                </div>
-                <div class="d-flex gap-3 text-muted small mb-3">
-                    <span><i class="fa-solid fa-briefcase me-1"></i>{{ job.experience }}</span>
-                    <span><i class="fa-solid fa-dollar-sign me-1"></i>{{ job.rate_card }}</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge bg-primary bg-opacity-10 text-primary">
-                        <i class="fa-solid fa-users me-1"></i>{{ job.submissions.count }} Candidates
-                    </span>
-                    <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="btn-ms-primary text-decoration-none" style="font-size:0.8rem;padding:6px 14px;border-radius:6px;">
-                        View Candidates <i class="fa-solid fa-arrow-right ms-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+<div class="ms-card overflow-hidden">
+    <div class="table-responsive">
+        <table class="ms-table" style="font-size: 12px;">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Required Skills</th>
+                    <th>Experience</th>
+                    <th>Rate Card</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>
+                        <div>
+                            <div class="text-dark">{{ job.job_title }}</div>
+                            <div class="text-muted" style="font-size: 11px;">{{ job.employment_type }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size: 11px;">
+                            {{ job.required_skills|truncatechars:40 }}
+                        </span>
+                    </td>
+                    <td>{{ job.experience }}</td>
+                    <td>{{ job.rate_card }}</td>
+                    <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
+                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 11px;">{{ job.get_status_display }}</span></td>
+                    <td class="text-end text-nowrap">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-2.5 py-1.5 me-2" style="font-size: 11px;">
+                            <i class="fa-solid fa-users me-1"></i>{{ job.submissions.count }} Candidates
+                        </span>
+                        <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="btn btn-sm btn-outline-primary py-1 px-3" style="font-size: 11px; border-radius: 6px;">
+                            View Candidates <i class="fa-solid fa-arrow-right ms-1" style="font-size: 10px;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% endfor %}
 </div>
 {% else %}
 <div class="ms-card text-center py-5">

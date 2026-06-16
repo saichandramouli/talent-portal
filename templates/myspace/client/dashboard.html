@@ -3,6 +3,19 @@
 {% block page_title %}Dashboard{% endblock %}
 {% block page_subtitle %}Welcome, {{ user.full_name|capfirst }}{% endblock %}
 
+{% block topbar_actions %}
+<a href="{% url 'corporate_client_cart' %}"
+    class="btn-ms-primary py-1 px-3 d-flex align-items-center gap-2 me-2 text-decoration-none"
+    style="font-size:0.8rem; border-radius: 8px;">
+    <i class="fa-solid fa-star text-warning"></i>
+    <span>My Shortlist</span>
+    {% if cart_count > 0 %}
+    <span class="badge bg-white text-primary rounded-pill" style="font-size:0.75rem; padding: 0.25em 0.6em;">{{
+        cart_count }}</span>
+    {% endif %}
+</a>
+{% endblock %}
+
 {% block content %}
 <!-- Stats -->
 <div class="row g-4 mb-4">
@@ -64,12 +77,19 @@
             </div>
             {% if recent_jobs %}
             <table class="ms-table">
-                <thead><tr><th>Job</th><th>Status</th><th>Date</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Job</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for job in recent_jobs %}
                     <tr>
                         <td>
-                            <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="fw-semibold text-decoration-none text-dark">{{ job.job_title }}</a>
+                            <a href="{% url 'corporate_client_job_candidates' job.pk %}"
+                                class="fw-semibold text-decoration-none text-dark">{{ job.job_title }}</a>
                             <div class="text-muted" style="font-size:0.72rem;">{{ job.employment_type }}</div>
                         </td>
                         <td><span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
@@ -92,7 +112,13 @@
             </div>
             {% if recent_submissions %}
             <table class="ms-table">
-                <thead><tr><th>Candidate</th><th>Job</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for sub in recent_submissions %}
                     <tr>

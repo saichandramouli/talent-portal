@@ -32,6 +32,14 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="id_gender" class="form-label">Gender</label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}
+                            <div class="text-danger small mt-1">{{ form.gender.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
                         <label for="id_job_title" class="form-label">Job Title</label>
                         {{ form.job_title }}
                         {% if form.job_title.errors %}

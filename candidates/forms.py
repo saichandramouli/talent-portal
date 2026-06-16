@@ -22,12 +22,13 @@ class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = [
-            'profile_photo', 'full_name', 'job_title', 'skills', 'years_of_experience',
+            'profile_photo', 'full_name', 'gender', 'job_title', 'skills', 'years_of_experience',
             'rate_card', 'technical_stack', 'location', 'availability', 'is_on_hold',
             'resume', 'bgv_verification', 'evaluation_certificate'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Candidate Full Name'}),
+            'gender': forms.Select(attrs={'class': 'form-select'}),
             'job_title': forms.Select(attrs={'class': 'form-select'}),
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'placeholder': 'e.g. 5'}),
             'rate_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 50.00'}),

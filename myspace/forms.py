@@ -117,13 +117,14 @@ class CorporateCandidateForm(forms.ModelForm):
     class Meta:
         model = CorporateCandidate
         fields = [
-            'profile_photo', 'full_name', 'email', 'phone',
+            'profile_photo', 'full_name', 'gender', 'email', 'phone',
             'total_experience', 'current_location', 'technology_stack',
             'current_company', 'rate_card', 'resume', 'bgv_verification',
             'evaluation_certificate', 'notes', 'status'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
+            'gender': forms.Select(attrs={'class': 'form-select'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'candidate@email.com'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+91 98765 43210'}),
             'total_experience': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 6 Years'}),
