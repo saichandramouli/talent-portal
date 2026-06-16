@@ -39,7 +39,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top flex-wrap gap-3">
                     <div class="d-flex align-items-center ps-3 border-start border-success border-4" style="min-height: 38px;">
                         <span class="small text-muted">
-                            {{ candidate.full_name }} is <span class="text-success fw-semibold">immediate</span> for hire
+                            {{ candidate.full_name }} notice period: <span class="text-success fw-semibold">{{ candidate.notice_period }}</span>
                         </span>
                     </div>
                 </div>
@@ -71,7 +71,17 @@
                             <i class="fa-solid fa-calendar-days text-muted" style="width: 16px;"></i> Member since {{ candidate.created_at|date:"F j, Y" }}
                         </div>
                         <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
-                            <i class="fa-solid fa-circle-dollar-to-slot text-muted" style="width: 16px;"></i> Rate: ${{ candidate.rate_card }}/hr
+                            <i class="fa-solid fa-briefcase text-muted" style="width: 16px;"></i> Employment Type: {{ candidate.employment_type }}
+                        </div>
+                        <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-dollar-to-slot text-muted" style="width: 16px;"></i> Rate Card: 
+                            {% if candidate.salary_inr %}
+                                ₹{{ candidate.salary_inr|floatformat:0 }} per annum (Full Time)
+                            {% endif %}
+                            {% if candidate.rate_card %}
+                                {% if candidate.salary_inr %} / {% endif %}
+                                ${{ candidate.rate_card }}/hr (Contract/Remote)
+                            {% endif %}
                         </div>
                     </div>
 

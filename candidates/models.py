@@ -32,7 +32,21 @@ class Candidate(models.Model):
     rate_card = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        help_text="Rate card in USD (hourly/monthly)"
+        null=True,
+        blank=True,
+        help_text="Rate card in USD per hour"
+    )
+    salary_inr = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Salary in INR per annum"
+    )
+    employment_type = models.CharField(
+        max_length=100,
+        default='Full Time',
+        help_text="Employment type: Full Time, Contract, Remote"
     )
     technical_stack = models.ManyToManyField(
         TechnologyStack,
@@ -41,7 +55,8 @@ class Candidate(models.Model):
     location = models.CharField(max_length=255)
     availability = models.CharField(
         max_length=100,
-        help_text="e.g. Immediate, 2 Weeks Notice, 1 Month Notice"
+        default='Immediate',
+        help_text="Notice period / availability"
     )
     summary = models.TextField(blank=True, default='', help_text="Summary or notes about the candidate")
     job_title = models.ForeignKey(

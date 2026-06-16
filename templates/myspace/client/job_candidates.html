@@ -78,11 +78,20 @@
                     <div class="text-muted small lh-base text-start px-2 mt-2" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
                         <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.total_experience }}</div>
                         <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.current_location }}{% if "remote" not in candidate.current_location|lower %}/Remote{% endif %}</div>
-                        <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate:</strong> USD {{ candidate.rate_card|floatformat:0 }}/hr / INR {{ candidate.rate_card_inr }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> Immediate</div>
+                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate Card:</strong> 
+                        {% if candidate.salary_inr %}
+                            ₹{{ candidate.salary_inr|floatformat:0 }}/yr
+                        {% endif %}
+                        {% if candidate.rate_card %}
+                            {% if candidate.salary_inr %} / {% endif %}
+                            ${{ candidate.rate_card|floatformat:0 }}/hr
+                        {% endif %}
+                        </div>
+                        <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.notice_period }}</div>
                         <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Shortlist to View</div>
-                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet On Demand:</strong> Shortlist to View</div>
-                        <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance On Demand:</strong> Yes</div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet:</strong> On Demand</div>
+                        <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance:</strong> On Demand</div>
                     </div>
                 </div>
 

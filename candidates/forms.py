@@ -19,11 +19,34 @@ class SkillForm(forms.ModelForm):
         }
 
 class CandidateForm(forms.ModelForm):
+    employment_type = forms.MultipleChoiceField(
+        choices=[
+            ('Full Time', 'Full Time'),
+            ('Contract', 'Contract'),
+            ('Remote', 'Remote'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required=True,
+        label="Employment Type"
+    )
+    availability = forms.MultipleChoiceField(
+        choices=[
+            ('Immediate', 'Immediate'),
+            ('15 Days', '15 Days'),
+            ('1 Month', '1 Month'),
+            ('2 Months', '2 Months'),
+            ('3 Months', '3 Months'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required=True,
+        label="Notice Period"
+    )
+
     class Meta:
         model = Candidate
         fields = [
             'profile_photo', 'full_name', 'gender', 'job_title', 'skills', 'years_of_experience',
-            'rate_card', 'technical_stack', 'location', 'availability', 'is_on_hold',
+            'rate_card', 'salary_inr', 'employment_type', 'technical_stack', 'location', 'availability', 'is_on_hold',
             'resume', 'bgv_verification', 'evaluation_certificate'
         ]
         widgets = {
@@ -32,8 +55,8 @@ class CandidateForm(forms.ModelForm):
             'job_title': forms.Select(attrs={'class': 'form-select'}),
             'years_of_experience': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'placeholder': 'e.g. 5'}),
             'rate_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 50.00'}),
+            'salary_inr': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g. 1200000.00'}),
             'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. New York, NY'}),
-            'availability': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Immediate, 2 Weeks'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'is_on_hold': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'technical_stack': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
@@ -47,6 +70,13 @@ class CandidateForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
+        # Load initial values for MultipleChoiceFields
+        if self.instance and self.instance.pk:
+            if self.instance.employment_type:
+                self.initial['employment_type'] = [x.strip() for x in self.instance.employment_type.split(',') if x.strip()]
+            if self.instance.availability:
+                self.initial['availability'] = [x.strip() for x in self.instance.availability.split(',') if x.strip()]
+
         # If user is recruiter, restrict the choices of tech stack to their team's stacks
         if self.user and self.user.role == 'recruiter':
             self.fields['technical_stack'].error_messages['invalid_choice'] = "You are not authorized to upload candidates outside your assigned technology stack."
@@ -96,6 +126,32 @@ class CandidateForm(forms.ModelForm):
             if ext != 'pdf':
                 raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
         return file_obj
+
+    def clean(self):
+        cleaned_data = super().clean()
+        emp_types = cleaned_data.get('employment_type', [])
+        rate_card = cleaned_data.get('rate_card')
+        salary_inr = cleaned_data.get('salary_inr')
+
+        if 'Full Time' in emp_types:
+            if not salary_inr:
+                self.add_error('salary_inr', 'Salary in INR per annum is required for Full Time employment.')
+        if 'Contract' in emp_types or 'Remote' in emp_types:
+            if not rate_card:
+                self.add_error('rate_card', 'Rate card in USD per hour is required for Contract or Remote employment.')
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        candidate = super().save(commit=False)
+        emp_types = self.cleaned_data.get('employment_type', [])
+        availabilities = self.cleaned_data.get('availability', [])
+        candidate.employment_type = ', '.join(emp_types)
+        candidate.availability = ', '.join(availabilities)
+        if commit:
+            candidate.save()
+            self.save_m2m()
+        return candidate
 
     def clean_resume(self):
         return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')

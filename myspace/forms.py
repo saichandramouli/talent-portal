@@ -114,12 +114,35 @@ class JobRequirementForm(forms.ModelForm):
 
 
 class CorporateCandidateForm(forms.ModelForm):
+    employment_type = forms.MultipleChoiceField(
+        choices=[
+            ('Full Time', 'Full Time'),
+            ('Contract', 'Contract'),
+            ('Remote', 'Remote'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required=True,
+        label="Employment Type"
+    )
+    notice_period = forms.MultipleChoiceField(
+        choices=[
+            ('Immediate', 'Immediate'),
+            ('15 Days', '15 Days'),
+            ('1 Month', '1 Month'),
+            ('2 Months', '2 Months'),
+            ('3 Months', '3 Months'),
+        ],
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+        required=True,
+        label="Notice Period"
+    )
+
     class Meta:
         model = CorporateCandidate
         fields = [
             'profile_photo', 'full_name', 'gender', 'email', 'phone',
             'total_experience', 'current_location', 'technology_stack',
-            'current_company', 'rate_card', 'resume', 'bgv_verification',
+            'current_company', 'rate_card', 'salary_inr', 'employment_type', 'notice_period', 'resume', 'bgv_verification',
             'evaluation_certificate', 'notes', 'status'
         ]
         widgets = {
@@ -133,6 +156,7 @@ class CorporateCandidateForm(forms.ModelForm):
                                                         'placeholder': 'e.g. SAP FICO, Python, React – any stack'}),
             'current_company': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Current employer (optional)'}),
             'rate_card': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0.00', 'step': '0.01'}),
+            'salary_inr': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0.00', 'step': '0.01'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal notes…'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
@@ -140,6 +164,14 @@ class CorporateCandidateForm(forms.ModelForm):
             'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
             'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            if self.instance.employment_type:
+                self.initial['employment_type'] = [x.strip() for x in self.instance.employment_type.split(',') if x.strip()]
+            if self.instance.notice_period:
+                self.initial['notice_period'] = [x.strip() for x in self.instance.notice_period.split(',') if x.strip()]
 
     def _validate_pdf_only(self, file_obj, field_name):
         if file_obj:
@@ -149,6 +181,31 @@ class CorporateCandidateForm(forms.ModelForm):
             if ext != 'pdf':
                 raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
         return file_obj
+
+    def clean(self):
+        cleaned_data = super().clean()
+        emp_types = cleaned_data.get('employment_type', [])
+        rate_card = cleaned_data.get('rate_card')
+        salary_inr = cleaned_data.get('salary_inr')
+
+        if 'Full Time' in emp_types:
+            if not salary_inr:
+                self.add_error('salary_inr', 'Salary in INR per annum is required for Full Time employment.')
+        if 'Contract' in emp_types or 'Remote' in emp_types:
+            if not rate_card:
+                self.add_error('rate_card', 'Rate card in USD per hour is required for Contract or Remote employment.')
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        candidate = super().save(commit=False)
+        emp_types = self.cleaned_data.get('employment_type', [])
+        notices = self.cleaned_data.get('notice_period', [])
+        candidate.employment_type = ', '.join(emp_types)
+        candidate.notice_period = ', '.join(notices)
+        if commit:
+            candidate.save()
+        return candidate
 
     def clean_resume(self):
         return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')

@@ -43,7 +43,9 @@
                     <th>Candidate</th>
                     <th>Stack</th>
                     <th>Experience</th>
-                    <th>Rate</th>
+                    <th>Type</th>
+                    <th>Rate Card</th>
+                    <th>Notice Period</th>
                     <th>Location</th>
                     <th>Status</th>
                     <th class="text-end">Actions</th>
@@ -67,7 +69,17 @@
                     </td>
                     <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ cand.technology_stack|truncatechars:30 }}</span></td>
                     <td>{{ cand.total_experience }}</td>
-                    <td>${{ cand.rate_card }}/hr</td>
+                    <td>{{ cand.employment_type }}</td>
+                    <td class="text-nowrap">
+                        {% if cand.salary_inr %}
+                            ₹{{ cand.salary_inr|floatformat:0 }}/yr
+                        {% endif %}
+                        {% if cand.rate_card %}
+                            {% if cand.salary_inr %} / {% endif %}
+                            ${{ cand.rate_card|floatformat:0 }}/hr
+                        {% endif %}
+                    </td>
+                    <td>{{ cand.notice_period }}</td>
                     <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ cand.current_location }}</td>
                     <td><span class="ms-badge ms-badge-{{ cand.status }}">{{ cand.get_status_display }}</span></td>
                     <td class="text-end text-nowrap">

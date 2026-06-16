@@ -75,7 +75,15 @@
                         <a href="{% url 'corporate_client_job_candidates' item.job.pk %}" class="text-decoration-none fw-semibold">{{ item.job.job_title }}</a>
                     </td>
                     <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.candidate.technology_stack|truncatechars:25 }}</span></td>
-                    <td>${{ item.candidate.rate_card }}/hr</td>
+                    <td class="text-nowrap">
+                        {% if item.candidate.salary_inr %}
+                            ₹{{ item.candidate.salary_inr|floatformat:0 }}/yr
+                        {% endif %}
+                        {% if item.candidate.rate_card %}
+                            {% if item.candidate.salary_inr %} / {% endif %}
+                            ${{ item.candidate.rate_card|floatformat:0 }}/hr
+                        {% endif %}
+                    </td>
                     <td class="text-muted">{{ item.created_at|date:"M d, Y" }}</td>
                     <td class="text-end">
                         <form method="post" action="{% url 'corporate_client_remove_from_cart' item.job.pk item.candidate.pk %}" class="d-inline">

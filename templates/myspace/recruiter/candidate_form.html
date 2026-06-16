@@ -25,11 +25,25 @@
                     {% csrf_token %}
                     <div class="row g-3">
                         {% for field in form %}
-                        <div class="col-md-{% if field.name == 'notes' or field.name == 'profile_photo' or field.name == 'resume' or field.name == 'bgv_verification' or field.name == 'evaluation_certificate' %}12{% else %}6{% endif %}">
+                        <div class="col-md-{% if field.name == 'notes' or field.name == 'profile_photo' or field.name == 'resume' or field.name == 'bgv_verification' or field.name == 'evaluation_certificate' or field.name == 'employment_type' or field.name == 'notice_period' %}12{% else %}6{% endif %}"
+                             {% if field.name == 'rate_card' %}id="rate_card_container"{% elif field.name == 'salary_inr' %}id="salary_inr_container"{% endif %}>
                             <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
                                 {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
                             </label>
-                            {{ field }}
+                            {% if field.name == 'employment_type' or field.name == 'notice_period' %}
+                                <div class="d-flex flex-wrap gap-3 mt-1 mb-2">
+                                    {% for checkbox in field %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
                             {% if field.help_text %}
                             <div class="form-text text-muted" style="font-size:0.78rem;">{{ field.help_text }}</div>
                             {% endif %}
@@ -51,4 +65,50 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rateCardContainer = document.getElementById('rate_card_container');
+    const salaryInrContainer = document.getElementById('salary_inr_container');
+    
+    function updateFields() {
+        const checkboxes = document.querySelectorAll('input[name="employment_type"]');
+        let showRateCard = false;
+        let showSalaryInr = false;
+        
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                if (cb.value === 'Contract' || cb.value === 'Remote') {
+                    showRateCard = true;
+                }
+                if (cb.value === 'Full Time') {
+                    showSalaryInr = true;
+                }
+            }
+        });
+        
+        if (rateCardContainer) rateCardContainer.style.display = showRateCard ? 'block' : 'none';
+        if (salaryInrContainer) salaryInrContainer.style.display = showSalaryInr ? 'block' : 'none';
+    }
+    
+    function makeMutuallyExclusive(name) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                if (this.checked) {
+                    checkboxes.forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+                updateFields();
+            });
+        });
+    }
+    
+    makeMutuallyExclusive('employment_type');
+    makeMutuallyExclusive('notice_period');
+    
+    updateFields();
+});
+</script>
 {% endblock %}

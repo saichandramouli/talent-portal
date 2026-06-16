@@ -21,7 +21,8 @@
                             <tr>
                                 <th>Candidate</th>
                                 <th>Experience</th>
-                                <th>Rate Card</th>
+                                <th>Type</th>
+                                <th>Compensation</th>
                                 <th>Availability</th>
                                 <th class="text-end">Actions</th>
                             </tr>
@@ -45,7 +46,16 @@
                                         </div>
                                     </td>
                                     <td>{{ item.candidate.years_of_experience }} years</td>
-                                    <td>${{ item.candidate.rate_card }}/hr</td>
+                                    <td>{{ item.candidate.employment_type }}</td>
+                                    <td>
+                                        {% if item.candidate.salary_inr %}
+                                            ₹{{ item.candidate.salary_inr|floatformat:0 }}/yr
+                                        {% endif %}
+                                        {% if item.candidate.rate_card %}
+                                            {% if item.candidate.salary_inr %} / {% endif %}
+                                            ${{ item.candidate.rate_card|floatformat:0 }}/hr
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         <span class="badge bg-success availability-badge small mt-1">{{ item.candidate.availability }}</span>
                                     </td>

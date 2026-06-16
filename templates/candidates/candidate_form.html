@@ -56,29 +56,63 @@
                             {% endif %}
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="id_rate_card" class="form-label">Rate Card ($/hour)</label>
-                            {{ form.rate_card }}
-                            {% if form.rate_card.errors %}
-                                <div class="text-danger small mt-1">{{ form.rate_card.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
                             <label for="id_location" class="form-label">Location</label>
                             {{ form.location }}
                             {% if form.location.errors %}
                                 <div class="text-danger small mt-1">{{ form.location.errors }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="id_availability" class="form-label">Availability</label>
-                            {{ form.availability }}
-                            {% if form.availability.errors %}
-                                <div class="text-danger small mt-1">{{ form.availability.errors }}</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Employment Type <span class="text-danger">*</span></label>
+                        <div class="d-flex flex-wrap gap-3 mt-1">
+                            {% for checkbox in form.employment_type %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.employment_type.errors %}
+                            <div class="text-danger small mt-1">{{ form.employment_type.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div id="rate_card_container" class="col-md-6 mb-3" style="display: none;">
+                            <label for="id_rate_card" class="form-label">Rate Card ($/hour)</label>
+                            {{ form.rate_card }}
+                            {% if form.rate_card.errors %}
+                                <div class="text-danger small mt-1">{{ form.rate_card.errors }}</div>
                             {% endif %}
                         </div>
+                        <div id="salary_inr_container" class="col-md-6 mb-3" style="display: none;">
+                            <label for="id_salary_inr" class="form-label">Salary (INR/annum)</label>
+                            {{ form.salary_inr }}
+                            {% if form.salary_inr.errors %}
+                                <div class="text-danger small mt-1">{{ form.salary_inr.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Notice Period <span class="text-danger">*</span></label>
+                        <div class="d-flex flex-wrap gap-3 mt-1">
+                            {% for checkbox in form.availability %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.availability.errors %}
+                            <div class="text-danger small mt-1">{{ form.availability.errors }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-3">
@@ -191,4 +225,50 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rateCardContainer = document.getElementById('rate_card_container');
+    const salaryInrContainer = document.getElementById('salary_inr_container');
+    
+    function updateFields() {
+        const checkboxes = document.querySelectorAll('input[name="employment_type"]');
+        let showRateCard = false;
+        let showSalaryInr = false;
+        
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                if (cb.value === 'Contract' || cb.value === 'Remote') {
+                    showRateCard = true;
+                }
+                if (cb.value === 'Full Time') {
+                    showSalaryInr = true;
+                }
+            }
+        });
+        
+        rateCardContainer.style.display = showRateCard ? 'block' : 'none';
+        salaryInrContainer.style.display = showSalaryInr ? 'block' : 'none';
+    }
+    
+    function makeMutuallyExclusive(name) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                if (this.checked) {
+                    checkboxes.forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+                updateFields();
+            });
+        });
+    }
+    
+    makeMutuallyExclusive('employment_type');
+    makeMutuallyExclusive('availability');
+    
+    updateFields();
+});
+</script>
 {% endblock %}

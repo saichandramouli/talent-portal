@@ -105,7 +105,26 @@ class CorporateCandidate(models.Model):
     rate_card = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        help_text='Rate card in USD'
+        null=True,
+        blank=True,
+        help_text='Rate card in USD per hour'
+    )
+    salary_inr = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text='Salary in INR per annum'
+    )
+    employment_type = models.CharField(
+        max_length=100,
+        default='Full Time',
+        help_text='Employment type: Full Time, Contract, Remote'
+    )
+    notice_period = models.CharField(
+        max_length=100,
+        default='Immediate',
+        help_text='Notice period'
     )
     resume = models.FileField(
         upload_to='corporate_candidates/resumes/',
