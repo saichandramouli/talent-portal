@@ -103,12 +103,10 @@
                         </div>
                         <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
                             <i class="fa-solid fa-circle-dollar-to-slot text-muted" style="width: 16px;"></i> Rate Card: 
-                            {% if candidate.salary_inr %}
-                                ₹{{ candidate.salary_inr|floatformat:0 }} per annum (Full Time)
-                            {% endif %}
-                            {% if candidate.rate_card %}
-                                {% if candidate.salary_inr %} / {% endif %}
-                                ${{ candidate.rate_card }}/hr (Contract/Remote)
+                            {% if 'Full Time' in candidate.employment_type %}
+                                ₹{{ candidate.salary_inr|floatformat:0 }} per annum
+                            {% else %}
+                                ${{ candidate.rate_card|floatformat:0 }}/hr
                             {% endif %}
                         </div>
                     </div>

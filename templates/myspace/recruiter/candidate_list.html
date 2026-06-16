@@ -71,11 +71,9 @@
                     <td>{{ cand.total_experience }}</td>
                     <td>{{ cand.employment_type }}</td>
                     <td class="text-nowrap">
-                        {% if cand.salary_inr %}
+                        {% if 'Full Time' in cand.employment_type %}
                             ₹{{ cand.salary_inr|floatformat:0 }}/yr
-                        {% endif %}
-                        {% if cand.rate_card %}
-                            {% if cand.salary_inr %} / {% endif %}
+                        {% else %}
                             ${{ cand.rate_card|floatformat:0 }}/hr
                         {% endif %}
                     </td>

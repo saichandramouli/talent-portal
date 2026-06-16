@@ -356,11 +356,9 @@
                             <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
                             <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>
                             <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate Card:</strong> 
-                            {% if candidate.salary_inr %}
+                            {% if 'Full Time' in candidate.employment_type %}
                                 ₹{{ candidate.salary_inr|floatformat:0 }}/yr
-                            {% endif %}
-                            {% if candidate.rate_card %}
-                                {% if candidate.salary_inr %} / {% endif %}
+                            {% else %}
                                 ${{ candidate.rate_card|floatformat:0 }}/hr
                             {% endif %}
                             </div>

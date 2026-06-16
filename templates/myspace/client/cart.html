@@ -76,11 +76,9 @@
                     </td>
                     <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ item.candidate.technology_stack|truncatechars:25 }}</span></td>
                     <td class="text-nowrap">
-                        {% if item.candidate.salary_inr %}
+                        {% if 'Full Time' in item.candidate.employment_type %}
                             ₹{{ item.candidate.salary_inr|floatformat:0 }}/yr
-                        {% endif %}
-                        {% if item.candidate.rate_card %}
-                            {% if item.candidate.salary_inr %} / {% endif %}
+                        {% else %}
                             ${{ item.candidate.rate_card|floatformat:0 }}/hr
                         {% endif %}
                     </td>

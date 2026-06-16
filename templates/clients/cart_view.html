@@ -48,11 +48,9 @@
                                     <td>{{ item.candidate.years_of_experience }} years</td>
                                     <td>{{ item.candidate.employment_type }}</td>
                                     <td>
-                                        {% if item.candidate.salary_inr %}
+                                        {% if 'Full Time' in item.candidate.employment_type %}
                                             ₹{{ item.candidate.salary_inr|floatformat:0 }}/yr
-                                        {% endif %}
-                                        {% if item.candidate.rate_card %}
-                                            {% if item.candidate.salary_inr %} / {% endif %}
+                                        {% else %}
                                             ${{ item.candidate.rate_card|floatformat:0 }}/hr
                                         {% endif %}
                                     </td>

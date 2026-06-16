@@ -183,11 +183,9 @@
                         <td class="text-nowrap">{{ candidate.years_of_experience }} years</td>
                         <td class="text-nowrap">{{ candidate.employment_type }}</td>
                         <td class="text-nowrap">
-                            {% if candidate.salary_inr %}
+                            {% if 'Full Time' in candidate.employment_type %}
                                 ₹{{ candidate.salary_inr|floatformat:0 }}/yr
-                            {% endif %}
-                            {% if candidate.rate_card %}
-                                {% if candidate.salary_inr %} / {% endif %}
+                            {% else %}
                                 ${{ candidate.rate_card|floatformat:0 }}/hr
                             {% endif %}
                         </td>
