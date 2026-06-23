@@ -293,6 +293,9 @@
             <a href="{% url 'ceo_dashboard' %}" class="{% if request.resolver_match.url_name == 'ceo_dashboard' %}active{% endif %}">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
+            <a href="{% url 'ceo_hiring_directory' %}" class="{% if request.resolver_match.url_name == 'ceo_hiring_directory' %}active{% endif %}">
+                <i class="fa-solid fa-user-group"></i> Hiring Directory
+            </a>
             <a href="{% url 'admin_corporate_client_list' %}" class="{% if 'corporate_client' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="fa-solid fa-building"></i> Corporate Clients
             </a>

@@ -1,7 +1,101 @@
 {% extends 'myspace/base_myspace.html' %}
+{% load static %}
 {% block title %}CEO Space – Company Overview{% endblock %}
 {% block page_title %}CEO Space{% endblock %}
 {% block page_subtitle %}Organization-wide activity and statistics{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom Accordion Filter Styles */
+    .filter-sidebar-container {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--ms-border);
+    }
+
+    .filter-group {
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .filter-group:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .filter-header {
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 0;
+    }
+
+    .filter-header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .accordion-toggle-icon {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #64748b;
+        width: 14px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .filter-title {
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: #1e293b;
+        letter-spacing: -0.01em;
+    }
+
+    .clear-filter-link {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--ms-primary) !important;
+    }
+
+    .clear-filter-link:hover {
+        text-decoration: underline !important;
+    }
+
+    .filter-content {
+        padding-left: 22px;
+        margin-top: 8px;
+    }
+
+    .filter-item-link {
+        font-size: 0.85rem;
+        color: #475569;
+        padding: 6px 12px;
+        margin-bottom: 3px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: block;
+        text-decoration: none;
+    }
+
+    .filter-item-link:hover {
+        background-color: #f1f5f9;
+        color: var(--ms-primary);
+    }
+
+    .filter-item-link.active-filter {
+        background-color: rgba(37, 99, 235, 0.08);
+        color: var(--ms-primary);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid px-0">
@@ -166,5 +260,6 @@
         </div>
     </div>
     {% endif %}
+
 </div>
 {% endblock %}

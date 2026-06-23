@@ -1,0 +1,480 @@
+{% extends 'myspace/base_myspace.html' %}
+{% load static %}
+{% block title %}CEO Space – Talent Directory & Profiles{% endblock %}
+{% block page_title %}Talent Directory{% endblock %}
+{% block page_subtitle %}Profiles and Technology Wise Hiring{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom Accordion Filter Styles */
+    .filter-sidebar-container {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--ms-border);
+    }
+
+    .filter-group {
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
+    .filter-group:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .filter-header {
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 0;
+    }
+
+    .filter-header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .accordion-toggle-icon {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #64748b;
+        width: 14px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .filter-title {
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: #1e293b;
+        letter-spacing: -0.01em;
+    }
+
+    .clear-filter-link {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--ms-primary) !important;
+    }
+
+    .clear-filter-link:hover {
+        text-decoration: underline !important;
+    }
+
+    .filter-content {
+        padding-left: 22px;
+        margin-top: 8px;
+    }
+
+    .filter-item-link {
+        font-size: 0.85rem;
+        color: #475569;
+        padding: 6px 12px;
+        margin-bottom: 3px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: block;
+        text-decoration: none;
+    }
+
+    .filter-item-link:hover {
+        background-color: #f1f5f9;
+        color: var(--ms-primary);
+    }
+
+    .filter-item-link.active-filter {
+        background-color: rgba(37, 99, 235, 0.08);
+        color: var(--ms-primary);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="row g-4 mb-5">
+        <!-- Left Sidebar: Filters -->
+        <div class="col-lg-3">
+            <div class="py-2">
+                <form id="filter-form" method="GET" action="{% url 'ceo_hiring_directory' %}">
+                    <!-- Maintain Search Query -->
+                    <input type="hidden" id="filter-search-query" name="q" value="{{ search_query }}">
+                    <input type="hidden" id="selected-stack-input" name="stack" value="{{ selected_stack }}">
+
+                    <div class="filter-sidebar-container">
+                        <label class="form-label mb-3"
+                            style="font-weight: 700; font-size: 0.85rem; color: var(--ms-muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; border-bottom: 2px solid #2563eb; padding-bottom: 8px;">Filters</label>
+
+                        {% with selected_stack_int=selected_stack|add:"0" %}
+
+                        <!-- Artificial Intelligence Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('ai')">
+                                <div class="filter-header-left">
+                                    <span id="ai-icon" class="accordion-toggle-icon">{% if selected_stack_int >= 4 and selected_stack_int <= 9 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Artificial Intelligence</span>
+                                </div>
+                                {% if selected_stack_int >= 4 and selected_stack_int <= 9 %}<a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>{% endif %}
+                            </div>
+                            <div id="ai-content" class="filter-content"
+                                style="{% if selected_stack_int >= 4 and selected_stack_int <= 9 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id < 10 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Enterprise Apps Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('enterprise')">
+                                <div class="filter-header-left">
+                                    <span id="enterprise-icon" class="accordion-toggle-icon">{% if selected_stack_int == 10 or selected_stack_int >= 16 and selected_stack_int <= 20 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Enterprise Apps</span>
+                                </div>
+                                {% if selected_stack_int == 10 or selected_stack_int >= 16 and selected_stack_int <= 20 %}<a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>{% endif %}
+                            </div>
+                            <div id="enterprise-content" class="filter-content"
+                                style="{% if selected_stack_int == 10 or selected_stack_int >= 16 and selected_stack_int <= 20 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 10 or stack.id >= 16 and stack.id <= 20 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- IT Infrastructure Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('infrastructure')">
+                                <div class="filter-header-left">
+                                    <span id="infrastructure-icon" class="accordion-toggle-icon">{% if selected_stack_int == 11 or selected_stack_int == 21 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">IT Infrastructure</span>
+                                </div>
+                                {% if selected_stack_int == 11 or selected_stack_int == 21 %}
+                                <a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>
+                                {% endif %}
+                            </div>
+                            <div id="infrastructure-content" class="filter-content"
+                                style="{% if selected_stack_int == 11 or selected_stack_int == 21 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 11 or stack.id == 21 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Application Services Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('application')">
+                                <div class="filter-header-left">
+                                    <span id="application-icon" class="accordion-toggle-icon">{% if selected_stack_int == 12 or selected_stack_int >= 22 and selected_stack_int <= 24 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Application Services</span>
+                                </div>
+                                {% if selected_stack_int == 12 or selected_stack_int >= 22 and selected_stack_int <= 24 %}
+                                <a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>
+                                {% endif %}
+                            </div>
+                            <div id="application-content" class="filter-content"
+                                style="{% if selected_stack_int == 12 or selected_stack_int >= 22 and selected_stack_int <= 24 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 12 or stack.id >= 22 and stack.id <= 24 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Cloud Solutions Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('cloud')">
+                                <div class="filter-header-left">
+                                    <span id="cloud-icon" class="accordion-toggle-icon">{% if selected_stack_int == 13 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Cloud Solutions</span>
+                                </div>
+                                {% if selected_stack_int == 13 %}
+                                <a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>
+                                {% endif %}
+                            </div>
+                            <div id="cloud-content" class="filter-content"
+                                style="{% if selected_stack_int == 13 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 13 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Digital Services Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('digital')">
+                                <div class="filter-header-left">
+                                    <span id="digital-icon" class="accordion-toggle-icon">{% if selected_stack_int == 14 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Digital Services</span>
+                                </div>
+                                {% if selected_stack_int == 14 %}
+                                <a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>
+                                {% endif %}
+                            </div>
+                            <div id="digital-content" class="filter-content"
+                                style="{% if selected_stack_int == 14 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 14 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Engineering Services Accordion -->
+                        <div class="filter-group">
+                            <div class="filter-header" onclick="toggleFilterGroup('engineering')">
+                                <div class="filter-header-left">
+                                    <span id="engineering-icon" class="accordion-toggle-icon">{% if selected_stack_int == 15 %}-{% else %}+{% endif %}</span>
+                                    <span class="filter-title">Engineering Services</span>
+                                </div>
+                                {% if selected_stack_int == 15 %}
+                                <a href="#" class="clear-filter-link" onclick="clearStackFilter(event)">Clear</a>
+                                {% endif %}
+                            </div>
+                            <div id="engineering-content" class="filter-content"
+                                style="{% if selected_stack_int == 15 %}display: block;{% else %}display: none;{% endif %}">
+                                {% for stack in all_stacks %}
+                                {% if stack.id == 15 %}
+                                <div class="filter-item-link {% if selected_stack == stack.id|stringformat:'i' %}active-filter{% endif %}"
+                                    onclick="selectStack('{{ stack.id }}')">
+                                    {{ stack.name }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {% endwith %}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side: Search and Candidates Grid -->
+        <div class="col-lg-9">
+            <!-- Search Bar -->
+            <div class="d-flex justify-content-end mb-4">
+                <div class="card p-1 shadow-sm" style="width: 100%; max-width: 350px; background: #ffffff; border: 1px solid var(--ms-border); border-radius: 12px;">
+                    <form method="GET" action="{% url 'ceo_hiring_directory' %}">
+                        <!-- Maintain Filters -->
+                        <input type="hidden" name="stack" value="{{ selected_stack }}">
+                        <input type="hidden" name="job_title" value="{{ job_title_filter }}">
+                        <input type="hidden" name="skills" value="{{ skills_filter }}">
+
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
+                            <input type="text" id="search-input" name="q" class="form-control border-start-0"
+                                placeholder="Search candidates..." value="{{ search_query }}">
+                            <button type="submit" class="btn btn-sm btn-primary px-3">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Candidates Grid -->
+            <div id="candidates-grid" class="row g-4">
+                {% for candidate in candidates %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column text-center px-2 py-3">
+                        <!-- Top Image Section (Centered) -->
+                        <div class="card-image-wrap d-flex justify-content-center align-items-center py-3" style="background: transparent;">
+                            {% if candidate.profile_photo %}
+                            <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}"
+                                class="candidate-img-full" loading="lazy"
+                                style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                            {% else %}
+                            <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}"
+                                class="candidate-img-full" loading="lazy"
+                                style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                            {% endif %}
+                        </div>
+
+                        <!-- Card Content Section (Centered) -->
+                        <div class="card-content flex-grow-1 d-flex flex-column justify-content-between">
+                            <div class="mb-3">
+                                <!-- Name -->
+                                <h5 class="fw-bold mb-1" style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
+                                    {{ candidate.full_name }}
+                                </h5>
+
+                                <!-- Job Title / Technical Stack -->
+                                <div class="mb-2 fw-semibold" style="color: #2563eb !important; font-size: 0.95rem;">
+                                    {{ candidate.job_title|default:"Professional" }}
+                                </div>
+
+                                <!-- Profile Details -->
+                                <div class="text-muted small lh-base text-start px-2 mt-2" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
+                                    <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.years_of_experience }} Years</div>
+                                    <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
+                                    <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>
+                                    <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate Card:</strong> 
+                                    {% if 'Full Time' in candidate.employment_type %}
+                                        ₹{{ candidate.salary_inr|floatformat:0 }}/yr
+                                    {% else %}
+                                        ${{ candidate.rate_card|floatformat:0 }}/hr
+                                    {% endif %}
+                                    </div>
+                                    <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.availability }}</div>
+                                    <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Available</div>
+                                    <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet:</strong> On Demand</div>
+                                    <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance:</strong> On Demand</div>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Buttons -->
+                            <div class="pt-3 border-top d-flex justify-content-center gap-2 mt-auto">
+                                <a href="{% url 'candidate_detail' candidate.id %}"
+                                    class="btn btn-sm btn-outline-primary w-100 text-nowrap">
+                                    <i class="fa-solid fa-circle-info me-1"></i>View Profile Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="fa-solid fa-user-group fa-4x mb-3"></i>
+                    <p class="fs-5 mb-0">No candidates match your search filters.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Global filter function triggered on click of filter items or search submission
+    function applyFilters() {
+        const form = document.getElementById("filter-form");
+        if (!form) return;
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        // Check search query from both sources
+        const searchInput = document.getElementById('search-input');
+        if (searchInput && searchInput.value) {
+            params.set('q', searchInput.value);
+        } else {
+            const qVal = formData.get('q');
+            if (qVal) params.set('q', qVal);
+        }
+
+        // Set stack
+        const stackInput = document.getElementById('selected-stack-input');
+        if (stackInput && stackInput.value) {
+            params.set('stack', stackInput.value);
+        }
+
+        const queryString = params.toString();
+        const targetUrl = `${form.getAttribute('action')}?${queryString}`;
+
+        history.pushState(null, '', targetUrl);
+
+        fetch(targetUrl)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const newGrid = doc.getElementById('candidates-grid');
+                const currentGrid = document.getElementById('candidates-grid');
+                if (newGrid && currentGrid) {
+                    currentGrid.innerHTML = newGrid.innerHTML;
+                }
+
+                const newForm = doc.getElementById('filter-form');
+                const currentForm = document.getElementById('filter-form');
+                if (newForm && currentForm) {
+                    currentForm.innerHTML = newForm.innerHTML;
+                }
+            })
+            .catch(err => console.error('Error fetching filtered candidates:', err));
+    }
+
+    function toggleFilterGroup(groupId) {
+        const content = document.getElementById(groupId + '-content');
+        const icon = document.getElementById(groupId + '-icon');
+        if (!content) return;
+
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            icon.textContent = '-';
+        } else {
+            content.style.display = 'none';
+            icon.textContent = '+';
+        }
+    }
+
+    function selectStack(stackId) {
+        const input = document.getElementById('selected-stack-input');
+        if (input) {
+            if (input.value === String(stackId)) {
+                input.value = ''; // Deselect if already selected
+            } else {
+                input.value = stackId;
+            }
+            applyFilters();
+        }
+    }
+
+    function clearStackFilter(event) {
+        event.stopPropagation();
+        const input = document.getElementById('selected-stack-input');
+        if (input) {
+            input.value = '';
+            applyFilters();
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Intercept search form submissions to make them dynamic (AJAX)
+        document.addEventListener("submit", function (e) {
+            const form = e.target.closest("form");
+            if (form && form.method.toLowerCase() === "get") {
+                const action = form.getAttribute("action");
+                if (action && (action.includes("ceo") || action.includes("directory") || action === "")) {
+                    e.preventDefault();
+                    applyFilters();
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

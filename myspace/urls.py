@@ -40,6 +40,9 @@ urlpatterns = [
     path('ceo/',
          ceo_views.ceo_dashboard,
          name='ceo_dashboard'),
+    path('ceo/hiring-directory/',
+         ceo_views.ceo_hiring_directory,
+         name='ceo_hiring_directory'),
 
     # ── Recruiter: My Space Home ───────────────────────────────────────────────
     path('recruiter/',
