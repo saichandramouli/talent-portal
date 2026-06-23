@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Create Recruiter - Admin Panel{% endblock %}
+{% block title %}Create Manager - Admin Panel{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="mb-4">
-        <a href="{% url 'recruiter_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
-            <i class="fa-solid fa-arrow-left me-1"></i>Back to Recruiters
+        <a href="{% url 'manager_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Managers
         </a>
-        <h1 class="h3">Create Recruiter Account</h1>
-        <p class="text-muted">Create a new recruiter account and set up login credentials.</p>
+        <h1 class="h3">Create Manager Account</h1>
+        <p class="text-muted">Create a new manager account and set up login credentials.</p>
     </div>
 
     <div class="row">
@@ -68,34 +68,8 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="id_team" class="form-label">Assign Team (Optional)</label>
-                        {{ form.team }}
-                        <div class="form-text text-muted">Assigning a team allows this recruiter to upload candidates belonging to the team's tech stack.</div>
-                        {% if form.team.errors %}
-                            <div class="text-danger small mt-1">{{ form.team.errors }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id_manager" class="form-label">Assign Manager (Optional)</label>
-                            {{ form.manager }}
-                            {% if form.manager.errors %}
-                                <div class="text-danger small mt-1">{{ form.manager.errors }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="id_recruiter_type" class="form-label">Recruiter Type (Optional)</label>
-                            {{ form.recruiter_type }}
-                            {% if form.recruiter_type.errors %}
-                                <div class="text-danger small mt-1">{{ form.recruiter_type.errors }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary-custom w-100">
-                        <i class="fa-solid fa-user-plus me-2"></i>Create Recruiter Account
+                    <button type="submit" class="btn btn-primary-custom w-100 mt-3">
+                        <i class="fa-solid fa-user-plus me-2"></i>Create Manager Account
                     </button>
                 </form>
             </div>

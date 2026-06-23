@@ -4,11 +4,25 @@
 {% block content %}
 <div class="container-fluid">
     <div class="mb-4">
+        {% if is_manager %}
+        <a href="{% url 'manager_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Managers
+        </a>
+        <h1 class="h3">Edit Manager: {{ user_obj.full_name }}</h1>
+        <p class="text-muted">Modify manager profiles.</p>
+        {% elif is_client %}
+        <a href="{% url 'client_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Clients
+        </a>
+        <h1 class="h3">Edit Client: {{ user_obj.full_name }}</h1>
+        <p class="text-muted">Modify client profiles or change roles.</p>
+        {% else %}
         <a href="{% url 'recruiter_list' %}" class="btn btn-sm btn-secondary-custom mb-3">
             <i class="fa-solid fa-arrow-left me-1"></i>Back to Recruiters
         </a>
         <h1 class="h3">Edit Recruiter: {{ user_obj.full_name }}</h1>
-        <p class="text-muted">Modify recruiter profiles or assign them to a team.</p>
+        <p class="text-muted">Modify recruiter profiles or assign them to a team/manager.</p>
+        {% endif %}
     </div>
 
     <div class="row">
@@ -30,6 +44,14 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="id_role" class="form-label">User Role / Privilege Level</label>
+                            {{ form.role }}
+                            {{ form.role.errors }}
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="id_company_name" class="form-label">Company Name</label>
                             {{ form.company_name }}
@@ -42,12 +64,27 @@
                         </div>
                     </div>
 
+                    {% if not is_manager and not is_client %}
                     <div class="mb-3">
                         <label for="id_team" class="form-label">Assign Team</label>
                         {{ form.team }}
                         <div class="form-text text-muted">Assigning a team allows this recruiter to upload candidates belonging to the team's tech stack.</div>
                         {{ form.team.errors }}
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_manager" class="form-label">Assign Manager</label>
+                            {{ form.manager }}
+                            {{ form.manager.errors }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_recruiter_type" class="form-label">Recruiter Type</label>
+                            {{ form.recruiter_type }}
+                            {{ form.recruiter_type.errors }}
+                        </div>
+                    </div>
+                    {% endif %}
 
                     <div class="mb-4">
                         <div class="form-check">

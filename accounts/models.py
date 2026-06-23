@@ -31,6 +31,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('recruiter', 'Recruiter'),
         ('client', 'Client'),
         ('corporate_client', 'Corporate Client'),
+        ('manager', 'Manager'),
+        ('ceo', 'CEO'),
     )
 
     email = models.EmailField(unique=True)
@@ -38,6 +40,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='client')
     company_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    
+    manager = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='recruiters_managed',
+        limit_choices_to={'role': 'manager'}
+    )
+    recruiter_type = models.CharField(
+        max_length=10,
+        choices=(('cwr', 'CWR'), ('fte', 'FTE')),
+        null=True,
+        blank=True,
+        help_text="Classification for recruiters (CWR or FTE)"
+    )
     
     # We use a string reference to avoid circular import with the teams app
     team = models.ForeignKey(

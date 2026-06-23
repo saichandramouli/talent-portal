@@ -12,8 +12,8 @@
 
     <!-- Stat Dashboard Cards -->
     <div class="row g-4 mb-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-premium card-stat p-4">
+        <div class="col-md-4 col-lg">
+            <div class="card card-premium card-stat p-4 h-100">
                 <h6 class="text-muted uppercase text-xs mb-2">Recruiters</h6>
                 <h2 class="display-6 fw-bold mb-1">{{ total_recruiters }}</h2>
                 <a href="{% url 'recruiter_list' %}" class="small text-primary text-decoration-none">Manage Recruiters
@@ -22,8 +22,18 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-premium card-stat p-4">
+        <div class="col-md-4 col-lg">
+            <div class="card card-premium card-stat p-4 h-100">
+                <h6 class="text-muted uppercase text-xs mb-2">Managers</h6>
+                <h2 class="display-6 fw-bold mb-1">{{ total_managers }}</h2>
+                <a href="{% url 'manager_list' %}" class="small text-primary text-decoration-none">Manage Managers
+                    <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                <div class="stat-icon"><i class="fa-solid fa-people-roof"></i></div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg">
+            <div class="card card-premium card-stat p-4 h-100">
                 <h6 class="text-muted uppercase text-xs mb-2">Clients</h6>
                 <h2 class="display-6 fw-bold mb-1">{{ total_clients }}</h2>
                 <a href="{% url 'client_list' %}" class="small text-primary text-decoration-none">Manage Clients <i
@@ -32,8 +42,8 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-premium card-stat p-4">
+        <div class="col-md-4 col-lg">
+            <div class="card card-premium card-stat p-4 h-100">
                 <h6 class="text-muted uppercase text-xs mb-2">Candidates</h6>
                 <h2 class="display-6 fw-bold mb-1">{{ total_candidates }}</h2>
                 <a href="{% url 'admin_candidate_list' %}" class="small text-primary text-decoration-none">Manage Roster
@@ -42,8 +52,8 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card card-premium card-stat p-4">
+        <div class="col-md-4 col-lg">
+            <div class="card card-premium card-stat p-4 h-100">
                 <h6 class="text-muted uppercase text-xs mb-2">Teams / Stacks</h6>
                 <h2 class="display-6 fw-bold mb-1">{{ total_teams }} / {{ total_stacks }}</h2>
                 <a href="{% url 'team_list' %}" class="small text-primary text-decoration-none">Configure Teams <i
@@ -59,6 +69,8 @@
         <div class="d-flex flex-wrap gap-2">
             <a href="{% url 'create_recruiter' %}" class="btn btn-outline-primary btn-sm"><i
                     class="fa-solid fa-user-plus me-1"></i>Create Recruiter</a>
+            <a href="{% url 'create_manager' %}" class="btn btn-outline-primary btn-sm"><i
+                    class="fa-solid fa-user-plus me-1"></i>Create Manager</a>
             <a href="{% url 'team_create' %}" class="btn btn-outline-primary btn-sm"><i
                     class="fa-solid fa-people-group me-1"></i>Create Team</a>
             <a href="{% url 'stack_create' %}" class="btn btn-outline-secondary btn-sm"><i

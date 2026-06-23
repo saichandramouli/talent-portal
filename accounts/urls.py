@@ -12,8 +12,16 @@ urlpatterns = [
     path('recruiters/create/', views.create_recruiter, name='create_recruiter'),
     path('recruiters/<int:pk>/edit/', views.edit_recruiter, name='edit_recruiter'),
     path('recruiters/<int:pk>/toggle-active/', views.toggle_recruiter_active, name='toggle_recruiter_active'),
+    path('managers/', views.manager_list, name='manager_list'),
+    path('managers/create/', views.create_manager, name='create_manager'),
+    path('managers/<int:pk>/edit/', views.edit_manager, name='edit_manager'),
+    path('managers/<int:pk>/toggle-active/', views.toggle_manager_active, name='toggle_manager_active'),
     path('clients/', views.client_list, name='client_list'),
+    path('clients/<int:pk>/edit/', views.edit_client, name='edit_client'),
+    path('clients/<int:pk>/delete/', views.delete_client, name='delete_client'),
     path('clients/<int:pk>/toggle-active/', views.toggle_client_active, name='toggle_client_active'),
+
+
 
     # Password Reset URLs
     path('password-reset/', auth_views.PasswordResetView.as_view(

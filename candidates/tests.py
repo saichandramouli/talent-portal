@@ -38,10 +38,12 @@ class CandidateRestrictionsTestCase(TestCase):
         """Form is valid if the selected stack belongs to the recruiter's team."""
         form_data = {
             'full_name': 'John Doe',
+            'gender': 'male',
             'years_of_experience': 4,
             'rate_card': 55.00,
             'location': 'Remote',
-            'availability': 'Immediate',
+            'availability': ['Immediate'],
+            'employment_type': ['Contract'],
             'summary': 'Some Python developer notes',
             'technical_stack': [self.python_stack.id]
         }
@@ -52,10 +54,12 @@ class CandidateRestrictionsTestCase(TestCase):
         """Form is invalid if recruiter selects a stack (Java) outside their team (Python Team)."""
         form_data = {
             'full_name': 'Jane Java',
+            'gender': 'female',
             'years_of_experience': 5,
             'rate_card': 65.00,
             'location': 'New York',
-            'availability': 'Immediate',
+            'availability': ['Immediate'],
+            'employment_type': ['Contract'],
             'summary': 'Java developer notes',
             'technical_stack': [self.java_stack.id]
         }
@@ -71,10 +75,12 @@ class CandidateRestrictionsTestCase(TestCase):
         """A recruiter with no team assigned cannot upload candidates."""
         form_data = {
             'full_name': 'No Team Dev',
+            'gender': 'male',
             'years_of_experience': 3,
             'rate_card': 45.00,
             'location': 'Remote',
-            'availability': '2 Weeks Notice',
+            'availability': ['15 Days'],
+            'employment_type': ['Contract'],
             'summary': 'Developer summary',
             'technical_stack': [self.python_stack.id]
         }

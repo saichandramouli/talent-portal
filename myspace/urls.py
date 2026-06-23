@@ -1,5 +1,5 @@
 from django.urls import path
-from myspace.views import admin_views, recruiter_views, client_views
+from myspace.views import admin_views, recruiter_views, client_views, manager_views, ceo_views
 
 urlpatterns = [
 
@@ -30,6 +30,16 @@ urlpatterns = [
     path('admin/cart/',
          admin_views.admin_cart_overview,
          name='admin_myspace_cart_overview'),
+
+    # ── Manager: Manager Space Home ─────────────────────────────────────────────
+    path('manager/',
+         manager_views.manager_dashboard,
+         name='manager_dashboard'),
+
+    # ── CEO: CEO Space Home ───────────────────────────────────────────────────
+    path('ceo/',
+         ceo_views.ceo_dashboard,
+         name='ceo_dashboard'),
 
     # ── Recruiter: My Space Home ───────────────────────────────────────────────
     path('recruiter/',

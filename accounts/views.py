@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .forms import CustomLoginForm, RecruiterRegistrationForm, ClientRegistrationForm, RecruiterEditForm, AdminRecruiterCreationForm
-from .decorators import admin_required
+from .forms import CustomLoginForm, RecruiterRegistrationForm, ClientRegistrationForm, RecruiterEditForm, AdminRecruiterCreationForm, AdminManagerCreationForm, ManagerEditForm, ClientEditForm
+from .decorators import admin_required, admin_or_ceo_required
 from teams.models import Team, TechnologyStack
 from candidates.models import Candidate
 from clients.models import Cart
@@ -61,6 +61,7 @@ def register_client(request):
 def admin_dashboard(request):
     # Stats
     total_recruiters = User.objects.filter(role='recruiter').count()
+    total_managers = User.objects.filter(role='manager').count()
     total_clients = User.objects.filter(role='client').count()
     total_candidates = Candidate.objects.count()
     total_teams = Team.objects.count()
@@ -73,6 +74,7 @@ def admin_dashboard(request):
     
     context = {
         'total_recruiters': total_recruiters,
+        'total_managers': total_managers,
         'total_clients': total_clients,
         'total_candidates': total_candidates,
         'total_teams': total_teams,
@@ -85,13 +87,13 @@ def admin_dashboard(request):
     return render(request, 'admin/admin_dashboard.html', context)
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def recruiter_list(request):
     recruiters = User.objects.filter(role='recruiter').order_by('-created_at')
     return render(request, 'accounts/recruiter_list.html', {'recruiters': recruiters})
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def client_list(request):
     clients = User.objects.filter(role='client').order_by('-created_at')
     return render(request, 'accounts/client_list.html', {'clients': clients})
@@ -140,6 +142,40 @@ def toggle_client_active(request, pk):
 
 @login_required
 @admin_required
+def edit_client(request, pk):
+    client = get_object_or_404(User, pk=pk, role='client')
+    if request.method == 'POST':
+        form = ClientEditForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Client {client.full_name} updated successfully.")
+            return redirect('client_list')
+    else:
+        form = ClientEditForm(instance=client)
+    return render(request, 'accounts/user_edit.html', {'form': form, 'user_obj': client, 'is_client': True})
+
+
+@login_required
+@admin_required
+def delete_client(request, pk):
+    client = get_object_or_404(User, pk=pk, is_active=False)
+    if client.role not in ['client', 'corporate_client']:
+        messages.error(request, "Only deactivated client or corporate client accounts can be deleted.")
+        return redirect('client_list')
+    
+    role = client.role
+    client_name = client.full_name
+    client.delete()
+    messages.success(request, f"Client {client_name} has been deleted successfully.")
+    if role == 'corporate_client':
+        return redirect('admin_corporate_client_list')
+    return redirect('client_list')
+
+
+
+
+@login_required
+@admin_required
 def create_recruiter(request):
     if request.method == 'POST':
         form = AdminRecruiterCreationForm(request.POST)
@@ -159,3 +195,46 @@ def create_recruiter(request):
     else:
         form = AdminRecruiterCreationForm()
     return render(request, 'accounts/recruiter_create.html', {'form': form})
+
+@login_required
+@admin_or_ceo_required
+def manager_list(request):
+    managers = User.objects.filter(role='manager').order_by('-created_at')
+    return render(request, 'accounts/manager_list.html', {'managers': managers})
+
+@login_required
+@admin_required
+def create_manager(request):
+    if request.method == 'POST':
+        form = AdminManagerCreationForm(request.POST)
+        if form.is_valid():
+            manager_obj = form.save()
+            messages.success(request, f"Manager account for {manager_obj.full_name} created successfully.")
+            return redirect('manager_list')
+    else:
+        form = AdminManagerCreationForm()
+    return render(request, 'accounts/manager_create.html', {'form': form})
+
+@login_required
+@admin_required
+def edit_manager(request, pk):
+    manager_obj = get_object_or_404(User, pk=pk, role='manager')
+    if request.method == 'POST':
+        form = ManagerEditForm(request.POST, instance=manager_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Manager {manager_obj.full_name} updated successfully.")
+            return redirect('manager_list')
+    else:
+        form = ManagerEditForm(instance=manager_obj)
+    return render(request, 'accounts/user_edit.html', {'form': form, 'user_obj': manager_obj, 'is_manager': True})
+
+@login_required
+@admin_required
+def toggle_manager_active(request, pk):
+    manager_obj = get_object_or_404(User, pk=pk, role='manager')
+    manager_obj.is_active = not manager_obj.is_active
+    manager_obj.save()
+    status = "activated" if manager_obj.is_active else "deactivated"
+    messages.success(request, f"Manager {manager_obj.full_name} has been {status}.")
+    return redirect('manager_list')

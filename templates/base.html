@@ -20,10 +20,11 @@
 </head>
 
 <body>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
     <div class="wrapper">
         <!-- Sidebar -->
-        {% if user.is_authenticated and user.role != 'client' and user.role != 'recruiter' and user.role != 'corporate_client' %}
+        {% if user.is_authenticated and user.role != 'client' and user.role != 'recruiter' and user.role != 'corporate_client' and user.role != 'ceo' %}
         <nav id="sidebar">
             <div class="sidebar-header d-flex align-items-center justify-content-center">
                 <a href="{% url 'admin_dashboard' %}" class="d-block w-100 text-center logo-hover">
@@ -40,6 +41,10 @@
                 <li
                     class="{% if request.resolver_match.url_name == 'recruiter_list' or request.resolver_match.url_name == 'edit_recruiter' %}active{% endif %}">
                     <a href="{% url 'recruiter_list' %}"><i class="fa-solid fa-user-tie"></i> Recruiters</a>
+                </li>
+                <li
+                    class="{% if request.resolver_match.url_name == 'manager_list' or request.resolver_match.url_name == 'edit_manager' or request.resolver_match.url_name == 'create_manager' %}active{% endif %}">
+                    <a href="{% url 'manager_list' %}"><i class="fa-solid fa-people-roof"></i> Managers</a>
                 </li>
                 <li class="{% if request.resolver_match.url_name == 'client_list' %}active{% endif %}">
                     <a href="{% url 'client_list' %}"><i class="fa-solid fa-users"></i> Clients</a>
@@ -66,6 +71,16 @@
                 <li class="{% if 'corporate_client' in request.resolver_match.url_name or 'myspace' in request.resolver_match.url_name %}active{% endif %}">
                     <a href="{% url 'admin_corporate_client_list' %}"><i class="fa-solid fa-building"></i> My Space</a>
                 </li>
+                {% elif user.role == 'manager' %}
+                <p>Manager Operations</p>
+                <li class="{% if request.resolver_match.url_name == 'manager_dashboard' %}active{% endif %}">
+                    <a href="{% url 'manager_dashboard' %}"><i class="fa-solid fa-gauge-high"></i> Manager Space</a>
+                </li>
+                {% elif user.role == 'ceo' %}
+                <p>CEO Operations</p>
+                <li class="{% if request.resolver_match.url_name == 'ceo_dashboard' %}active{% endif %}">
+                    <a href="{% url 'ceo_dashboard' %}"><i class="fa-solid fa-gauge-high"></i> CEO Space</a>
+                </li>
                 {% endif %}
 
                 <li>
@@ -88,11 +103,38 @@
                         <img src="{% static 'images/people_prime_logo.png' %}" alt="People Prime" style="height: 40px; width: auto; object-fit: contain;">
                     </a>
                     {% endif %}
+                    {% if user.role == 'ceo' %}
+                    <div class="dropdown me-3">
+                        <button type="button" class="btn btn-sm btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <ul class="dropdown-menu shadow border-0 mt-2">
+                            <li>
+                                <a class="dropdown-item py-2 px-3 fw-semibold" href="{% url 'ceo_dashboard' %}">
+                                    <i class="fa-solid fa-gauge-high me-2 text-primary"></i>CEO Space
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" id="logout-ceo-dropdown-form" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                <a class="dropdown-item py-2 px-3 text-danger fw-semibold" href="#" onclick="document.getElementById('logout-ceo-dropdown-form').submit(); return false;">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% elif user.is_authenticated and user.role != 'client' and user.role != 'recruiter' and user.role != 'corporate_client' %}
+                    <button type="button" id="sidebarCollapse" class="btn btn-sm btn-light me-3">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    {% endif %}
 
                     {% if user.is_authenticated %}
                     <span class="navbar-text {% if user.role == 'client' or user.role == 'recruiter' %}ms-3{% endif %}">
                         Welcome, <strong>{{ user.full_name|capfirst }}</strong>
-                        <span class="badge bg-secondary ms-1">{{ user.role|title }}</span>
+                        <span class="badge bg-secondary ms-1">{% if user.role == 'ceo' %}CEO{% else %}{{ user.role|title }}{% endif %}</span>
                         {% if user.team %}
                         <span class="badge bg-primary ms-1">{{ user.team.name }}</span>
                         {% endif %}
@@ -280,6 +322,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS File -->
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const sidebarCollapse = document.getElementById("sidebarCollapse");
+            const backdrop = document.getElementById("sidebarBackdrop");
+
+            if (sidebarCollapse && sidebar) {
+                sidebarCollapse.addEventListener("click", function () {
+                    sidebar.classList.toggle("active");
+                    if (backdrop) {
+                        backdrop.classList.toggle("show");
+                    }
+                });
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener("click", function () {
+                    if (sidebar) {
+                        sidebar.classList.remove("active");
+                    }
+                    backdrop.classList.remove("show");
+                });
+            }
+        });
+    </script>
     {% block extra_js %}{% endblock %}
     {% block modals %}{% endblock %}
 </body>

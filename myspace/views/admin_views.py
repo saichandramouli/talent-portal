@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 
-from accounts.decorators import admin_required
+from accounts.decorators import admin_required, admin_or_ceo_required
 from accounts.models import User
 from myspace.models import (
     CorporateClient, RecruiterClientAssignment,
@@ -22,7 +22,7 @@ from myspace.forms import (
 
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def admin_corporate_client_list(request):
     """List all Corporate Clients."""
     clients = CorporateClient.objects.select_related('user').prefetch_related('recruiter_assignments__recruiter')
@@ -144,7 +144,7 @@ def admin_assign_recruiters(request, pk):
 
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def admin_job_overview(request):
     """Admin: view all job requirements across all corporate clients."""
     jobs = JobRequirement.objects.select_related('client', 'creator').order_by('-created_at')
@@ -159,7 +159,7 @@ def admin_job_overview(request):
 
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def admin_submission_overview(request):
     """Admin: view all candidate submissions."""
     submissions = CandidateSubmission.objects.select_related(
@@ -176,7 +176,7 @@ def admin_submission_overview(request):
 
 
 @login_required
-@admin_required
+@admin_or_ceo_required
 def admin_cart_overview(request):
     """Admin: view all corporate cart activity."""
     cart_items = CandidateCart.objects.select_related(

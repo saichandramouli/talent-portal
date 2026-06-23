@@ -238,7 +238,7 @@
     <!-- Sidebar -->
     <nav class="ms-sidebar" id="msSidebar">
         <div class="ms-sidebar-header">
-            <a href="{% if user.role == 'corporate_client' %}{% url 'corporate_client_dashboard' %}{% elif user.role == 'recruiter' %}{% url 'recruiter_my_space' %}{% else %}{% url 'admin_corporate_client_list' %}{% endif %}" class="ms-brand d-flex align-items-center gap-2 text-decoration-none">
+            <a href="{% if user.role == 'corporate_client' %}{% url 'corporate_client_dashboard' %}{% elif user.role == 'recruiter' %}{% url 'recruiter_my_space' %}{% elif user.role == 'manager' %}{% url 'manager_dashboard' %}{% elif user.role == 'ceo' %}{% url 'ceo_dashboard' %}{% else %}{% url 'admin_corporate_client_list' %}{% endif %}" class="ms-brand d-flex align-items-center gap-2 text-decoration-none">
                 <img src="{% static 'images/people_prime_logo.png' %}" alt="People Prime" style="height:32px;object-fit:contain;">
             </a>
             <div class="ms-brand-sub mt-1">My Space – Corporate Portal</div>
@@ -281,6 +281,28 @@
             <a href="{% url 'recruiter_dashboard' %}">
                 <i class="fa-solid fa-gauge-high"></i> Recruiter Dashboard
             </a>
+
+            {% elif user.role == 'manager' %}
+            <div class="ms-nav-section">Manager Space</div>
+            <a href="{% url 'manager_dashboard' %}" class="{% if request.resolver_match.url_name == 'manager_dashboard' %}active{% endif %}">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+
+            {% elif user.role == 'ceo' %}
+            <div class="ms-nav-section">CEO Space</div>
+            <a href="{% url 'ceo_dashboard' %}" class="{% if request.resolver_match.url_name == 'ceo_dashboard' %}active{% endif %}">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </a>
+            <a href="{% url 'admin_corporate_client_list' %}" class="{% if 'corporate_client' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fa-solid fa-building"></i> Corporate Clients
+            </a>
+            <a href="{% url 'admin_myspace_job_overview' %}" class="{% if 'job_overview' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fa-solid fa-briefcase"></i> All Jobs
+            </a>
+            <a href="{% url 'admin_myspace_submission_overview' %}" class="{% if 'submission_overview' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="fa-solid fa-paper-plane"></i> All Submissions
+            </a>
+
 
             {% elif user.role == 'corporate_client' %}
             <div class="ms-nav-section">My Space</div>
@@ -328,7 +350,7 @@
                 <span class="badge rounded-pill" style="background:var(--ms-primary);font-size:0.72rem;">
                     <i class="fa-solid fa-user-circle me-1"></i>{{ user.full_name|truncatechars:20 }}
                 </span>
-                <span class="badge bg-secondary rounded-pill" style="font-size:0.72rem;">{{ user.role|title }}</span>
+                <span class="badge bg-secondary rounded-pill" style="font-size:0.72rem;">{% if user.role == 'ceo' %}CEO{% else %}{{ user.role|title }}{% endif %}</span>
             </div>
         </div>
 

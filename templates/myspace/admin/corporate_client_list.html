@@ -58,11 +58,20 @@
                         <i class="fa-solid fa-pen"></i>
                     </a>
                     <a href="{% url 'admin_corporate_client_toggle_active' client.pk %}"
-                       class="btn btn-sm {% if client.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                       class="btn btn-sm {% if client.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %} me-1"
                        title="{% if client.is_active %}Deactivate{% else %}Activate{% endif %}"
                        onclick="return confirm('{% if client.is_active %}Deactivate{% else %}Activate{% endif %} {{ client.company_name }}?')">
                         <i class="fa-solid fa-{% if client.is_active %}ban{% else %}circle-check{% endif %}"></i>
                     </a>
+                    {% if not client.is_active %}
+                    <a href="{% url 'delete_client' client.user.pk %}"
+                       class="btn btn-sm btn-outline-danger"
+                       title="Delete"
+                       onclick="return confirm('Are you sure you want to permanently delete corporate client {{ client.company_name }}? This action cannot be undone.');">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    {% endif %}
+
                 </td>
             </tr>
             {% endfor %}

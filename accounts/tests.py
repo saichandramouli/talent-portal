@@ -88,3 +88,80 @@ class RecruiterCreationTestCase(TestCase):
         
         # Verify the celery email notification task was triggered
         mock_task_delay.assert_called_once_with(recruiter.id, 'password123')
+
+    def test_edit_client_role_to_ceo(self):
+        """Test that admin can edit a client and change their role to ceo, and toggle active status."""
+        client_user = User.objects.create_user(
+            email='client@test.com',
+            password='password123',
+            full_name='Test Client',
+            role='client',
+            is_active=False
+        )
+        self.client.force_login(self.admin)
+        
+        # Verify initial state
+        self.assertFalse(client_user.is_active)
+        self.assertEqual(client_user.role, 'client')
+        
+        form_data = {
+            'full_name': 'Test Client Promoted',
+            'role': 'ceo',
+            'company_name': 'Client Company',
+            'phone': '9876543210',
+            'is_active': True,
+        }
+        
+        response = self.client.post(f'/accounts/clients/{client_user.id}/edit/', form_data)
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify changes in DB
+        client_user.refresh_from_db()
+        self.assertEqual(client_user.full_name, 'Test Client Promoted')
+        self.assertEqual(client_user.role, 'ceo')
+        self.assertEqual(client_user.company_name, 'Client Company')
+        self.assertEqual(client_user.phone, '9876543210')
+        self.assertTrue(client_user.is_active)
+
+    def test_delete_client_success(self):
+        """Test that admin can successfully delete a deactivated client account."""
+        client_user = User.objects.create_user(
+            email='deactivated_client@test.com',
+            password='password123',
+            full_name='Deactivated Client',
+            role='client',
+            is_active=False
+        )
+        self.client.force_login(self.admin)
+        
+        # Verify it exists
+        self.assertTrue(User.objects.filter(id=client_user.id).exists())
+        
+        response = self.client.post(f'/accounts/clients/{client_user.id}/delete/')
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify it has been deleted
+        self.assertFalse(User.objects.filter(id=client_user.id).exists())
+
+    def test_delete_corporate_client_success(self):
+        """Test that admin can successfully delete a deactivated corporate client account."""
+        corp_client_user = User.objects.create_user(
+            email='deactivated_corp@test.com',
+            password='password123',
+            full_name='Deactivated Corporate',
+            role='corporate_client',
+            is_active=False
+        )
+        self.client.force_login(self.admin)
+        
+        # Verify it exists
+        self.assertTrue(User.objects.filter(id=corp_client_user.id).exists())
+        
+        response = self.client.post(f'/accounts/clients/{corp_client_user.id}/delete/')
+        self.assertEqual(response.status_code, 302)
+        
+        # Verify it has been deleted
+        self.assertFalse(User.objects.filter(id=corp_client_user.id).exists())
+
+
+

@@ -30,6 +30,9 @@ def role_required(allowed_roles):
 def admin_required(view_func):
     return role_required(['admin'])(view_func)
 
+def admin_or_ceo_required(view_func):
+    return role_required(['admin', 'ceo'])(view_func)
+
 def recruiter_required(view_func):
     return role_required(['recruiter'])(view_func)
 
@@ -38,3 +41,10 @@ def client_required(view_func):
 
 def corporate_client_required(view_func):
     return role_required(['corporate_client'])(view_func)
+
+def manager_required(view_func):
+    return role_required(['manager'])(view_func)
+
+def ceo_required(view_func):
+    return role_required(['ceo'])(view_func)
+
