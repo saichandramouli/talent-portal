@@ -35,7 +35,7 @@
             display: flex; flex-direction: column;
             z-index: 1000; overflow-y: auto;
             transition: transform 0.3s ease;
-            transform: translateX(-100%);
+            transform: translateX(0);
         }
         .ms-sidebar.open {
             transform: translateX(0);
@@ -89,7 +89,7 @@
         }
 
         /* ── Main Content ─────────────────────────────────────── */
-        .ms-main { margin-left: 0; display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+        .ms-main { margin-left: var(--ms-sidebar-width); display: flex; flex-direction: column; min-height: 100vh; width: calc(100% - var(--ms-sidebar-width)); }
         .ms-topbar {
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(12px);
@@ -316,7 +316,7 @@
                 <i class="fa-solid fa-briefcase"></i> My Jobs
             </a>
             <a href="{% url 'corporate_client_cart' %}" class="{% if request.resolver_match.url_name == 'corporate_client_cart' %}active{% endif %}">
-                <i class="fa-solid fa-star"></i> Shortlist
+                <i class="fa-solid fa-cart-shopping"></i> Cart
             </a>
             <a href="{% url 'corporate_client_profile' %}" class="{% if request.resolver_match.url_name == 'corporate_client_profile' %}active{% endif %}">
                 <i class="fa-solid fa-user-circle"></i> Profile
@@ -340,7 +340,7 @@
         <!-- Topbar -->
         <div class="ms-topbar">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-light" onclick="document.getElementById('msSidebar').classList.toggle('open'); document.getElementById('sidebarBackdrop').classList.toggle('show');">
+                <button class="btn btn-sm btn-light d-lg-none" onclick="document.getElementById('msSidebar').classList.toggle('open'); document.getElementById('sidebarBackdrop').classList.toggle('show');">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div>

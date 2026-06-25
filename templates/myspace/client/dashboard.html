@@ -7,11 +7,10 @@
 <a href="{% url 'corporate_client_cart' %}"
     class="btn-ms-primary py-1 px-3 d-flex align-items-center gap-2 me-2 text-decoration-none"
     style="font-size:0.8rem; border-radius: 8px;">
-    <i class="fa-solid fa-star text-warning"></i>
-    <span>My Shortlist</span>
+    <i class="fa-solid fa-cart-shopping text-warning"></i>
+    <span>Cart</span>
     {% if cart_count > 0 %}
-    <span class="badge bg-white text-primary rounded-pill" style="font-size:0.75rem; padding: 0.25em 0.6em;">{{
-        cart_count }}</span>
+    <span class="badge bg-white text-primary rounded-pill" style="font-size:0.75rem; padding: 0.25em 0.6em;">{{ cart_count }}</span>
     {% endif %}
 </a>
 {% endblock %}
@@ -58,7 +57,7 @@
                 <i class="fa-solid fa-briefcase me-1"></i> View All Jobs
             </a>
             <a href="{% url 'corporate_client_cart' %}" class="btn-ms-outline text-decoration-none py-2 px-3">
-                <i class="fa-solid fa-star me-1"></i> My Shortlist
+                <i class="fa-solid fa-cart-shopping me-1"></i> Cart
             </a>
             <a href="{% url 'corporate_client_profile' %}" class="btn btn-outline-secondary btn-sm py-2 px-3">
                 <i class="fa-solid fa-user-circle me-1"></i> My Profile
