@@ -19,7 +19,7 @@
 {% if jobs %}
 <div class="ms-card overflow-hidden">
     <div class="table-responsive">
-        <table class="ms-table" style="font-size: 12px;">
+        <table class="ms-table text-nowrap" style="font-size: 11px;">
             <thead>
                 <tr>
                     <th>Job Title</th>
@@ -36,25 +36,25 @@
                 <tr>
                     <td>
                         <div>
-                            <div class="text-dark">{{ job.job_title }}</div>
-                            <div class="text-muted" style="font-size: 11px;">{{ job.employment_type }}</div>
+                            <div class="text-dark fw-semibold">{{ job.job_title }}</div>
+                            <div class="text-muted" style="font-size: 10px;">{{ job.employment_type }}</div>
                         </div>
                     </td>
                     <td>
-                        <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size: 11px;">
+                        <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size: 10px;">
                             {{ job.required_skills|truncatechars:40 }}
                         </span>
                     </td>
                     <td>{{ job.experience }}</td>
                     <td>{{ job.rate_card }}</td>
                     <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
-                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 11px;">{{ job.get_status_display }}</span></td>
-                    <td class="text-end text-nowrap">
-                        <span class="badge bg-primary bg-opacity-10 text-primary px-2.5 py-1.5 me-2" style="font-size: 11px;">
+                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 10px;">{{ job.get_status_display }}</span></td>
+                    <td class="text-end">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 me-2" style="font-size: 10px;">
                             <i class="fa-solid fa-users me-1"></i>{{ job.submissions.count }} Candidates
                         </span>
-                        <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="btn btn-sm btn-outline-primary py-1 px-3" style="font-size: 11px; border-radius: 6px;">
-                            View Candidates <i class="fa-solid fa-arrow-right ms-1" style="font-size: 10px;"></i>
+                        <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="btn btn-sm btn-outline-primary py-1 px-3" style="font-size: 10px; border-radius: 6px;">
+                            View Candidates <i class="fa-solid fa-arrow-right ms-1" style="font-size: 9px;"></i>
                         </a>
                     </td>
                 </tr>
