@@ -213,6 +213,29 @@ class JobRequirement(models.Model):
     location = models.CharField(max_length=255)
     rate_card = models.CharField(max_length=100, help_text='e.g. $80/hr or $120k/yr')
     employment_type = models.CharField(max_length=100, help_text='e.g. Contract, Full-Time, Part-Time')
+    num_positions = models.PositiveIntegerField(default=1, verbose_name="Number of Positions")
+    onboard_type = models.CharField(
+        max_length=50,
+        choices=[
+            ('Remote', 'Remote'),
+            ('Hybrid', 'Hybrid'),
+            ('In Office Everyday', 'In Office Everyday')
+        ],
+        default='Remote',
+        verbose_name="Onboard Type"
+    )
+    notice_period = models.CharField(
+        max_length=100,
+        choices=[
+            ('Immediate', 'Immediate'),
+            ('15 Days', '15 Days'),
+            ('1 Month', '1 Month'),
+            ('2 Months', '2 Months'),
+            ('3 Months', '3 Months')
+        ],
+        default='Immediate',
+        verbose_name="Notice Period"
+    )
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -236,6 +259,9 @@ class CandidateSubmission(models.Model):
         ('viewed', 'Viewed'),
         ('shortlisted', 'Shortlisted'),
         ('interview_scheduled', 'Interview Scheduled'),
+        ('selected_yet_to_offer', 'Select Yet to Offer'),
+        ('offered_yet_to_join', 'Offered yet to Join'),
+        ('joined', 'Joined'),
         ('selected', 'Selected'),
         ('rejected', 'Rejected'),
     ]

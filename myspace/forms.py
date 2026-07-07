@@ -113,6 +113,38 @@ class JobRequirementForm(forms.ModelForm):
         }
 
 
+class CorporateClientJobRequirementForm(forms.ModelForm):
+    employment_type = forms.ChoiceField(
+        choices=[
+            ('Full Time', 'Full Time'),
+            ('Contract', 'Contract'),
+        ],
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Hire Type ( Contract/Full Time )"
+    )
+
+    class Meta:
+        model = JobRequirement
+        fields = [
+            'job_title', 'num_positions', 'employment_type',
+            'required_skills', 'experience', 'rate_card',
+            'onboard_type', 'notice_period', 'location', 'description', 'status'
+        ]
+        widgets = {
+            'job_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Senior Frontend Engineer'}),
+            'num_positions': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'required_skills': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'e.g. Python, Django, React'}),
+            'experience': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 5+ Years'}),
+            'rate_card': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. $80/hr or $120k/yr'}),
+            'onboard_type': forms.Select(attrs={'class': 'form-select'}),
+            'notice_period': forms.Select(attrs={'class': 'form-select'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Bangalore / Remote'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe the job roles and responsibilities...'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+
+
 class CorporateCandidateForm(forms.ModelForm):
     employment_type = forms.MultipleChoiceField(
         choices=[

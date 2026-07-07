@@ -22,6 +22,10 @@ def _get_corporate_client(user):
     return get_object_or_404(CorporateClient, user=user)
 
 
+from django.db.models import Count, Q
+from myspace.forms import CorporateClientJobRequirementForm
+
+
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 
 @login_required
@@ -29,12 +33,14 @@ def _get_corporate_client(user):
 def corporate_client_dashboard(request):
     """Corporate Client main dashboard."""
     corp = _get_corporate_client(request.user)
+    
+    # Simple dashboard stats
     jobs = JobRequirement.objects.filter(client=corp)
     total_jobs = jobs.count()
     open_jobs = jobs.filter(status='open').count()
     total_submissions = CandidateSubmission.objects.filter(job__client=corp).count()
     cart_count = CandidateCart.objects.filter(client=corp).count()
-    recent_jobs = jobs.order_by('-created_at')[:5]
+    
     recent_submissions = CandidateSubmission.objects.filter(
         job__client=corp
     ).select_related('candidate', 'job').order_by('-created_at')[:5]
@@ -45,9 +51,107 @@ def corporate_client_dashboard(request):
         'open_jobs': open_jobs,
         'total_submissions': total_submissions,
         'cart_count': cart_count,
-        'recent_jobs': recent_jobs,
         'recent_submissions': recent_submissions,
     })
+
+
+@login_required
+@corporate_client_required
+def corporate_client_jobs_posted(request):
+    """List only the jobs posted by the Corporate Client themselves (not recruiters) in a tracker table."""
+    corp = _get_corporate_client(request.user)
+    
+    # Filter jobs created/added by the corporate client user themselves
+    jobs = JobRequirement.objects.filter(client=corp, creator=request.user).annotate(
+        submission_count=Count('submissions'),
+        shortlist_count=Count('submissions', filter=Q(submissions__status='shortlisted')),
+        interview_count=Count('submissions', filter=Q(submissions__status='interview_scheduled')),
+        select_yet_to_offer_count=Count('submissions', filter=Q(submissions__status='selected_yet_to_offer')),
+        offered_yet_to_join_count=Count('submissions', filter=Q(submissions__status='offered_yet_to_join')),
+        joined_count=Count('submissions', filter=Q(submissions__status='joined'))
+    ).order_by('-created_at')
+
+    # Calculate sums for footer
+    totals = {
+        'num_positions': sum(j.num_positions for j in jobs),
+        'submissions': sum(j.submission_count for j in jobs),
+        'shortlisted': sum(j.shortlist_count for j in jobs),
+        'interviews': sum(j.interview_count for j in jobs),
+        'select_yet_to_offer': sum(j.select_yet_to_offer_count for j in jobs),
+        'offered_yet_to_join': sum(j.offered_yet_to_join_count for j in jobs),
+        'joined': sum(j.joined_count for j in jobs),
+    }
+
+    return render(request, 'myspace/client/client_jobs.html', {
+        'corp': corp,
+        'jobs': jobs,
+        'totals': totals,
+    })
+
+
+@login_required
+@corporate_client_required
+def corporate_client_job_create(request):
+    """Allow Corporate Client to create a Job Posting."""
+    corp = _get_corporate_client(request.user)
+    if request.method == 'POST':
+        form = CorporateClientJobRequirementForm(request.POST)
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.client = corp
+            job.creator = request.user
+            job.save()
+            messages.success(request, f"Job requirement '{job.job_title}' posted successfully.")
+            return redirect('corporate_client_dashboard')
+    else:
+        form = CorporateClientJobRequirementForm()
+    return render(request, 'myspace/client/job_form.html', {
+        'form': form,
+        'corp': corp,
+        'title': 'Post a Job',
+        'action': 'Post Job',
+    })
+
+
+@login_required
+@corporate_client_required
+def corporate_client_job_edit(request, job_pk):
+    """Allow Corporate Client to edit their Job Posting."""
+    corp = _get_corporate_client(request.user)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=corp)
+    if request.method == 'POST':
+        form = CorporateClientJobRequirementForm(request.POST, instance=job)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Job '{job.job_title}' updated successfully.")
+            return redirect('corporate_client_dashboard')
+    else:
+        form = CorporateClientJobRequirementForm(instance=job)
+    return render(request, 'myspace/client/job_form.html', {
+        'form': form,
+        'corp': corp,
+        'job': job,
+        'title': 'Edit Job',
+        'action': 'Save Changes',
+    })
+
+
+@login_required
+@corporate_client_required
+def corporate_client_job_delete(request, job_pk):
+    """Allow Corporate Client to delete their Job Posting."""
+    corp = _get_corporate_client(request.user)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=corp)
+    if request.method == 'POST':
+        title = job.job_title
+        job.delete()
+        messages.success(request, f"Job requirement '{title}' deleted.")
+        return redirect('corporate_client_dashboard')
+    return render(request, 'myspace/client/job_confirm_delete.html', {
+        'corp': corp,
+        'job': job,
+    })
+
 
 
 # ─── Jobs ─────────────────────────────────────────────────────────────────────

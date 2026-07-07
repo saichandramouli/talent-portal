@@ -312,7 +312,10 @@
             <a href="{% url 'corporate_client_dashboard' %}" class="{% if request.resolver_match.url_name == 'corporate_client_dashboard' %}active{% endif %}">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
-            <a href="{% url 'corporate_client_my_jobs' %}" class="{% if 'jobs' in request.resolver_match.url_name %}active{% endif %}">
+            <a href="{% url 'corporate_client_jobs_posted' %}" class="{% if request.resolver_match.url_name == 'corporate_client_jobs_posted' %}active{% endif %}">
+                <i class="fa-solid fa-table"></i> Client Jobs
+            </a>
+            <a href="{% url 'corporate_client_my_jobs' %}" class="{% if request.resolver_match.url_name == 'corporate_client_my_jobs' %}active{% endif %}">
                 <i class="fa-solid fa-briefcase"></i> My Jobs
             </a>
             <a href="{% url 'corporate_client_cart' %}" class="{% if request.resolver_match.url_name == 'corporate_client_cart' %}active{% endif %}">
@@ -353,21 +356,25 @@
                     {% if user.role == 'corporate_client' and user.corporate_client_profile %}
                     <a href="{% url 'corporate_client_cart' %}"
                         class="btn-ms-primary py-1 px-3 d-flex align-items-center gap-2 me-2 text-decoration-none"
-                        style="font-size:0.8rem; border-radius: 8px;">
+                        style="font-size:0.7rem; border-radius: 8px;">
                         <i class="fa-solid fa-cart-shopping text-warning"></i>
-                        <span>Your Shortlist Cart</span>
+                        <span>Cart</span>
                         {% with count=user.corporate_client_profile.cart_items.count %}
                         {% if count > 0 %}
-                        <span class="badge bg-white text-primary rounded-pill" style="font-size:0.75rem; padding: 0.25em 0.6em;">{{ count }}</span>
+                        <span class="badge bg-white text-primary rounded-pill" style="font-size:0.65rem; padding: 0.25em 0.6em;">{{ count }}</span>
                         {% endif %}
                         {% endwith %}
                     </a>
                     {% endif %}
                 {% endblock %}
-                <span class="badge rounded-pill" style="background:var(--ms-primary);font-size:0.72rem;">
-                    <i class="fa-solid fa-user-circle me-1"></i>{{ user.full_name|truncatechars:20 }}
-                </span>
-                <span class="badge bg-secondary rounded-pill" style="font-size:0.72rem;">{% if user.role == 'ceo' %}CEO{% else %}{{ user.role|title }}{% endif %}</span>
+                <div class="text-end d-flex flex-column align-items-end justify-content-center me-2" style="line-height: 1.25;">
+                    <span class="text-white fw-semibold" style="font-size:0.78rem;">
+                        <i class="fa-solid fa-user-circle me-1" style="font-size:0.85rem;"></i>{{ user.full_name }}
+                    </span>
+                    <span class="text-white-50" style="font-size:0.65rem;">
+                        {% if user.role == 'ceo' %}CEO{% elif user.role == 'corporate_client' %}Corporate Client{% else %}{{ user.role|title }}{% endif %}
+                    </span>
+                </div>
             </div>
         </div>
 

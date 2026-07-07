@@ -54,7 +54,7 @@ def recruiter_my_space(request):
 def recruiter_job_list(request, client_pk):
     """List all jobs for a given Corporate Client (only if recruiter is assigned)."""
     client = _get_assigned_client_or_404(request.user, client_pk)
-    jobs = JobRequirement.objects.filter(client=client, creator=request.user).order_by('-created_at')
+    jobs = JobRequirement.objects.filter(client=client).order_by('-created_at')
     status_filter = request.GET.get('status', '')
     if status_filter:
         jobs = jobs.filter(status=status_filter)
@@ -118,7 +118,7 @@ def recruiter_job_edit(request, client_pk, job_pk):
 def recruiter_job_detail(request, client_pk, job_pk):
     """View a job's details along with all submitted candidates."""
     client = _get_assigned_client_or_404(request.user, client_pk)
-    job = get_object_or_404(JobRequirement, pk=job_pk, client=client, creator=request.user)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=client)
     submissions = job.submissions.select_related('candidate').order_by('-created_at')
     return render(request, 'myspace/recruiter/job_detail.html', {
         'client': client,
@@ -228,7 +228,7 @@ def recruiter_candidate_delete(request, candidate_pk):
 def recruiter_submit_candidates(request, client_pk, job_pk):
     """Submit one or more Corporate Candidates to a Job Requirement."""
     client = _get_assigned_client_or_404(request.user, client_pk)
-    job = get_object_or_404(JobRequirement, pk=job_pk, client=client, creator=request.user)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=client)
 
     # Already submitted candidates for this job
     already_submitted_ids = list(

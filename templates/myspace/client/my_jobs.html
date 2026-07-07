@@ -9,7 +9,8 @@
     <div class="d-flex align-items-center gap-2 flex-wrap">
         {% for val, label in status_choices %}
         <a href="?status={{ val }}"
-            class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+            class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{
+            label }}</a>
         {% endfor %}
         <a href="?"
             class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
@@ -48,12 +49,16 @@
                     <td>{{ job.experience }}</td>
                     <td>{{ job.rate_card }}</td>
                     <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
-                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 10px;">{{ job.get_status_display }}</span></td>
+                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 10px;">{{
+                            job.get_status_display }}</span></td>
                     <td class="text-end">
-                        <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 me-2" style="font-size: 10px;">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 me-2"
+                            style="font-size: 10px;">
                             <i class="fa-solid fa-users me-1"></i>{{ job.submissions.count }} Candidates
                         </span>
-                        <a href="{% url 'corporate_client_job_candidates' job.pk %}" class="btn btn-sm btn-outline-primary py-1 px-3" style="font-size: 10px; border-radius: 6px;">
+                        <a href="{% url 'corporate_client_job_candidates' job.pk %}"
+                            class="btn btn-sm btn-outline-primary py-1 px-3"
+                            style="font-size: 10px; border-radius: 6px;">
                             View Candidates <i class="fa-solid fa-arrow-right ms-1" style="font-size: 9px;"></i>
                         </a>
                     </td>
