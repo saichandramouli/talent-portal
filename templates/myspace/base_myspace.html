@@ -327,6 +327,39 @@
             <a href="{% url 'client_dashboard' %}" class="{% if request.resolver_match.url_name == 'client_dashboard' %}active{% endif %}">
                 <i class="fa-solid fa-bolt"></i> Hire Instantly
             </a>
+            {% if user.corporate_client_profile.is_servicenow_client %}
+            <div class="ms-nav-section mt-3" style="font-size: 0.68rem; letter-spacing: 0.05em;">ServiceNow Modules</div>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'ITSM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'ITSM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> ITSM
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'ITOM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'ITOM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> ITOM
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'HRSD' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'HRSD' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> HRSD
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'CSM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'CSM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> CSM
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'SPM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'SPM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> SPM
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'IRM_GRC' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'IRM_GRC' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> IRM/GRC
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'SecOps' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'SecOps' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> SecOps
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'HAM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'HAM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> HAM
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'SAM_Pro' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'SAM_Pro' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> SAM Pro
+            </a>
+            <a href="{% url 'corporate_client_servicenow_candidates' 'FSM' %}" class="{% if request.resolver_match.url_name == 'corporate_client_servicenow_candidates' and request.resolver_match.kwargs.module_name == 'FSM' %}active{% endif %}" style="font-size:0.75rem; padding: 0.35rem 1rem;">
+                <i class="fa-solid fa-circle-dot" style="font-size: 0.45rem; margin-right: 0.4rem;"></i> FSM
+            </a>
+            {% endif %}
             {% endif %}
         </div>
 

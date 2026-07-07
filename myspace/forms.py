@@ -50,7 +50,7 @@ class CorporateClientProfileForm(forms.ModelForm):
 
     class Meta:
         model = CorporateClient
-        fields = ['company_name', 'company_website', 'industry', 'contact_phone', 'address', 'description']
+        fields = ['company_name', 'company_website', 'industry', 'contact_phone', 'address', 'description', 'is_servicenow_client']
         widgets = {
             'company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ABC Technologies Pvt Ltd'}),
             'company_website': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com'}),
@@ -58,6 +58,7 @@ class CorporateClientProfileForm(forms.ModelForm):
             'contact_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+91 98765 43210'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Office address'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Brief description'}),
+            'is_servicenow_client': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 
@@ -175,7 +176,7 @@ class CorporateCandidateForm(forms.ModelForm):
             'profile_photo', 'full_name', 'gender', 'email', 'phone',
             'total_experience', 'current_location', 'technology_stack',
             'current_company', 'rate_card', 'salary_inr', 'employment_type', 'notice_period', 'resume', 'bgv_verification',
-            'evaluation_certificate', 'notes', 'status'
+            'evaluation_certificate', 'notes', 'status', 'servicenow_module'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
@@ -191,6 +192,7 @@ class CorporateCandidateForm(forms.ModelForm):
             'salary_inr': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0.00', 'step': '0.01'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal notes…'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
+            'servicenow_module': forms.Select(attrs={'class': 'form-select'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
             'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),

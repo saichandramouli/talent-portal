@@ -416,3 +416,37 @@ def corporate_candidate_detail(request, candidate_pk):
         'has_credentials_access': has_credentials_access,
     })
 
+
+@login_required
+@corporate_client_required
+def corporate_client_servicenow_candidates(request, module_name):
+    """Filter and display submitted candidates matching a ServiceNow module."""
+    corp = _get_corporate_client(request.user)
+    if not corp.is_servicenow_client:
+        messages.error(request, "ServiceNow Dashboard is not enabled for your account.")
+        return redirect('corporate_client_dashboard')
+
+    submissions = CandidateSubmission.objects.filter(
+        job__client=corp,
+        candidate__servicenow_module=module_name
+    ).select_related('candidate', 'job').order_by('-created_at')
+
+    credential_requests = {
+        req.candidate_id: req
+        for req in CorporateCredentialRequest.objects.filter(client=corp)
+    }
+
+    cart_candidate_ids = set(
+        CandidateCart.objects.filter(client=corp).values_list('candidate_id', flat=True)
+    )
+
+    for sub in submissions:
+        sub.candidate.credential_request = credential_requests.get(sub.candidate.id)
+
+    return render(request, 'myspace/client/servicenow_candidates.html', {
+        'corp': corp,
+        'module_name': module_name,
+        'submissions': submissions,
+        'cart_candidate_ids': cart_candidate_ids,
+    })
+

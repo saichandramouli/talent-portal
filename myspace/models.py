@@ -22,6 +22,7 @@ class CorporateClient(models.Model):
     address = models.TextField(blank=True, default='')
     description = models.TextField(blank=True, default='')
     is_active = models.BooleanField(default=True)
+    is_servicenow_client = models.BooleanField(default=False, verbose_name="Is ServiceNow Client")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -146,6 +147,24 @@ class CorporateCandidate(models.Model):
     )
     notes = models.TextField(blank=True, default='')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    servicenow_module = models.CharField(
+        max_length=50,
+        choices=[
+            ('ITSM', 'ITSM'),
+            ('ITOM', 'ITOM'),
+            ('HRSD', 'HRSD'),
+            ('CSM', 'CSM'),
+            ('SPM', 'SPM'),
+            ('IRM_GRC', 'IRM/GRC'),
+            ('SecOps', 'SecOps'),
+            ('HAM', 'HAM'),
+            ('SAM_Pro', 'SAM Pro'),
+            ('FSM', 'FSM'),
+        ],
+        blank=True,
+        null=True,
+        verbose_name="ServiceNow Module"
+    )
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),

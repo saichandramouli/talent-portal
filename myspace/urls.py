@@ -128,6 +128,9 @@ urlpatterns = [
     path('client/profile/',
          client_views.corporate_client_profile,
          name='corporate_client_profile'),
+    path('client/servicenow-candidates/<str:module_name>/',
+         client_views.corporate_client_servicenow_candidates,
+         name='corporate_client_servicenow_candidates'),
 
     # ── Corporate Credential Requests ──────────────────────────────────────────
     path('recruiter/credential-requests/<int:request_id>/approve/',

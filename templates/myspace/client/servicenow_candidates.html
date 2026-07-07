@@ -1,0 +1,95 @@
+{% extends 'myspace/base_myspace.html' %}
+{% load static %}
+{% block title %}ServiceNow Candidates ({{ module_name }}) – {{ corp.company_name }}{% endblock %}
+{% block page_title %}ServiceNow: {{ module_name }} Candidates{% endblock %}
+{% block page_subtitle %}Filtered candidates submitted for your requirements under {{ module_name }} module{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'corporate_client_dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">ServiceNow Candidates ({{ module_name }})</li>
+    </ol>
+</nav>
+
+<!-- Candidates List -->
+<h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>ServiceNow {{ module_name }} Candidates <span class="badge bg-primary">{{ submissions.count }}</span></h5>
+
+{% if submissions %}
+<div class="row g-4">
+    {% for sub in submissions %}
+    {% with candidate=sub.candidate job=sub.job %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="card candidate-card-premium-cyber h-100 shadow-sm d-flex flex-column text-center px-2 py-3">
+            <!-- Top Image Section (Centered) -->
+            <div class="card-image-wrap d-flex justify-content-center align-items-center py-3" style="background: transparent;">
+                {% if candidate.profile_photo %}
+                <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                {% else %}
+                <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                {% endif %}
+            </div>
+
+            <!-- Card Content Section (Centered) -->
+            <div class="card-content flex-grow-1 d-flex flex-column justify-content-between">
+                <div class="mb-3">
+                    <!-- Name -->
+                    <h5 class="fw-bold mb-1" style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
+                        {{ candidate.full_name }}
+                    </h5>
+
+                    <!-- Technical Stack / Job Title -->
+                    <div class="mb-2 fw-semibold" style="color: #2563eb !important; font-size: 0.95rem;">
+                        {{ candidate.technology_stack|default:"Professional" }}
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="text-muted small lh-base text-start px-2 mt-2" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
+                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Submitted For:</strong> {{ job.job_title }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.total_experience }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.current_location }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate Card:</strong> 
+                        {% if 'Full Time' in candidate.employment_type %}
+                            ₹{{ candidate.salary_inr|floatformat:0 }}/yr
+                        {% else %}
+                            ${{ candidate.rate_card|floatformat:0 }}/hr
+                        {% endif %}
+                        </div>
+                        <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.notice_period }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Shortlist to View</div>
+                    </div>
+                </div>
+
+                <!-- Interactive Buttons -->
+                <div class="pt-3 border-top d-flex justify-content-between gap-2 mt-auto">
+                    <a href="{% url 'corporate_candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-primary w-50 text-nowrap">
+                        <i class="fa-solid fa-circle-info me-1"></i>Details
+                    </a>
+                    {% if candidate.id in cart_candidate_ids %}
+                    <form method="post" action="{% url 'corporate_client_remove_from_cart' job.pk candidate.id %}" class="w-50 m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success w-100 text-nowrap">
+                            <i class="fa-solid fa-circle-check me-1"></i>In Cart
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'corporate_client_add_to_cart' job.pk candidate.id %}" class="btn btn-sm btn-primary-custom w-50 text-nowrap">
+                        <i class="fa-regular fa-star me-1"></i>Shortlist
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-user-group fa-3x mb-3 d-block opacity-50"></i>
+    <h5 class="fw-semibold">No Candidates Tagged under {{ module_name }}</h5>
+    <p class="mb-0 text-muted">Assigned recruiters have not submitted candidates tagged with this ServiceNow module yet.</p>
+</div>
+{% endif %}
+{% endblock %}
