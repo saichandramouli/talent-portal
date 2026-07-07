@@ -103,7 +103,7 @@
                     <!-- Credentials section for Corporate Client -->
                     <div class="mb-4 border-top pt-3">
                         <h6 class="fw-bold text-uppercase text-muted small tracking-wider mb-2" style="font-size: 0.75rem;">Credentials & Documents</h6>
-                        {% if has_credentials_access %}
+                        {% if has_credentials_access or corp.is_servicenow_client %}
                             <div class="p-3 bg-light rounded" style="border: 1px solid var(--ms-border); font-size: 0.9rem;">
                                 <div class="mb-2"><strong class="text-dark">Email:</strong> {{ candidate.email }}</div>
                                 <div class="mb-2"><strong class="text-dark">Phone:</strong> {{ candidate.phone|default:"No Phone" }}</div>

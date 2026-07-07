@@ -25,12 +25,12 @@
                     {% csrf_token %}
                     <div class="row g-3">
                         {% for field in form %}
-                        <div class="col-md-{% if field.name == 'notes' or field.name == 'profile_photo' or field.name == 'resume' or field.name == 'bgv_verification' or field.name == 'evaluation_certificate' or field.name == 'employment_type' or field.name == 'notice_period' %}12{% else %}6{% endif %}"
-                             {% if field.name == 'rate_card' %}id="rate_card_container"{% elif field.name == 'salary_inr' %}id="salary_inr_container"{% endif %}>
+                        <div class="col-md-{% if field.name == 'notes' or field.name == 'profile_photo' or field.name == 'resume' or field.name == 'bgv_verification' or field.name == 'evaluation_certificate' or field.name == 'employment_type' or field.name == 'notice_period' or field.name == 'ltm_ripple_ats_check' %}12{% else %}6{% endif %}"
+                             {% if field.name == 'rate_card' %}id="rate_card_container"{% elif field.name == 'salary_inr' %}id="salary_inr_container"{% elif field.name == 'ltm_ripple_ats_check' %}id="ltm_ripple_ats_check_container"{% endif %}>
                             <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
                                 {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
                             </label>
-                            {% if field.name == 'employment_type' or field.name == 'notice_period' %}
+                            {% if field.name == 'employment_type' or field.name == 'notice_period' or field.name == 'ltm_ripple_ats_check' %}
                                 <div class="d-flex flex-wrap gap-3 mt-1 mb-2">
                                     {% for checkbox in field %}
                                         <div class="form-check">
@@ -108,7 +108,27 @@ document.addEventListener('DOMContentLoaded', function() {
     makeMutuallyExclusive('employment_type');
     makeMutuallyExclusive('notice_period');
     
+    const clientSelect = document.querySelector('select[name="client"]');
+    const ltmContainer = document.getElementById('ltm_ripple_ats_check_container');
+    
+    function updateLTMFields() {
+        if (!clientSelect || !ltmContainer) return;
+        const selectedText = clientSelect.options[clientSelect.selectedIndex].text.toLowerCase();
+        if (selectedText.includes('ltm') || selectedText.includes('anshu')) {
+            ltmContainer.style.display = 'block';
+        } else {
+            ltmContainer.style.display = 'none';
+            // Clear choices
+            const radios = ltmContainer.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.checked = false);
+        }
+    }
+    
+    if (clientSelect) {
+        clientSelect.addEventListener('change', updateLTMFields);
+        updateLTMFields();
+    }
+    
     updateFields();
-});
-</script>
+});</script>
 {% endblock %}

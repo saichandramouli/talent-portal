@@ -83,11 +83,24 @@
                         {% if 'Full Time' in candidate.employment_type %}
                             ₹{{ candidate.salary_inr|floatformat:0 }}/yr
                         {% else %}
-                            ${{ candidate.rate_card|floatformat:0 }}/hr
+                            ${{ candidate.rate_card|floatformat:0 }}/hr{% if corp.is_servicenow_client %} (~₹{{ candidate.rate_card_inr|floatformat:0 }}/hr){% endif %}
                         {% endif %}
                         </div>
                         <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.notice_period }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Shortlist to View</div>
+                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> 
+                        {% if corp.is_servicenow_client %}
+                            {% if candidate.resume %}
+                                <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" class="text-primary fw-semibold">Available</a>
+                            {% else %}
+                                Not uploaded
+                            {% endif %}
+                        {% else %}
+                            Shortlist to View
+                        {% endif %}
+                        </div>
+                        {% if corp.is_servicenow_client and candidate.ltm_ripple_ats_check %}
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>LTM Ripple ATS Check:</strong> <span class="badge bg-secondary" style="font-size:0.65rem; text-transform: uppercase;">{{ candidate.ltm_ripple_ats_check }}</span></div>
+                        {% endif %}
                         <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet:</strong> On Demand</div>
                         <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance:</strong> On Demand</div>
                     </div>

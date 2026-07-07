@@ -53,11 +53,20 @@
                         {% if 'Full Time' in candidate.employment_type %}
                             ₹{{ candidate.salary_inr|floatformat:0 }}/yr
                         {% else %}
-                            ${{ candidate.rate_card|floatformat:0 }}/hr
+                            ${{ candidate.rate_card|floatformat:0 }}/hr (~₹{{ candidate.rate_card_inr|floatformat:0 }}/hr)
                         {% endif %}
                         </div>
                         <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.notice_period }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> Shortlist to View</div>
+                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> 
+                        {% if candidate.resume %}
+                            <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" class="text-primary fw-semibold">Available</a>
+                        {% else %}
+                            Not uploaded
+                        {% endif %}
+                        </div>
+                        {% if candidate.ltm_ripple_ats_check %}
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>LTM Ripple ATS Check:</strong> <span class="badge bg-secondary" style="font-size:0.65rem; text-transform: uppercase;">{{ candidate.ltm_ripple_ats_check }}</span></div>
+                        {% endif %}
                     </div>
                 </div>
 

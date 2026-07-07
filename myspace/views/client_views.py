@@ -161,13 +161,52 @@ def corporate_client_job_delete(request, job_pk):
 def corporate_client_my_jobs(request):
     """List only the jobs that belong to this Corporate Client."""
     corp = _get_corporate_client(request.user)
-    jobs = JobRequirement.objects.filter(client=corp).order_by('-created_at')
+    jobs = JobRequirement.objects.filter(client=corp).annotate(
+        submission_count=Count('submissions'),
+        shortlist_count=Count('submissions', filter=Q(submissions__status='shortlisted')),
+        interview_count=Count('submissions', filter=Q(submissions__status='interview_scheduled')),
+        select_yet_to_offer_count=Count('submissions', filter=Q(submissions__status='selected_yet_to_offer')),
+        offered_yet_to_join_count=Count('submissions', filter=Q(submissions__status='offered_yet_to_join')),
+        joined_count=Count('submissions', filter=Q(submissions__status='joined'))
+    ).order_by('-created_at')
+
     status_filter = request.GET.get('status', '')
     if status_filter:
         jobs = jobs.filter(status=status_filter)
+
+    totals = {
+        'num_positions': sum(j.num_positions for j in jobs),
+        'submissions': sum(j.submission_count for j in jobs),
+        'shortlisted': sum(j.shortlist_count for j in jobs),
+        'interviews': sum(j.interview_count for j in jobs),
+        'select_yet_to_offer': sum(j.select_yet_to_offer_count for j in jobs),
+        'offered_yet_to_join': sum(j.offered_yet_to_join_count for j in jobs),
+        'joined': sum(j.joined_count for j in jobs),
+    }
+
+    for job in jobs:
+        if job.required_skills:
+            # Clean and strip newlines/carriage returns
+            skills_text = job.required_skills.replace('\r', ' ').replace('\n', ' ').strip()
+            skills = [s.strip() for s in skills_text.split(',') if s.strip()]
+            if len(skills) > 2:
+                short_text = f"{skills[0]}, {skills[1]}"
+                if len(short_text) > 30:
+                    job.required_skills_short = short_text[:30] + " ......"
+                else:
+                    job.required_skills_short = short_text + " ......"
+            else:
+                if len(skills_text) > 30:
+                    job.required_skills_short = skills_text[:30] + " ......"
+                else:
+                    job.required_skills_short = skills_text
+        else:
+            job.required_skills_short = ""
+
     return render(request, 'myspace/client/my_jobs.html', {
         'corp': corp,
         'jobs': jobs,
+        'totals': totals,
         'status_filter': status_filter,
         'status_choices': JobRequirement.STATUS_CHOICES,
     })

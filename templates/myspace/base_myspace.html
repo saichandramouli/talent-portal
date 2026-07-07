@@ -312,9 +312,6 @@
             <a href="{% url 'corporate_client_dashboard' %}" class="{% if request.resolver_match.url_name == 'corporate_client_dashboard' %}active{% endif %}">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </a>
-            <a href="{% url 'corporate_client_jobs_posted' %}" class="{% if request.resolver_match.url_name == 'corporate_client_jobs_posted' %}active{% endif %}">
-                <i class="fa-solid fa-table"></i> Client Jobs
-            </a>
             <a href="{% url 'corporate_client_my_jobs' %}" class="{% if request.resolver_match.url_name == 'corporate_client_my_jobs' %}active{% endif %}">
                 <i class="fa-solid fa-briefcase"></i> My Jobs
             </a>

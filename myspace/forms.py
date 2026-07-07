@@ -176,7 +176,7 @@ class CorporateCandidateForm(forms.ModelForm):
             'profile_photo', 'full_name', 'gender', 'email', 'phone',
             'total_experience', 'current_location', 'technology_stack',
             'current_company', 'rate_card', 'salary_inr', 'employment_type', 'notice_period', 'resume', 'bgv_verification',
-            'evaluation_certificate', 'notes', 'status', 'servicenow_module'
+            'evaluation_certificate', 'notes', 'status', 'servicenow_module', 'client', 'ltm_ripple_ats_check'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
@@ -193,6 +193,8 @@ class CorporateCandidateForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal notes…'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'servicenow_module': forms.Select(attrs={'class': 'form-select'}),
+            'client': forms.Select(attrs={'class': 'form-select'}),
+            'ltm_ripple_ats_check': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
             'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),

@@ -5,16 +5,13 @@
 
 {% block content %}
 <!-- Quick Actions / Top Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="mb-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb" style="font-size:0.82rem; margin-bottom: 0;">
             <li class="breadcrumb-item"><a href="{% url 'corporate_client_dashboard' %}">Dashboard</a></li>
             <li class="breadcrumb-item active">Client Jobs</li>
         </ol>
     </nav>
-    <a href="{% url 'corporate_client_job_create' %}" class="btn btn-success fw-semibold">
-        <i class="fa-solid fa-plus me-1"></i> Post a Job
-    </a>
 </div>
 
 <!-- Job Postings & Requirements Tracker -->

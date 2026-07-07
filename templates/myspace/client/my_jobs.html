@@ -4,13 +4,27 @@
 {% block page_subtitle %}{{ corp.company_name }}{% endblock %}
 
 {% block content %}
+<style>
+    .compact-table th, .compact-table td {
+        padding: 5px 3px !important;
+        white-space: normal;
+        word-break: break-word;
+        font-size: 0.58rem !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        line-height: 1.2 !important;
+    }
+    .compact-table th {
+        font-weight: 600 !important;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h4 fw-bold mb-0">My Job Requirements</h1>
     <div class="d-flex align-items-center gap-2 flex-wrap">
         {% for val, label in status_choices %}
         <a href="?status={{ val }}"
-            class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{
-            label }}</a>
+            class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
         {% endfor %}
         <a href="?"
             class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
@@ -19,51 +33,73 @@
 
 {% if jobs %}
 <div class="ms-card overflow-hidden">
-    <div class="table-responsive">
-        <table class="ms-table text-nowrap" style="font-size: 11px;">
+    <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: hidden;">
+        <table class="ms-table compact-table" style="font-size: 0.58rem; width: 100%; table-layout: fixed;">
             <thead>
-                <tr>
-                    <th>Job Title</th>
-                    <th>Required Skills</th>
-                    <th>Experience</th>
-                    <th>Rate Card</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
+                <tr class="table-dark">
+                    <th style="width: 3%;">S.No</th>
+                    <th style="width: 7%;">Date of Job Posting</th>
+                    <th style="width: 10%;">Job Title</th>
+                    <th style="width: 5%;">No of Positions</th>
+                    <th style="width: 7%;">Hire Type ( Contract/Full Time )</th>
+                    <th style="width: 9%;">Primary Skills</th>
+                    <th style="width: 5%;">Experience Level</th>
+                    <th style="width: 8%;">Proposed Budget (Per Hr/Month/Annum)</th>
+                    <th style="width: 8%;">Onboard Type (Remote/Hybrid/In Office Everyday)</th>
+                    <th style="width: 6%;">No of Submissions</th>
+                    <th style="width: 6%;">Shortlist By Client</th>
+                    <th style="width: 6%;">Interviews</th>
+                    <th style="width: 6%;">Select Yet to Offer</th>
+                    <th style="width: 6%;">Offered yet to Join</th>
+                    <th style="width: 4%;">Joined</th>
+                    <th style="width: 8%; text-align: right;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for job in jobs %}
                 <tr>
-                    <td>
-                        <div>
-                            <div class="text-dark fw-semibold">{{ job.job_title }}</div>
-                            <div class="text-muted" style="font-size: 10px;">{{ job.employment_type }}</div>
-                        </div>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ job.created_at|date:"Y-m-d" }}</td>
+                    <td style="white-space: nowrap !important; text-overflow: ellipsis; overflow: hidden; max-width: 90px; text-align: left !important;" title="{{ job.job_title }}">
+                        <a href="{% url 'corporate_client_job_candidates' job.pk %}"
+                            class="text-decoration-none text-dark fw-semibold">
+                            {{ job.job_title }}
+                        </a>
                     </td>
-                    <td>
-                        <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size: 10px;">
-                            {{ job.required_skills|truncatechars:40 }}
-                        </span>
-                    </td>
+                    <td>{{ job.num_positions }}</td>
+                    <td>{{ job.employment_type }}</td>
+                    <td style="white-space: nowrap !important; text-overflow: ellipsis; overflow: hidden; max-width: 100px; text-align: left !important;" title="{{ job.required_skills }}">{{ job.required_skills_short }}</td>
                     <td>{{ job.experience }}</td>
                     <td>{{ job.rate_card }}</td>
-                    <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
-                    <td><span class="ms-badge ms-badge-{{ job.status }}" style="font-size: 10px;">{{
-                            job.get_status_display }}</span></td>
+                    <td>{{ job.onboard_type }}</td>
+                    <td>{{ job.submission_count }}</td>
+                    <td>{{ job.shortlist_count }}</td>
+                    <td>{{ job.interview_count }}</td>
+                    <td>{{ job.select_yet_to_offer_count }}</td>
+                    <td>{{ job.offered_yet_to_join_count }}</td>
+                    <td>{{ job.joined_count }}</td>
                     <td class="text-end">
-                        <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 me-2"
-                            style="font-size: 10px;">
-                            <i class="fa-solid fa-users me-1"></i>{{ job.submissions.count }} Candidates
-                        </span>
                         <a href="{% url 'corporate_client_job_candidates' job.pk %}"
-                            class="btn btn-sm btn-outline-primary py-1 px-3"
-                            style="font-size: 10px; border-radius: 6px;">
-                            View Candidates <i class="fa-solid fa-arrow-right ms-1" style="font-size: 9px;"></i>
+                            class="btn btn-xs btn-outline-primary py-0 px-1" title="View Candidates"
+                            style="font-size: 8px; border-radius: 4px; display: inline-block; white-space: nowrap;">
+                            <i class="fa-solid fa-eye"></i> Candidates
                         </a>
                     </td>
                 </tr>
                 {% endfor %}
+                <!-- Totals Row -->
+                <tr class="fw-bold table-light">
+                    <td colspan="3">Total</td>
+                    <td>{{ totals.num_positions }}</td>
+                    <td colspan="5"></td>
+                    <td>{{ totals.submissions }}</td>
+                    <td>{{ totals.shortlisted }}</td>
+                    <td>{{ totals.interviews }}</td>
+                    <td>{{ totals.select_yet_to_offer }}</td>
+                    <td>{{ totals.offered_yet_to_join }}</td>
+                    <td>{{ totals.joined }}</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </div>

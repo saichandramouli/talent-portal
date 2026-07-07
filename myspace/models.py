@@ -171,8 +171,32 @@ class CorporateCandidate(models.Model):
         ('other', 'Other'),
     ]
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')
+    client = models.ForeignKey(
+        'CorporateClient',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='candidates',
+        help_text="Optional: Associate candidate with a corporate client"
+    )
+    ltm_ripple_ats_check = models.CharField(
+        max_length=20,
+        choices=[
+            ('duplicate', 'Duplicate'),
+            ('not_duplicate', 'Not Duplicate'),
+        ],
+        blank=True,
+        null=True,
+        verbose_name="LTM Ripple ATS Check"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def rate_card_inr(self):
+        if self.rate_card:
+            return self.rate_card * 83
+        return None
 
     class Meta:
         ordering = ['-created_at']
