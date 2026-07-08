@@ -189,15 +189,15 @@ def corporate_client_my_jobs(request):
             # Clean and strip newlines/carriage returns
             skills_text = job.required_skills.replace('\r', ' ').replace('\n', ' ').strip()
             skills = [s.strip() for s in skills_text.split(',') if s.strip()]
-            if len(skills) > 2:
-                short_text = f"{skills[0]}, {skills[1]}"
-                if len(short_text) > 30:
-                    job.required_skills_short = short_text[:30] + " ......"
+            if len(skills) > 1:
+                short_text = skills[0]
+                if len(short_text) > 15:
+                    job.required_skills_short = short_text[:15] + " ......"
                 else:
                     job.required_skills_short = short_text + " ......"
             else:
-                if len(skills_text) > 30:
-                    job.required_skills_short = skills_text[:30] + " ......"
+                if len(skills_text) > 15:
+                    job.required_skills_short = skills_text[:15] + " ......"
                 else:
                     job.required_skills_short = skills_text
         else:
