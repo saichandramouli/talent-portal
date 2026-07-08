@@ -72,12 +72,48 @@
                     <td>{{ job.experience }}</td>
                     <td>{{ job.rate_card }}</td>
                     <td>{{ job.onboard_type }}</td>
-                    <td>{{ job.submission_count }}</td>
-                    <td>{{ job.shortlist_count }}</td>
-                    <td>{{ job.interview_count }}</td>
-                    <td>{{ job.select_yet_to_offer_count }}</td>
-                    <td>{{ job.offered_yet_to_join_count }}</td>
-                    <td>{{ job.joined_count }}</td>
+                    <td>
+                        {% if job.submission_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="all" style="color: #2563eb;">{{ job.submission_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.shortlist_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="shortlisted" style="color: #2563eb;">{{ job.shortlist_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.interview_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="interviews" style="color: #2563eb;">{{ job.interview_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.select_yet_to_offer_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="select_yet_to_offer" style="color: #2563eb;">{{ job.select_yet_to_offer_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.offered_yet_to_join_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="offered_yet_to_join" style="color: #2563eb;">{{ job.offered_yet_to_join_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if job.joined_count > 0 %}
+                            <a href="#" class="view-submissions-trigger text-decoration-none fw-semibold" data-job-id="{{ job.pk }}" data-job-title="{{ job.job_title }}" data-status="joined" style="color: #2563eb;">{{ job.joined_count }}</a>
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
                     <td class="text-end">
                         <a href="{% url 'corporate_client_job_candidates' job.pk %}"
                             class="btn btn-xs btn-outline-primary py-0 px-1" title="View Candidates"
@@ -111,4 +147,69 @@
     <p class="text-muted mb-0">Your assigned recruiters will add job requirements for your review.</p>
 </div>
 {% endif %}
+
+<!-- Candidates Modal -->
+<div class="modal fade" id="candidatesModal" tabindex="-1" aria-labelledby="candidatesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.2); background-color: #ffffff; color: #0f172a;">
+            <div class="modal-header border-0 pb-0" style="padding: 1.5rem 1.5rem 0.5rem 1.5rem; background-color: #ffffff;">
+                <h5 class="modal-title fw-bold" id="candidatesModalLabel" style="font-size: 1.2rem; color: #0f172a !important;">Candidates</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: brightness(0) saturate(100%) invert(0) !important; opacity: 0.7;"></button>
+            </div>
+            <div class="modal-body" id="candidatesModalBody" style="padding: 1.5rem; background-color: #ffffff; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modalEl = document.getElementById('candidatesModal');
+    if (!modalEl) return;
+    const modal = new bootstrap.Modal(modalEl);
+    const modalBody = document.getElementById('candidatesModalBody');
+    const modalTitle = document.getElementById('candidatesModalLabel');
+    
+    document.querySelectorAll('.view-submissions-trigger').forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            const jobId = this.getAttribute('data-job-id');
+            const status = this.getAttribute('data-status');
+            const jobTitle = this.getAttribute('data-job-title');
+            
+            let statusLabel = status.replace(/_/g, ' ').toUpperCase();
+            if (status === 'all') {
+                statusLabel = 'ALL SUBMISSIONS';
+            }
+            modalTitle.textContent = `${jobTitle} – ${statusLabel}`;
+            
+            modalBody.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+            modal.show();
+            
+            fetch(`/myspace/client/jobs/${jobId}/submissions-modal/?status=${status}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load');
+                    return response.text();
+                })
+                .then(html => {
+                    modalBody.innerHTML = html;
+                })
+                .catch(err => {
+                    modalBody.innerHTML = `<div class="alert alert-danger mb-0">Error loading candidates. Please try again.</div>`;
+                });
+        });
+    });
+});
+</script>
 {% endblock %}

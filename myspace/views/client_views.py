@@ -386,11 +386,14 @@ def download_corporate_candidate_document(request, candidate_id, doc_type):
     elif request.user.role == 'corporate_client':
         try:
             corp = CorporateClient.objects.get(user=request.user)
-            has_access = CorporateCredentialRequest.objects.filter(
-                client=corp,
-                candidate=candidate,
-                status='approved'
-            ).exists()
+            if corp.is_servicenow_client:
+                has_access = True
+            else:
+                has_access = CorporateCredentialRequest.objects.filter(
+                    client=corp,
+                    candidate=candidate,
+                    status='approved'
+                ).exists()
         except CorporateClient.DoesNotExist:
             pass
             
@@ -438,8 +441,11 @@ def corporate_candidate_detail(request, candidate_pk):
     corp = _get_corporate_client(request.user)
     candidate = get_object_or_404(CorporateCandidate, pk=candidate_pk)
     
-    # Ensure this candidate has a submission for one of the client's jobs
-    submission = get_object_or_404(CandidateSubmission, candidate=candidate, job__client=corp)
+    # Ensure this candidate has at least one submission for one of the client's jobs
+    submissions = CandidateSubmission.objects.filter(candidate=candidate, job__client=corp)
+    if not submissions.exists():
+        raise Http404("No submission found for this candidate under your jobs.")
+    submission = submissions.first()
     
     # Check if the credential request is approved
     has_credentials_access = CorporateCredentialRequest.objects.filter(
@@ -487,5 +493,41 @@ def corporate_client_servicenow_candidates(request, module_name):
         'module_name': module_name,
         'submissions': submissions,
         'cart_candidate_ids': cart_candidate_ids,
+    })
+
+
+@login_required
+@corporate_client_required
+def corporate_client_job_submissions_modal(request, job_pk):
+    """Return HTML snippet of candidates matching job and status for Modal display."""
+    corp = _get_corporate_client(request.user)
+    job = get_object_or_404(JobRequirement, pk=job_pk, client=corp)
+    
+    status = request.GET.get('status', 'all')
+    submissions = CandidateSubmission.objects.filter(job=job).select_related('candidate').order_by('-created_at')
+    
+    status_map = {
+        'shortlisted': 'shortlisted',
+        'interviews': 'interview_scheduled',
+        'select_yet_to_offer': 'selected_yet_to_offer',
+        'offered_yet_to_join': 'offered_yet_to_join',
+        'joined': 'joined',
+    }
+    
+    db_status = status_map.get(status)
+    if db_status:
+        submissions = submissions.filter(status=db_status)
+        
+    approved_candidate_ids = set(CorporateCredentialRequest.objects.filter(
+        client=corp,
+        status='approved'
+    ).values_list('candidate_id', flat=True))
+    
+    return render(request, 'myspace/client/submissions_modal.html', {
+        'corp': corp,
+        'job': job,
+        'submissions': submissions,
+        'approved_candidate_ids': approved_candidate_ids,
+        'is_servicenow_client': corp.is_servicenow_client,
     })
 

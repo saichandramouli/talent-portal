@@ -65,7 +65,7 @@
                         {% endif %}
                         </div>
                         {% if candidate.ltm_ripple_ats_check %}
-                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>LTM Ripple ATS Check:</strong> <span class="badge bg-secondary" style="font-size:0.65rem; text-transform: uppercase;">{{ candidate.ltm_ripple_ats_check }}</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>LTM Ripple ATS Check:</strong> {{ candidate.get_ltm_ripple_ats_check_display }}</div>
                         {% endif %}
                     </div>
                 </div>

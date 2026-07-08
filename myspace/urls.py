@@ -145,4 +145,7 @@ urlpatterns = [
     path('client/candidates/<int:candidate_id>/document/<str:doc_type>/',
          client_views.download_corporate_candidate_document,
          name='download_corporate_candidate_document'),
+    path('client/jobs/<int:job_pk>/submissions-modal/',
+         client_views.corporate_client_job_submissions_modal,
+         name='corporate_client_job_submissions_modal'),
 ]

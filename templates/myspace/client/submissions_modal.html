@@ -1,0 +1,65 @@
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0" style="font-size: 0.8rem; border-collapse: collapse; background-color: #ffffff;">
+        <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+                <th class="text-secondary fw-semibold py-3 px-3">Candidate Name</th>
+                <th class="text-secondary fw-semibold py-3 px-3">Experience</th>
+                <th class="text-secondary fw-semibold py-3 px-3">Rate Card</th>
+                <th class="text-secondary fw-semibold py-3 px-3">LTM Ripple ATS Check</th>
+                <th class="text-secondary fw-semibold py-3 px-3">Status</th>
+                <th class="text-secondary fw-semibold py-3 px-3 text-end">Resume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in submissions %}
+            {% with cand=sub.candidate %}
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+                <td class="py-3 px-3">
+                    <a href="{% url 'corporate_candidate_detail' cand.id %}" class="fw-semibold text-decoration-none text-primary" target="_blank">
+                        {{ cand.full_name }}
+                    </a>
+                </td>
+                <td class="py-3 px-3 text-dark">{{ cand.total_experience }}</td>
+                <td class="py-3 px-3 text-dark">
+                    {% if 'Full Time' in cand.employment_type %}
+                        ₹{{ cand.salary_inr|floatformat:0 }}/yr
+                    {% else %}
+                        ${{ cand.rate_card|floatformat:0 }}/hr{% if is_servicenow_client %} (~₹{{ cand.rate_card_inr|floatformat:0 }}/hr){% endif %}
+                    {% endif %}
+                </td>
+                <td class="py-3 px-3 text-dark">
+                    {% if cand.ltm_ripple_ats_check %}
+                        {{ cand.get_ltm_ripple_ats_check_display }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td class="py-3 px-3">
+                    <span class="badge bg-primary bg-opacity-10 text-primary py-1.5 px-3" style="font-size: 0.65rem; border-radius: 6px; font-weight: 600; text-transform: uppercase;">{{ sub.get_status_display }}</span>
+                </td>
+                <td class="py-3 px-3 text-end">
+                    {% if cand.resume %}
+                        {% if is_servicenow_client or cand.id in approved_candidate_ids %}
+                            <a href="{% url 'download_corporate_candidate_resume' cand.id %}" target="_blank" class="btn btn-sm btn-outline-danger py-1 px-3 fw-semibold" style="font-size: 0.7rem; border-radius: 6px;">
+                                <i class="fa-solid fa-file-pdf me-1"></i>Download
+                            </a>
+                        {% else %}
+                            <span class="text-muted small fw-semibold"><i class="fa-solid fa-lock me-1"></i>Locked</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="text-muted small">None</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endwith %}
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted py-5" style="background-color: #ffffff;">
+                    <i class="fa-solid fa-users fa-2x mb-3 text-secondary opacity-50 d-block"></i>
+                    No candidates found in this status.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
