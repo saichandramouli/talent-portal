@@ -16,11 +16,33 @@
     }
     .compact-table th {
         font-weight: 600 !important;
-        background-color: #0f172a !important;
+        background-color: #004C89 !important;
         color: #ffffff !important;
     }
     .compact-table thead tr {
-        background-color: #0f172a !important;
+        background-color: #004C89 !important;
+    }
+    
+    /* Responsive layout configuration */
+    @media (min-width: 1200px) {
+        .responsive-container {
+            overflow-x: hidden !important;
+        }
+        .compact-table {
+            table-layout: fixed !important;
+        }
+    }
+    @media (max-width: 1199.98px) {
+        .responsive-container {
+            overflow-x: auto !important;
+        }
+        .compact-table {
+            table-layout: auto !important;
+            min-width: 1100px;
+        }
+        .compact-table th, .compact-table td {
+            white-space: nowrap !important;
+        }
     }
 </style>
 
@@ -38,21 +60,20 @@
 
 {% if jobs %}
 <div class="ms-card overflow-hidden">
-    <div class="table-responsive" style="max-height: 500px; overflow-y: auto; overflow-x: hidden;">
-        <table class="ms-table compact-table" style="font-size: 0.58rem; width: 100%; table-layout: fixed;">
+    <div class="table-responsive responsive-container" style="max-height: 500px; overflow-y: auto;">
+        <table class="ms-table compact-table" style="font-size: 0.58rem; width: 100%;">
             <thead>
                 <tr class="table-dark">
                     <th style="width: 3%;">S.No</th>
-                    <th style="width: 7%;">Date of Job Posting</th>
-                    <th style="width: 10%;">Job Title</th>
+                    <th style="width: 9%;">Date of Job Posting</th>
+                    <th style="width: 15%;">Job Title</th>
                     <th style="width: 5%;">No of Positions</th>
-                    <th style="width: 7%;">Hire Type ( Contract/Full Time )</th>
-                    <th style="width: 9%;">Primary Skills</th>
+                    <th style="width: 7%;">Hire Type</th>
                     <th style="width: 5%;">Experience Level</th>
-                    <th style="width: 8%;">Proposed Budget (Per Hr/Month/Annum)</th>
-                    <th style="width: 8%;">Onboard Type (Remote/Hybrid/In Office Everyday)</th>
-                    <th style="width: 6%;">No of Submissions</th>
-                    <th style="width: 6%;">Shortlist By Client</th>
+                    <th style="width: 10%;">Rate</th>
+                    <th style="width: 8%;">Work Mode</th>
+                    <th style="width: 6%;">Submissions</th>
+                    <th style="width: 6%;">Shortlist</th>
                     <th style="width: 6%;">Interviews</th>
                     <th style="width: 6%;">Select Yet to Offer</th>
                     <th style="width: 6%;">Offered yet to Join</th>
@@ -73,7 +94,6 @@
                     </td>
                     <td>{{ job.num_positions }}</td>
                     <td>{{ job.employment_type }}</td>
-                    <td style="white-space: nowrap !important; text-overflow: ellipsis; overflow: hidden; max-width: 100px; text-align: left !important;" title="{{ job.required_skills }}">{{ job.required_skills_short }}</td>
                     <td>{{ job.experience }}</td>
                     <td>{{ job.rate_card }}</td>
                     <td>{{ job.onboard_type }}</td>
@@ -132,7 +152,7 @@
                 <tr class="fw-bold table-light">
                     <td colspan="3">Total</td>
                     <td>{{ totals.num_positions }}</td>
-                    <td colspan="5"></td>
+                    <td colspan="4"></td>
                     <td>{{ totals.submissions }}</td>
                     <td>{{ totals.shortlisted }}</td>
                     <td>{{ totals.interviews }}</td>
