@@ -38,6 +38,17 @@
                                 <div class="text-muted" style="font-size:0.72rem;">{{ item.candidate.total_experience }}
                                     experience</div>
 
+                                {% if item.candidate.resume %}
+                                <div class="mt-1">
+                                    <a href="{% url 'download_corporate_candidate_resume' item.candidate.id %}"
+                                        target="_blank"
+                                        class="btn btn-xs btn-outline-danger py-0 px-1 d-inline-block text-decoration-none"
+                                        style="font-size:0.68rem; border-radius:4px; line-height:1.2;">
+                                        <i class="fa-solid fa-file-pdf me-1"></i>Resume PDF
+                                    </a>
+                                </div>
+                                {% endif %}
+
                                 {% if item.candidate.credential_request %}
                                 {% if item.candidate.credential_request.status == 'approved' %}
                                 <div class="mt-1 small" style="font-size:0.75rem; line-height:1.3;">
@@ -46,14 +57,6 @@
                                     <div class="text-dark"><i class="fa-solid fa-phone me-1 text-primary"></i>{{
                                         item.candidate.phone|default:"No Phone" }}</div>
                                     <div class="mt-1 d-flex flex-wrap gap-1">
-                                        {% if item.candidate.resume %}
-                                        <a href="{% url 'download_corporate_candidate_resume' item.candidate.id %}"
-                                            target="_blank"
-                                            class="btn btn-xs btn-outline-danger py-0 px-1 d-inline-block text-decoration-none"
-                                            style="font-size:0.68rem; border-radius:4px; line-height:1.2;">
-                                            <i class="fa-solid fa-file-pdf me-1"></i>Resume PDF
-                                        </a>
-                                        {% endif %}
                                         {% if item.candidate.bgv_verification %}
                                         <a href="{% url 'download_corporate_candidate_document' item.candidate.id 'bgv' %}"
                                             target="_blank"

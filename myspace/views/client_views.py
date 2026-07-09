@@ -386,7 +386,9 @@ def download_corporate_candidate_document(request, candidate_id, doc_type):
     elif request.user.role == 'corporate_client':
         try:
             corp = CorporateClient.objects.get(user=request.user)
-            if corp.is_servicenow_client:
+            if doc_type == 'resume':
+                has_access = True
+            elif corp.is_servicenow_client:
                 has_access = True
             else:
                 has_access = CorporateCredentialRequest.objects.filter(

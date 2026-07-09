@@ -108,16 +108,21 @@
                     <!-- Credentials section for Corporate Client -->
                     <div class="mb-4 border-top pt-3">
                         <h6 class="fw-bold text-uppercase text-muted small tracking-wider mb-2" style="font-size: 0.75rem;">Credentials & Documents</h6>
+                        
+                        <!-- Resume is always accessible for corporate clients -->
+                        {% if candidate.resume %}
+                            <div class="mb-3">
+                                <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" class="btn btn-sm btn-outline-danger">
+                                    <i class="fa-solid fa-file-pdf me-1"></i>Download Resume PDF
+                                </a>
+                            </div>
+                        {% endif %}
+
                         {% if has_credentials_access or corp.is_servicenow_client %}
                             <div class="p-3 bg-light rounded" style="border: 1px solid var(--ms-border); font-size: 0.9rem;">
                                 <div class="mb-2"><strong class="text-dark">Email:</strong> {{ candidate.email }}</div>
                                 <div class="mb-2"><strong class="text-dark">Phone:</strong> {{ candidate.phone|default:"No Phone" }}</div>
                                 <div class="mt-3 d-flex flex-wrap gap-2">
-                                    {% if candidate.resume %}
-                                        <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" class="btn btn-sm btn-outline-danger">
-                                            <i class="fa-solid fa-file-pdf me-1"></i>Download Resume PDF
-                                        </a>
-                                    {% endif %}
                                     {% if candidate.bgv_verification %}
                                         <a href="{% url 'download_corporate_candidate_document' candidate.id 'bgv' %}" target="_blank" class="btn btn-sm btn-outline-primary">
                                             <i class="fa-solid fa-file-shield me-1"></i>Download BGV PDF
@@ -132,7 +137,7 @@
                             </div>
                         {% else %}
                             <div class="p-3 bg-light rounded text-muted small" style="border: 1px solid var(--ms-border);">
-                                <i class="fa-solid fa-lock me-2"></i>Shortlist this candidate to request credentials and resume access.
+                                <i class="fa-solid fa-lock me-2"></i>Shortlist this candidate to request credentials access (Email, Phone, BGV, Evaluation).
                             </div>
                         {% endif %}
                     </div>
