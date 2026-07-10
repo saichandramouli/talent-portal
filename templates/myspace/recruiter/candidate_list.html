@@ -81,8 +81,7 @@
                     <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ cand.current_location }}</td>
                     <td><span class="ms-badge ms-badge-{{ cand.status }}">{{ cand.get_status_display }}</span></td>
                     <td class="text-end text-nowrap">
-                        <a href="{% url 'recruiter_corporate_candidate_edit' cand.pk %}" class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></a>
-                        <a href="{% url 'recruiter_corporate_candidate_delete' cand.pk %}" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
+                        <a href="{% url 'recruiter_corporate_candidate_edit' cand.pk %}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa-solid fa-pen"></i> Edit</a>
                     </td>
                 </tr>
                 {% endfor %}

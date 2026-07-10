@@ -185,3 +185,35 @@ def admin_cart_overview(request):
     return render(request, 'myspace/admin/cart_overview.html', {
         'cart_items': cart_items,
     })
+
+
+@login_required
+@admin_required
+def admin_job_delete(request, job_pk):
+    """Allow Admin to delete any Job Requirement."""
+    job = get_object_or_404(JobRequirement, pk=job_pk)
+    if request.method == 'POST':
+        title = job.job_title
+        job.delete()
+        messages.success(request, f"Job requirement '{title}' has been successfully deleted.")
+        return redirect('admin_myspace_job_overview')
+    return render(request, 'myspace/admin/job_confirm_delete.html', {
+        'job': job,
+    })
+
+
+@login_required
+@admin_required
+def admin_submission_delete(request, submission_pk):
+    """Allow Admin to delete any Candidate Submission."""
+    submission = get_object_or_404(CandidateSubmission, pk=submission_pk)
+    if request.method == 'POST':
+        candidate_name = submission.candidate.full_name
+        job_title = submission.job.job_title
+        submission.delete()
+        messages.success(request, f"Submission of '{candidate_name}' for job '{job_title}' has been successfully deleted.")
+        return redirect('admin_myspace_submission_overview')
+    return render(request, 'myspace/admin/submission_confirm_delete.html', {
+        'submission': submission,
+    })
+

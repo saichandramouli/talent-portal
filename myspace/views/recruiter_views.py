@@ -127,22 +127,6 @@ def recruiter_job_detail(request, client_pk, job_pk):
     })
 
 
-@login_required
-@recruiter_required
-def recruiter_job_delete(request, client_pk, job_pk):
-    """Delete a Job Requirement."""
-    client = _get_assigned_client_or_404(request.user, client_pk)
-    job = get_object_or_404(JobRequirement, pk=job_pk, client=client, creator=request.user)
-    if request.method == 'POST':
-        title = job.job_title
-        job.delete()
-        messages.success(request, f"Job '{title}' deleted.")
-        return redirect('recruiter_job_list', client_pk=client_pk)
-    return render(request, 'myspace/recruiter/job_confirm_delete.html', {
-        'client': client,
-        'job': job,
-    })
-
 
 # ─── Corporate Candidates ─────────────────────────────────────────────────────
 
@@ -207,18 +191,6 @@ def recruiter_candidate_edit(request, candidate_pk):
         'action': 'Save Changes',
     })
 
-
-@login_required
-@recruiter_required
-def recruiter_candidate_delete(request, candidate_pk):
-    """Delete a Corporate Candidate (only own candidates)."""
-    candidate = get_object_or_404(CorporateCandidate, pk=candidate_pk, recruiter=request.user)
-    if request.method == 'POST':
-        name = candidate.full_name
-        candidate.delete()
-        messages.success(request, f"Candidate '{name}' deleted.")
-        return redirect('recruiter_corporate_candidate_list')
-    return render(request, 'myspace/recruiter/candidate_confirm_delete.html', {'candidate': candidate})
 
 
 # ─── Submissions ──────────────────────────────────────────────────────────────

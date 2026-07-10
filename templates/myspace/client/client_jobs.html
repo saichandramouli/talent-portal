@@ -46,7 +46,7 @@
                 {% for job in jobs %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ job.created_at|date:"Y-m-d" }}</td>
+                    <td>{{ job.created_at|date:"d-m-Y" }}</td>
                     <td>
                         <a href="{% url 'corporate_client_job_candidates' job.pk %}"
                             class="text-decoration-none text-dark">
