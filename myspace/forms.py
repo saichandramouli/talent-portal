@@ -202,7 +202,15 @@ class CorporateCandidateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        if user:
+            self.fields['client'].queryset = CorporateClient.objects.filter(
+                recruiter_assignments__recruiter=user
+            )
+        self.fields['servicenow_module'].required = True
+        self.fields['client'].required = True
+
         if self.instance and self.instance.pk:
             if self.instance.employment_type:
                 self.initial['employment_type'] = [x.strip() for x in self.instance.employment_type.split(',') if x.strip()]

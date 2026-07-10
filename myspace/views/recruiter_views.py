@@ -155,7 +155,7 @@ def recruiter_candidate_list(request):
 def recruiter_candidate_create(request):
     """Add a new Corporate Candidate."""
     if request.method == 'POST':
-        form = CorporateCandidateForm(request.POST, request.FILES)
+        form = CorporateCandidateForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             candidate = form.save(commit=False)
             candidate.recruiter = request.user
@@ -163,7 +163,7 @@ def recruiter_candidate_create(request):
             messages.success(request, f"Candidate '{candidate.full_name}' added to My Space.")
             return redirect('recruiter_corporate_candidate_list')
     else:
-        form = CorporateCandidateForm()
+        form = CorporateCandidateForm(user=request.user)
     return render(request, 'myspace/recruiter/candidate_form.html', {
         'form': form,
         'title': 'Add Corporate Candidate',
@@ -177,13 +177,13 @@ def recruiter_candidate_edit(request, candidate_pk):
     """Edit a Corporate Candidate (only own candidates)."""
     candidate = get_object_or_404(CorporateCandidate, pk=candidate_pk, recruiter=request.user)
     if request.method == 'POST':
-        form = CorporateCandidateForm(request.POST, request.FILES, instance=candidate)
+        form = CorporateCandidateForm(request.POST, request.FILES, instance=candidate, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, f"Candidate '{candidate.full_name}' updated.")
             return redirect('recruiter_corporate_candidate_list')
     else:
-        form = CorporateCandidateForm(instance=candidate)
+        form = CorporateCandidateForm(instance=candidate, user=request.user)
     return render(request, 'myspace/recruiter/candidate_form.html', {
         'form': form,
         'candidate': candidate,
