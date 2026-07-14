@@ -42,7 +42,10 @@
     <div class="ms-card-body">
         <h6 class="fw-bold mb-3"><i class="fa-solid fa-bolt text-warning me-2"></i>Quick Actions</h6>
         <div class="d-flex flex-wrap gap-2">
-            <a href="{% url 'corporate_client_my_jobs' %}" class="btn-ms-primary text-decoration-none py-2 px-3">
+            <a href="{% url 'corporate_client_job_create' %}" class="btn-ms-primary text-decoration-none py-2 px-3">
+                <i class="fa-solid fa-plus me-1"></i> Post a Job
+            </a>
+            <a href="{% url 'corporate_client_my_jobs' %}" class="btn-ms-outline text-decoration-none py-2 px-3">
                 <i class="fa-solid fa-briefcase me-1"></i> View All Jobs
             </a>
             <a href="{% url 'corporate_client_cart' %}" class="btn-ms-outline text-decoration-none py-2 px-3">
