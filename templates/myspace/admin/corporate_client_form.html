@@ -17,10 +17,11 @@
             {% csrf_token %}
             <div class="row g-4">
                 <!-- User Account -->
+                {% if not client_profile %}
                 <div class="col-lg-6">
                     <div class="ms-card h-100">
                         <div class="ms-card-header">
-                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-user-circle text-primary me-2"></i>Login / User Account</h6>
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-user-circle text-primary me-2"></i>Login / Primary User Account</h6>
                         </div>
                         <div class="ms-card-body">
                             {% for field in user_form %}
@@ -35,18 +36,13 @@
                                 {% endfor %}
                             </div>
                             {% endfor %}
-                            {% if client_profile %}
-                            <div class="alert alert-info" style="font-size:0.8rem;">
-                                <i class="fa-solid fa-info-circle me-1"></i>
-                                Leave password fields blank to keep the existing password.
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- Company Profile -->
-                <div class="col-lg-6">
+                <div class="{% if client_profile %}col-lg-12{% else %}col-lg-6{% endif %}">
                     <div class="ms-card h-100">
                         <div class="ms-card-header">
                             <h6 class="fw-bold mb-0"><i class="fa-solid fa-building text-primary me-2"></i>Company Profile</h6>
@@ -73,6 +69,11 @@
                 <button type="submit" class="btn-ms-primary">
                     <i class="fa-solid fa-check me-1"></i> {{ action }}
                 </button>
+                {% if client_profile %}
+                <a href="{% url 'admin_corporate_client_users' client_profile.pk %}" class="btn btn-outline-info">
+                    <i class="fa-solid fa-users me-1"></i> Manage Logins
+                </a>
+                {% endif %}
                 <a href="{% url 'admin_corporate_client_list' %}" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>

@@ -32,8 +32,10 @@
                     {% if client.industry %}<div class="text-muted" style="font-size:0.72rem;">{{ client.industry }}</div>{% endif %}
                 </td>
                 <td>
-                    <div>{{ client.user.full_name }}</div>
-                    <div class="text-muted" style="font-size:0.72rem;">{{ client.user.email }}</div>
+                    <div class="fw-semibold">{{ client.users.count }} Login(s)</div>
+                    <a href="{% url 'admin_corporate_client_users' client.pk %}" class="small text-primary text-decoration-none" style="font-size:0.75rem;">
+                        <i class="fa-solid fa-users me-1"></i>Manage Logins
+                    </a>
                 </td>
                 <td>
                     {% for assignment in client.recruiter_assignments.all %}
@@ -54,7 +56,10 @@
                     <a href="{% url 'admin_assign_recruiters' client.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Assign Recruiters">
                         <i class="fa-solid fa-user-plus"></i>
                     </a>
-                    <a href="{% url 'admin_corporate_client_edit' client.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                    <a href="{% url 'admin_corporate_client_users' client.pk %}" class="btn btn-sm btn-outline-info me-1" title="Manage Logins">
+                        <i class="fa-solid fa-users"></i>
+                    </a>
+                    <a href="{% url 'admin_corporate_client_edit' client.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit Company">
                         <i class="fa-solid fa-pen"></i>
                     </a>
                     <a href="{% url 'admin_corporate_client_toggle_active' client.pk %}"
@@ -64,14 +69,13 @@
                         <i class="fa-solid fa-{% if client.is_active %}ban{% else %}circle-check{% endif %}"></i>
                     </a>
                     {% if not client.is_active %}
-                    <a href="{% url 'delete_client' client.user.pk %}"
+                    <a href="{% url 'admin_corporate_client_delete' client.pk %}"
                        class="btn btn-sm btn-outline-danger"
                        title="Delete"
                        onclick="return confirm('Are you sure you want to permanently delete corporate client {{ client.company_name }}? This action cannot be undone.');">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                     {% endif %}
-
                 </td>
             </tr>
             {% endfor %}

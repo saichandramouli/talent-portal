@@ -389,7 +389,7 @@
                         style="font-size:0.7rem; border-radius: 8px;">
                         <i class="fa-solid fa-cart-shopping text-warning"></i>
                         <span>Cart</span>
-                        {% with count=user.corporate_client_profile.cart_items.count %}
+                        {% with count=user.corporate_cart_items.count %}
                         {% if count > 0 %}
                         <span class="badge bg-white text-primary rounded-pill" style="font-size:0.65rem; padding: 0.25em 0.6em;">{{ count }}</span>
                         {% endif %}

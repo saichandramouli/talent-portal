@@ -25,7 +25,7 @@ from myspace.forms import (
 @admin_or_ceo_required
 def admin_corporate_client_list(request):
     """List all Corporate Clients."""
-    clients = CorporateClient.objects.select_related('user').prefetch_related('recruiter_assignments__recruiter')
+    clients = CorporateClient.objects.prefetch_related('users', 'recruiter_assignments__recruiter')
     return render(request, 'myspace/admin/corporate_client_list.html', {'clients': clients})
 
 
@@ -38,15 +38,14 @@ def admin_corporate_client_create(request):
         profile_form = CorporateClientProfileForm(request.POST)
         if user_form.is_valid() and profile_form.is_valid():
             with transaction.atomic():
+                profile = profile_form.save()
                 user = user_form.save(commit=False)
                 user.role = 'corporate_client'
-                user.company_name = profile_form.cleaned_data['company_name']
+                user.company_name = profile.company_name
+                user.corporate_client = profile
                 user.set_password(user_form.cleaned_data['password'])
                 user.save()
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
-            messages.success(request, f"Corporate Client '{profile.company_name}' created successfully.")
+            messages.success(request, f"Corporate Client '{profile.company_name}' and primary user created successfully.")
             return redirect('admin_corporate_client_list')
     else:
         user_form = CorporateClientUserForm()
@@ -63,25 +62,20 @@ def admin_corporate_client_create(request):
 @login_required
 @admin_required
 def admin_corporate_client_edit(request, pk):
-    """Edit an existing Corporate Client's user account and profile."""
+    """Edit an existing Corporate Client's profile."""
     client_profile = get_object_or_404(CorporateClient, pk=pk)
     if request.method == 'POST':
-        user_form = CorporateClientEditUserForm(request.POST, instance=client_profile.user)
         profile_form = CorporateClientProfileForm(request.POST, instance=client_profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            with transaction.atomic():
-                user = user_form.save(commit=False)
-                user.company_name = profile_form.cleaned_data['company_name']
-                user.save()
-                profile_form.save()
+        if profile_form.is_valid():
+            profile_form.save()
+            # Sync company name with all associated users
+            client_profile.users.update(company_name=client_profile.company_name)
             messages.success(request, f"Corporate Client '{client_profile.company_name}' updated successfully.")
             return redirect('admin_corporate_client_list')
     else:
-        user_form = CorporateClientEditUserForm(instance=client_profile.user)
         profile_form = CorporateClientProfileForm(instance=client_profile)
 
     return render(request, 'myspace/admin/corporate_client_form.html', {
-        'user_form': user_form,
         'profile_form': profile_form,
         'client_profile': client_profile,
         'title': 'Edit Corporate Client',
@@ -92,14 +86,16 @@ def admin_corporate_client_edit(request, pk):
 @login_required
 @admin_required
 def admin_corporate_client_toggle_active(request, pk):
-    """Activate or deactivate a Corporate Client account."""
+    """Activate or deactivate a Corporate Client profile and all associated users."""
     client_profile = get_object_or_404(CorporateClient, pk=pk)
-    client_profile.user.is_active = not client_profile.user.is_active
-    client_profile.user.save()
-    client_profile.is_active = client_profile.user.is_active
+    client_profile.is_active = not client_profile.is_active
     client_profile.save()
-    status = 'activated' if client_profile.user.is_active else 'deactivated'
-    messages.success(request, f"Corporate Client '{client_profile.company_name}' has been {status}.")
+    
+    # Toggle active status on all users of this client
+    client_profile.users.update(is_active=client_profile.is_active)
+    
+    status = 'activated' if client_profile.is_active else 'deactivated'
+    messages.success(request, f"Corporate Client '{client_profile.company_name}' and all associated users have been {status}.")
     return redirect('admin_corporate_client_list')
 
 
@@ -180,7 +176,7 @@ def admin_submission_overview(request):
 def admin_cart_overview(request):
     """Admin: view all corporate cart activity."""
     cart_items = CandidateCart.objects.select_related(
-        'client', 'candidate', 'job'
+        'user', 'user__corporate_client', 'candidate', 'job'
     ).order_by('-created_at')
     return render(request, 'myspace/admin/cart_overview.html', {
         'cart_items': cart_items,
@@ -216,4 +212,93 @@ def admin_submission_delete(request, submission_pk):
     return render(request, 'myspace/admin/submission_confirm_delete.html', {
         'submission': submission,
     })
+
+
+@login_required
+@admin_required
+def admin_corporate_client_delete(request, pk):
+    """Delete Corporate Client company and all associated users."""
+    client_profile = get_object_or_404(CorporateClient, pk=pk)
+    company_name = client_profile.company_name
+    with transaction.atomic():
+        client_profile.users.all().delete()
+        client_profile.delete()
+    messages.success(request, f"Corporate Client '{company_name}' and all its users have been permanently deleted.")
+    return redirect('admin_corporate_client_list')
+
+
+@login_required
+@admin_required
+def admin_corporate_client_users(request, client_pk):
+    """List all user login accounts for a specific Corporate Client."""
+    client_profile = get_object_or_404(CorporateClient, pk=client_pk)
+    users = client_profile.users.all().order_by('-created_at')
+    return render(request, 'myspace/admin/corporate_client_users.html', {
+        'client_profile': client_profile,
+        'users': users,
+    })
+
+
+@login_required
+@admin_required
+def admin_corporate_client_user_create(request, client_pk):
+    """Create a new user login for a Corporate Client."""
+    client_profile = get_object_or_404(CorporateClient, pk=client_pk)
+    if request.method == 'POST':
+        form = CorporateClientUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.role = 'corporate_client'
+            user.company_name = client_profile.company_name
+            user.corporate_client = client_profile
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.success(request, f"User account for '{user.full_name}' created successfully.")
+            return redirect('admin_corporate_client_users', client_pk=client_pk)
+    else:
+        form = CorporateClientUserForm()
+        
+    return render(request, 'myspace/admin/corporate_client_user_form.html', {
+        'form': form,
+        'client_profile': client_profile,
+        'title': f"Add User to {client_profile.company_name}",
+        'action': 'Add User',
+    })
+
+
+@login_required
+@admin_required
+def admin_corporate_client_user_edit(request, client_pk, user_pk):
+    """Edit an existing user login for a Corporate Client."""
+    client_profile = get_object_or_404(CorporateClient, pk=client_pk)
+    user = get_object_or_404(User, pk=user_pk, corporate_client=client_profile)
+    if request.method == 'POST':
+        form = CorporateClientEditUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"User account for '{user.full_name}' updated.")
+            return redirect('admin_corporate_client_users', client_pk=client_pk)
+    else:
+        form = CorporateClientEditUserForm(instance=user)
+        
+    return render(request, 'myspace/admin/corporate_client_user_form.html', {
+        'form': form,
+        'client_profile': client_profile,
+        'user_obj': user,
+        'title': f"Edit User '{user.full_name}'",
+        'action': 'Save Changes',
+    })
+
+
+@login_required
+@admin_required
+def admin_corporate_client_user_toggle_active(request, client_pk, user_pk):
+    """Toggle a user's active status."""
+    client_profile = get_object_or_404(CorporateClient, pk=client_pk)
+    user = get_object_or_404(User, pk=user_pk, corporate_client=client_profile)
+    user.is_active = not user.is_active
+    user.save()
+    status = 'activated' if user.is_active else 'deactivated'
+    messages.success(request, f"User '{user.full_name}' has been {status}.")
+    return redirect('admin_corporate_client_users', client_pk=client_pk)
 

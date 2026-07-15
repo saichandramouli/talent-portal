@@ -4,6 +4,35 @@
 {% block page_subtitle %}Candidates you've shortlisted across all jobs{% endblock %}
 
 {% block content %}
+<style>
+    .cart-table th, .cart-table td {
+        padding: 6px 12px !important;
+        vertical-align: middle !important;
+        font-size: 0.78rem !important;
+    }
+    .cart-table thead th {
+        font-size: 0.7rem !important;
+        padding: 8px 12px !important;
+    }
+    .cart-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .cart-avatar-placeholder {
+        width: 32px !important;
+        height: 32px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: var(--ms-primary);
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+</style>
 {% if cart_items %}
 <div class="ms-card overflow-hidden">
     <div class="ms-card-header">
@@ -11,7 +40,7 @@
                 class="badge bg-warning text-dark ms-1">{{ cart_items.count }}</span></h6>
     </div>
     <div class="table-responsive">
-        <table class="ms-table">
+        <table class="ms-table cart-table">
             <thead>
                 <tr>
                     <th>Candidate</th>
@@ -28,10 +57,10 @@
                     <td>
                         <div class="d-flex align-items-center gap-2">
                             {% if item.candidate.profile_photo %}
-                            <img src="{{ item.candidate.profile_photo_thumbnail_url }}" class="ms-avatar"
+                            <img src="{{ item.candidate.profile_photo_thumbnail_url }}" class="cart-avatar"
                                 alt="{{ item.candidate.full_name }}">
                             {% else %}
-                            <span class="ms-avatar-placeholder">{{ item.candidate.full_name|slice:":2"|upper }}</span>
+                            <span class="cart-avatar-placeholder">{{ item.candidate.full_name|slice:":2"|upper }}</span>
                             {% endif %}
                             <div>
                                 <div class="fw-semibold">{{ item.candidate.full_name }}</div>
@@ -52,10 +81,8 @@
                                 {% if item.candidate.credential_request %}
                                 {% if item.candidate.credential_request.status == 'approved' %}
                                 <div class="mt-1 small" style="font-size:0.75rem; line-height:1.3;">
-                                    <div class="text-dark"><i class="fa-solid fa-envelope me-1 text-primary"></i>{{
-                                        item.candidate.email }}</div>
-                                    <div class="text-dark"><i class="fa-solid fa-phone me-1 text-primary"></i>{{
-                                        item.candidate.phone|default:"No Phone" }}</div>
+                                    <div class="text-dark"><i class="fa-solid fa-envelope me-1 text-primary"></i>{{ item.candidate.email }}</div>
+                                    <div class="text-dark"><i class="fa-solid fa-phone me-1 text-primary"></i>{{ item.candidate.phone|default:"No Phone" }}</div>
                                     <div class="mt-1 d-flex flex-wrap gap-1">
                                         {% if item.candidate.bgv_verification %}
                                         <a href="{% url 'download_corporate_candidate_document' item.candidate.id 'bgv' %}"

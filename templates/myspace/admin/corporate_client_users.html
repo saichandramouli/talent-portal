@@ -1,0 +1,75 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}Manage Users – {{ client_profile.company_name }}{% endblock %}
+{% block page_title %}Manage User Logins{% endblock %}
+{% block page_subtitle %}{{ client_profile.company_name }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" style="font-size:0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'admin_corporate_client_list' %}">Corporate Clients</a></li>
+        <li class="breadcrumb-item active">Logins</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 fw-bold mb-0">Users for {{ client_profile.company_name }}</h1>
+    <a href="{% url 'admin_corporate_client_user_create' client_profile.pk %}" class="btn-ms-primary">
+        <i class="fa-solid fa-plus me-1"></i> Add User Login
+    </a>
+</div>
+
+{% if users %}
+<div class="ms-card overflow-hidden">
+    <table class="ms-table">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Email / Username</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>
+                    <div class="fw-semibold">{{ u.full_name }}</div>
+                </td>
+                <td>
+                    <div>{{ u.email }}</div>
+                </td>
+                <td>
+                    <span class="text-muted">{{ u.phone|default:"—" }}</span>
+                </td>
+                <td>
+                    <span class="ms-badge {% if u.is_active %}ms-badge-active{% else %}ms-badge-inactive{% endif %}">
+                        {% if u.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </td>
+                <td class="text-end text-nowrap">
+                    <a href="{% url 'admin_corporate_client_user_edit' client_profile.pk u.pk %}" class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="{% url 'admin_corporate_client_user_toggle_active' client_profile.pk u.pk %}"
+                       class="btn btn-sm {% if u.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                       title="{% if u.is_active %}Deactivate{% else %}Activate{% endif %}"
+                       onclick="return confirm('{% if u.is_active %}Deactivate{% else %}Activate{% endif %} user login {{ u.full_name }}?')">
+                        <i class="fa-solid fa-{% if u.is_active %}ban{% else %}circle-check{% endif %}"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="ms-card text-center py-5">
+    <i class="fa-solid fa-users fa-3x text-muted mb-3 d-block opacity-50"></i>
+    <h5 class="text-muted fw-semibold">No login accounts associated yet.</h5>
+    <a href="{% url 'admin_corporate_client_user_create' client_profile.pk %}" class="btn-ms-primary mt-2">
+        <i class="fa-solid fa-plus me-1"></i> Add Primary User
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -7,14 +7,7 @@ class CorporateClient(models.Model):
     """
     Represents a corporate company that is a client of the talent portal.
     Created by Admin only – cannot self-register.
-    Linked one-to-one with a User whose role='corporate_client'.
     """
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='corporate_client_profile',
-        limit_choices_to={'role': 'corporate_client'}
-    )
     company_name = models.CharField(max_length=255, help_text='Company / Organisation Name')
     company_website = models.URLField(max_length=300, blank=True, default='')
     industry = models.CharField(max_length=255, blank=True, default='')
@@ -368,10 +361,10 @@ class CandidateCart(models.Model):
     Corporate Client selects (shortlists) a candidate for a specific job.
     Adding to cart triggers an email notification to the recruiter.
     """
-    client = models.ForeignKey(
-        CorporateClient,
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='cart_items'
+        related_name='corporate_cart_items'
     )
     job = models.ForeignKey(
         JobRequirement,
@@ -386,12 +379,13 @@ class CandidateCart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('client', 'job', 'candidate')
+        unique_together = ('user', 'job', 'candidate')
         ordering = ['-created_at']
         verbose_name = 'Candidate Cart Item'
 
     def __str__(self):
-        return f"{self.client.company_name} – {self.candidate.full_name} for {self.job.job_title}"
+        comp_name = self.user.corporate_client.company_name if self.user.corporate_client else "No Company"
+        return f"{comp_name} ({self.user.full_name}) – {self.candidate.full_name} for {self.job.job_title}"
 
 
 class CorporateCredentialRequest(models.Model):

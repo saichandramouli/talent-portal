@@ -8,9 +8,9 @@ from .models import (
 
 @admin.register(CorporateClient)
 class CorporateClientAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'user', 'contact_phone', 'is_active', 'created_at')
+    list_display = ('company_name', 'contact_phone', 'is_active', 'created_at')
     list_filter = ('is_active',)
-    search_fields = ('company_name', 'user__email', 'user__full_name')
+    search_fields = ('company_name', 'contact_phone')
 
 
 @admin.register(RecruiterClientAssignment)
@@ -50,9 +50,9 @@ class SubmissionStatusHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(CandidateCart)
 class CandidateCartAdmin(admin.ModelAdmin):
-    list_display = ('client', 'candidate', 'job', 'created_at')
-    list_filter = ('client',)
-    search_fields = ('client__company_name', 'candidate__full_name')
+    list_display = ('user', 'candidate', 'job', 'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__email', 'user__full_name', 'candidate__full_name')
 
 
 @admin.register(CorporateCredentialRequest)

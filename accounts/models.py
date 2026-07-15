@@ -66,6 +66,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name='recruiters'
     )
     
+    corporate_client = models.ForeignKey(
+        'myspace.CorporateClient',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='users'
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -78,6 +86,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def visible_cart_items(self):
         return self.cart_items.filter(candidate__is_on_hold=False)
+
+    @property
+    def corporate_client_profile(self):
+        return self.corporate_client
 
     def __str__(self):
         return f"{self.full_name} ({self.email}) - {self.role.capitalize()}"

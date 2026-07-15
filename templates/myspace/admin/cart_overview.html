@@ -22,7 +22,10 @@
         <tbody>
             {% for item in cart_items %}
             <tr>
-                <td class="fw-semibold">{{ item.client.company_name }}</td>
+                <td class="fw-semibold">
+                    {{ item.user.corporate_client.company_name }}
+                    <div class="text-muted fw-normal" style="font-size:0.72rem;">User: {{ item.user.full_name }}</div>
+                </td>
                 <td>
                     <div class="fw-semibold">{{ item.candidate.full_name }}</div>
                     <div class="text-muted" style="font-size:0.72rem;">{{ item.candidate.email }}</div>

@@ -19,7 +19,10 @@ from myspace.forms import SubmissionStatusForm
 
 def _get_corporate_client(user):
     """Return CorporateClient profile for the logged-in user."""
-    return get_object_or_404(CorporateClient, user=user)
+    if user.corporate_client:
+        return user.corporate_client
+    from django.http import Http404
+    raise Http404("No Corporate Client profile associated with this user.")
 
 
 from django.db.models import Count, Q
@@ -39,7 +42,7 @@ def corporate_client_dashboard(request):
     total_jobs = jobs.count()
     open_jobs = jobs.filter(status='open').count()
     total_submissions = CandidateSubmission.objects.filter(job__client=corp).count()
-    cart_count = CandidateCart.objects.filter(client=corp).count()
+    cart_count = CandidateCart.objects.filter(user=request.user).count()
     
     recent_submissions = CandidateSubmission.objects.filter(
         job__client=corp
@@ -227,7 +230,7 @@ def corporate_client_job_candidates(request, job_pk):
 
     # IDs already in cart for this job
     cart_candidate_ids = set(
-        CandidateCart.objects.filter(client=corp, job=job).values_list('candidate_id', flat=True)
+        CandidateCart.objects.filter(user=request.user, job=job).values_list('candidate_id', flat=True)
     )
 
     # Fetch credential requests for these candidate IDs
@@ -263,7 +266,7 @@ def corporate_client_add_to_cart(request, job_pk, candidate_pk):
     candidate = submission.candidate
 
     cart_item, created = CandidateCart.objects.get_or_create(
-        client=corp,
+        user=request.user,
         job=job,
         candidate=candidate
     )
@@ -310,7 +313,7 @@ def corporate_client_remove_from_cart(request, job_pk, candidate_pk):
     """Remove a candidate from the cart."""
     corp = _get_corporate_client(request.user)
     job = get_object_or_404(JobRequirement, pk=job_pk, client=corp)
-    cart_item = get_object_or_404(CandidateCart, client=corp, job=job, candidate_id=candidate_pk)
+    cart_item = get_object_or_404(CandidateCart, user=request.user, job=job, candidate_id=candidate_pk)
     if request.method == 'POST':
         cart_item.delete()
         messages.success(request, 'Candidate removed from shortlist.')
@@ -323,7 +326,7 @@ def corporate_client_cart(request):
     """View all shortlisted candidates across all jobs."""
     corp = _get_corporate_client(request.user)
     cart_items = CandidateCart.objects.filter(
-        client=corp
+        user=request.user
     ).select_related('candidate', 'job').order_by('-created_at')
 
     # Fetch credential requests for these candidate IDs
@@ -384,8 +387,8 @@ def download_corporate_candidate_document(request, candidate_id, doc_type):
         if candidate.recruiter == request.user:
             has_access = True
     elif request.user.role == 'corporate_client':
-        try:
-            corp = CorporateClient.objects.get(user=request.user)
+        corp = request.user.corporate_client
+        if corp:
             if doc_type == 'resume':
                 has_access = True
             elif corp.is_servicenow_client:
@@ -396,8 +399,6 @@ def download_corporate_candidate_document(request, candidate_id, doc_type):
                     candidate=candidate,
                     status='approved'
                 ).exists()
-        except CorporateClient.DoesNotExist:
-            pass
             
     if not has_access:
         raise PermissionDenied("You do not have access to these credentials.")
@@ -456,11 +457,17 @@ def corporate_candidate_detail(request, candidate_pk):
         status='approved'
     ).exists()
 
+    is_shortlisted = CandidateCart.objects.filter(
+        user=request.user,
+        candidate=candidate
+    ).exists()
+
     return render(request, 'myspace/client/candidate_detail.html', {
         'corp': corp,
         'candidate': candidate,
         'submission': submission,
         'has_credentials_access': has_credentials_access,
+        'is_shortlisted': is_shortlisted,
     })
 
 
@@ -484,7 +491,7 @@ def corporate_client_servicenow_candidates(request, module_name):
     }
 
     cart_candidate_ids = set(
-        CandidateCart.objects.filter(client=corp).values_list('candidate_id', flat=True)
+        CandidateCart.objects.filter(user=request.user).values_list('candidate_id', flat=True)
     )
 
     for sub in submissions:
