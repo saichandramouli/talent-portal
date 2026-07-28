@@ -19,7 +19,7 @@
                     {% if candidate.profile_photo %}
                         <img src="{{ candidate.profile_photo_optimized_url }}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% else %}
-                        <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
+                        <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.png' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% endif %}
 
                     <!-- Shortlist / Add to Cart Button directly under the image -->
@@ -83,7 +83,7 @@
                         </div>
                         {% if corp.is_servicenow_client and candidate.ltm_ripple_ats_check %}
                         <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
-                            <i class="fa-solid fa-circle-question text-muted" style="width: 16px;"></i> LTM Ripple ATS Check: <span class="text-dark fw-semibold">{{ candidate.get_ltm_ripple_ats_check_display }}</span>
+                            <i class="fa-solid fa-circle-question text-muted" style="width: 16px;"></i> LTM Ripple ATS Check: <span class="text-white fw-semibold">{{ candidate.get_ltm_ripple_ats_check_display }}</span>
                         </div>
                         {% endif %}
                     </div>
@@ -120,8 +120,8 @@
 
                         {% if has_credentials_access or corp.is_servicenow_client %}
                             <div class="p-3 bg-light rounded" style="border: 1px solid var(--ms-border); font-size: 0.9rem;">
-                                <div class="mb-2"><strong class="text-dark">Email:</strong> {{ candidate.email }}</div>
-                                <div class="mb-2"><strong class="text-dark">Phone:</strong> {{ candidate.phone|default:"No Phone" }}</div>
+                                <div class="mb-2"><strong class="text-white">Email:</strong> {{ candidate.email }}</div>
+                                <div class="mb-2"><strong class="text-white">Phone:</strong> {{ candidate.phone|default:"No Phone" }}</div>
                                 <div class="mt-3 d-flex flex-wrap gap-2">
                                     {% if candidate.bgv_verification %}
                                         <a href="{% url 'download_corporate_candidate_document' candidate.id 'bgv' %}" target="_blank" class="btn btn-sm btn-outline-primary">

@@ -8,14 +8,14 @@
 <style>
     /* Custom Accordion Filter Styles */
     .filter-sidebar-container {
-        background: #ffffff;
+        background: var(--ms-surface);
         border-radius: 16px;
         padding: 20px;
         border: 1px solid var(--ms-border);
     }
 
     .filter-group {
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid var(--ms-border);
         padding-bottom: 12px;
         margin-bottom: 12px;
     }
@@ -44,7 +44,7 @@
     .accordion-toggle-icon {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #64748b;
+        color: var(--ms-muted);
         width: 14px;
         display: inline-block;
         text-align: center;
@@ -53,7 +53,7 @@
     .filter-title {
         font-weight: 600;
         font-size: 0.92rem;
-        color: #1e293b;
+        color: var(--ms-text);
         letter-spacing: -0.01em;
     }
 
@@ -74,7 +74,7 @@
 
     .filter-item-link {
         font-size: 0.85rem;
-        color: #475569;
+        color: var(--ms-muted);
         padding: 6px 12px;
         margin-bottom: 3px;
         border-radius: 8px;
@@ -85,12 +85,12 @@
     }
 
     .filter-item-link:hover {
-        background-color: #f1f5f9;
+        background-color: rgba(0, 168, 232, 0.08);
         color: var(--ms-primary);
     }
 
     .filter-item-link.active-filter {
-        background-color: rgba(37, 99, 235, 0.08);
+        background-color: rgba(0, 168, 232, 0.08);
         color: var(--ms-primary);
         font-weight: 600;
     }
@@ -110,7 +110,7 @@
 
                     <div class="filter-sidebar-container">
                         <label class="form-label mb-3"
-                            style="font-weight: 700; font-size: 0.85rem; color: var(--ms-muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; border-bottom: 2px solid #2563eb; padding-bottom: 8px;">Filters</label>
+                            style="font-weight: 700; font-size: 0.85rem; color: var(--ms-muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; border-bottom: 2px solid var(--ms-primary); padding-bottom: 8px;">Filters</label>
 
                         {% with selected_stack_int=selected_stack|add:"0" %}
 
@@ -317,7 +317,7 @@
                                 class="candidate-img-full" loading="lazy"
                                 style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                             {% else %}
-                            <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}"
+                            <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.png' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}?v=2" alt="{{ candidate.full_name }}"
                                 class="candidate-img-full" loading="lazy"
                                 style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                             {% endif %}
@@ -337,7 +337,7 @@
                                 </div>
 
                                 <!-- Profile Details -->
-                                <div class="text-muted small lh-base text-start px-2 mt-2" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
+                                <div class="text-muted small lh-base text-start px-2 mt-2" style="color: var(--ms-text) !important; font-size: 11px; letter-spacing: -0.025em; font-weight: normal;">
                                     <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.years_of_experience }} Years</div>
                                     <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.location }}{% if "remote" not in candidate.location|lower %}/Remote{% endif %}</div>
                                     <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>

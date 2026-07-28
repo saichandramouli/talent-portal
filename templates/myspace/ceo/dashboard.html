@@ -8,14 +8,14 @@
 <style>
     /* Custom Accordion Filter Styles */
     .filter-sidebar-container {
-        background: #ffffff;
+        background: var(--ms-surface);
         border-radius: 16px;
         padding: 20px;
         border: 1px solid var(--ms-border);
     }
 
     .filter-group {
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid var(--ms-border);
         padding-bottom: 12px;
         margin-bottom: 12px;
     }
@@ -44,7 +44,7 @@
     .accordion-toggle-icon {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #64748b;
+        color: var(--ms-muted);
         width: 14px;
         display: inline-block;
         text-align: center;
@@ -53,7 +53,7 @@
     .filter-title {
         font-weight: 600;
         font-size: 0.92rem;
-        color: #1e293b;
+        color: var(--ms-text);
         letter-spacing: -0.01em;
     }
 
@@ -74,7 +74,7 @@
 
     .filter-item-link {
         font-size: 0.85rem;
-        color: #475569;
+        color: var(--ms-muted);
         padding: 6px 12px;
         margin-bottom: 3px;
         border-radius: 8px;
@@ -85,12 +85,12 @@
     }
 
     .filter-item-link:hover {
-        background-color: #f1f5f9;
+        background-color: rgba(0, 168, 232, 0.08);
         color: var(--ms-primary);
     }
 
     .filter-item-link.active-filter {
-        background-color: rgba(37, 99, 235, 0.08);
+        background-color: rgba(0, 168, 232, 0.08);
         color: var(--ms-primary);
         font-weight: 600;
     }
@@ -103,11 +103,11 @@
     <div class="row g-4 mb-4">
         <div class="col-md-2.4 col-lg">
             <a href="{% url 'manager_list' %}" class="text-decoration-none d-block h-100">
-                <div class="ms-stat h-100" style="background: #ffffff; border: 1px solid var(--ms-border); color: #0f172a;">
-                    <div class="ms-stat-label" style="color: #64748b;">Total Managers</div>
-                    <h2 style="color: #0f172a !important;">{{ total_managers }}</h2>
-                    <div class="small mt-1" style="color: #64748b;">Managers leading teams</div>
-                    <div class="ms-stat-icon" style="color: #0f172a; opacity: 0.15;"><i class="fa-solid fa-people-roof"></i></div>
+                <div class="ms-stat h-100">
+                    <div class="ms-stat-label">Total Managers</div>
+                    <h2>{{ total_managers }}</h2>
+                    <div class="small mt-1">Managers leading teams</div>
+                    <div class="ms-stat-icon"><i class="fa-solid fa-people-roof"></i></div>
                 </div>
             </a>
         </div>

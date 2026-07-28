@@ -28,9 +28,9 @@
         <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
             <label class="fw-semibold text-muted small mb-0">Filter:</label>
             {% for val, label in status_choices %}
-            <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+            <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">{{ label }}</a>
             {% endfor %}
-            <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+            <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">All</a>
         </form>
     </div>
 </div>
@@ -53,12 +53,12 @@
             {% for job in jobs %}
             <tr>
                 <td>
-                    <a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}" class="fw-semibold text-decoration-none text-dark">
+                    <a href="{% url 'recruiter_job_detail' client_pk=client.pk job_pk=job.pk %}" class="fw-semibold text-decoration-none text-white">
                         {{ job.job_title }}
                     </a>
                     <div class="text-muted" style="font-size:0.75rem;">{{ job.rate_card }}</div>
                 </td>
-                <td><span class="badge bg-light text-dark">{{ job.employment_type }}</span></td>
+                <td><span class="badge bg-light text-light">{{ job.employment_type }}</span></td>
                 <td>{{ job.experience }}</td>
                 <td><i class="fa-solid fa-location-dot text-muted me-1"></i>{{ job.location }}</td>
                 <td><span class="ms-badge ms-badge-{{ job.status }}">{{ job.get_status_display }}</span></td>

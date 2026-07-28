@@ -70,6 +70,15 @@ class CandidateForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
+        # Make gender a mandatory field
+        choices = list(self.fields['gender'].choices)
+        if not any(c[0] == '' for c in choices):
+            choices = [('', 'Select Gender')] + choices
+        self.fields['gender'].choices = choices
+        self.fields['gender'].required = True
+        if not self.instance or not self.instance.pk:
+            self.fields['gender'].initial = ''
+
         # Load initial values for MultipleChoiceFields
         if self.instance and self.instance.pk:
             if self.instance.employment_type:

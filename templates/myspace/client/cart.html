@@ -81,8 +81,8 @@
                                 {% if item.candidate.credential_request %}
                                 {% if item.candidate.credential_request.status == 'approved' %}
                                 <div class="mt-1 small" style="font-size:0.75rem; line-height:1.3;">
-                                    <div class="text-dark"><i class="fa-solid fa-envelope me-1 text-primary"></i>{{ item.candidate.email }}</div>
-                                    <div class="text-dark"><i class="fa-solid fa-phone me-1 text-primary"></i>{{ item.candidate.phone|default:"No Phone" }}</div>
+                                    <div class="text-white"><i class="fa-solid fa-envelope me-1 text-primary"></i>{{ item.candidate.email }}</div>
+                                    <div class="text-white"><i class="fa-solid fa-phone me-1 text-primary"></i>{{ item.candidate.phone|default:"No Phone" }}</div>
                                     <div class="mt-1 d-flex flex-wrap gap-1">
                                         {% if item.candidate.bgv_verification %}
                                         <a href="{% url 'download_corporate_candidate_document' item.candidate.id 'bgv' %}"

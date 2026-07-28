@@ -7,9 +7,9 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h4 fw-bold mb-0">All Job Requirements</h1>
     <div class="d-flex gap-1 flex-wrap">
-        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">All</a>
+        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">All</a>
         {% for val, label in status_choices %}
-        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-dark{% endif %} px-3 py-2">{{ label }}</a>
+        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">{{ label }}</a>
         {% endfor %}
     </div>
 </div>

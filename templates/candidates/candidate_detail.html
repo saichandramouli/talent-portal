@@ -28,7 +28,7 @@
                     {% if candidate.profile_photo %}
                         <img src="{{ candidate.profile_photo_optimized_url }}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% else %}
-                        <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
+                        <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.png' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="img-fluid" style="border-radius: 8px; max-width: 320px; aspect-ratio: 1; object-fit: cover; border: 1px solid #e2e8f0; width: 100%;">
                     {% endif %}
                     
                     <!-- Shortlist / Add to Cart Button directly under the image -->

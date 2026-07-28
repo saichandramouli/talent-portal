@@ -10,20 +10,20 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <style>
         :root {
-            --ms-primary: var(--primary-color, #2563eb);
-            --ms-primary-dark: var(--primary-hover, #1d4ed8);
-            --ms-secondary: var(--secondary-color, #3b82f6);
+            --ms-primary: var(--primary-color, #00a8e8);
+            --ms-primary-dark: var(--primary-hover, #38bdf8);
+            --ms-secondary: var(--secondary-color, #0284c7);
             --ms-accent: var(--warning-color, #f59e0b);
-            --ms-dark: var(--sidebar-bg, #ffffff);
-            --ms-surface: var(--card-bg, #ffffff);
-            --ms-border: var(--border-color, rgba(226, 232, 240, 0.8));
-            --ms-text: var(--text-main, #0f172a);
-            --ms-muted: var(--text-muted, #64748b);
+            --ms-dark: var(--sidebar-bg, #010d24);
+            --ms-surface: var(--card-bg, #020c24);
+            --ms-border: var(--border-color, #0d2146);
+            --ms-text: var(--text-main, #ffffff);
+            --ms-muted: var(--text-muted, #94a3b8);
             --ms-sidebar-width: 220px;
             --transition: var(--transition-smooth, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
         }
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: var(--font-body), 'Inter', sans-serif; background-color: var(--bg-main, #f8fafc); color: var(--ms-text); }
+        body { margin: 0; font-family: var(--font-body), 'Inter', sans-serif; background-color: var(--bg-main, #020817); color: var(--ms-text); }
 
         /* ── Sidebar ─────────────────────────────────────────── */
         .ms-layout { display: flex; min-height: 100vh; }
@@ -59,11 +59,14 @@
             transition: var(--transition);
         }
         .ms-nav a:hover {
-            color: var(--ms-primary); background: var(--sidebar-hover, rgba(37, 99, 235, 0.08));
+            color: var(--ms-primary); background: var(--sidebar-hover, rgba(0, 168, 232, 0.08));
         }
         .ms-nav a.active {
-            color: var(--ms-primary); background: var(--sidebar-hover, rgba(37, 99, 235, 0.08));
-            font-weight: 600; border-left: 3px solid var(--ms-primary);
+            color: var(--ms-primary) !important;
+            background: rgba(0, 168, 232, 0.05) !important;
+            font-weight: 600;
+            border: 1.5px solid var(--ms-primary) !important;
+            box-shadow: 0 0 10px rgba(0, 168, 232, 0.15);
         }
         .ms-nav a i { width: 20px; text-align: center; font-size: 1.1rem; color: inherit; }
         .ms-sidebar-footer {
@@ -91,10 +94,10 @@
         /* ── Main Content ─────────────────────────────────────── */
         .ms-main { margin-left: var(--ms-sidebar-width); display: flex; flex-direction: column; min-height: 100vh; width: calc(100% - var(--ms-sidebar-width)); }
         .ms-topbar {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(2, 8, 23, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--ms-border);
             padding: 1.25rem 2rem; display: flex; align-items: center;
             justify-content: space-between; position: sticky; top: 0; z-index: 100;
             color: rgba(241, 245, 249, 0.9);
@@ -118,8 +121,8 @@
             transition: var(--transition);
         }
         .ms-card:hover {
-            box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1)), var(--shadow-premium, 0 4px 20px rgba(37, 99, 235, 0.08));
-            border-color: rgba(37, 99, 235, 0.15) !important;
+            box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1)), var(--shadow-premium, 0 4px 20px rgba(0, 168, 232, 0.15));
+            border-color: rgba(0, 168, 232, 0.22) !important;
             transform: translateY(-2px);
         }
         .ms-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--ms-border);
@@ -128,14 +131,14 @@
 
         /* ── Stat Cards ───────────────────────────────────────── */
         .ms-stat {
-            background: linear-gradient(135deg, var(--ms-primary) 0%, var(--ms-secondary) 100%);
+            background: linear-gradient(135deg, #00a8e8 0%, #0056b3 100%) !important;
             border-radius: 20px; padding: 1.5rem; color: #ffffff; position: relative; overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
         }
         .ms-stat:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-lg), 0 10px 25px rgba(37, 99, 235, 0.15);
+            box-shadow: var(--shadow-lg), 0 10px 25px rgba(0, 168, 232, 0.35);
         }
         .ms-stat h2 { font-size: 2.25rem; font-weight: 800; margin: 0; color: #ffffff !important; font-family: var(--font-heading), 'Outfit', sans-serif; }
         .ms-stat-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; }
@@ -145,7 +148,7 @@
         /* ── Tables ───────────────────────────────────────────── */
         .ms-table { width: 100%; border-collapse: separate; border-spacing: 0; }
         .ms-table thead th {
-            background-color: rgba(37, 99, 235, 0.04);
+            background-color: rgba(0, 168, 232, 0.04);
             font-family: var(--font-heading), 'Outfit', sans-serif;
             font-weight: 600;
             text-transform: uppercase;
@@ -156,7 +159,7 @@
             border-bottom: 1px solid var(--ms-border);
         }
         .ms-table tbody tr { transition: var(--transition); }
-        .ms-table tbody tr:hover { background-color: rgba(37, 99, 235, 0.02); }
+        .ms-table tbody tr:hover { background-color: rgba(0, 168, 232, 0.04); }
         .ms-table tbody td { padding: 14px 16px; border-bottom: 1px solid var(--ms-border);
             vertical-align: middle; font-size: 0.875rem; color: var(--ms-text); }
 

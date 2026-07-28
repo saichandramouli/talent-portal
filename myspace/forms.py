@@ -211,6 +211,15 @@ class CorporateCandidateForm(forms.ModelForm):
         self.fields['servicenow_module'].required = True
         self.fields['client'].required = True
 
+        # Make gender a mandatory field
+        choices = list(self.fields['gender'].choices)
+        if not any(c[0] == '' for c in choices):
+            choices = [('', 'Select Gender')] + choices
+        self.fields['gender'].choices = choices
+        self.fields['gender'].required = True
+        if not self.instance or not self.instance.pk:
+            self.fields['gender'].initial = ''
+
         if self.instance and self.instance.pk:
             if self.instance.employment_type:
                 self.initial['employment_type'] = [x.strip() for x in self.instance.employment_type.split(',') if x.strip()]

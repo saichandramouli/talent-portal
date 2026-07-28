@@ -5,24 +5,24 @@
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Design Colors - Light White & Blue Theme */
-    --bg-main: #f8fafc;
-    /* Clean Light Gray/Blue */
-    --sidebar-bg: #ffffff;
-    --sidebar-hover: rgba(37, 99, 235, 0.08);
+    /* Design Colors - Dark Cyber & Neon Blue Theme */
+    --bg-main: #020817;
+    /* Deep dark space background */
+    --sidebar-bg: #010d24;
+    --sidebar-hover: rgba(0, 168, 232, 0.08);
 
-    --primary-color: #2563eb;
-    /* Premium Classic Blue */
-    --primary-hover: #1d4ed8;
-    --primary-glow: rgba(37, 99, 235, 0.15);
+    --primary-color: #00a8e8;
+    /* Glowing Neon Cyan */
+    --primary-hover: #38bdf8;
+    --primary-glow: rgba(0, 168, 232, 0.25);
 
-    --secondary-color: #3b82f6;
-    /* Soft Blue */
-    --secondary-hover: #2563eb;
-    --secondary-glow: rgba(59, 130, 246, 0.1);
+    --secondary-color: #0284c7;
+    /* Soft Neon Blue */
+    --secondary-hover: #0369a1;
+    --secondary-glow: rgba(2, 132, 199, 0.15);
 
-    --accent-color: #1e3a8a;
-    /* Dark Blue Accent */
+    --accent-color: #00a8e8;
+    /* Neon Accent */
 
     --success-color: #10b981;
     /* Soft Emerald Green */
@@ -34,21 +34,21 @@
     /* Soft Red */
     --danger-bg: rgba(239, 68, 68, 0.1);
 
-    --text-main: #0f172a;
-    /* Deep Slate Dark Text */
-    --text-muted: #64748b;
+    --text-main: #ffffff;
+    /* Crisp White Text */
+    --text-muted: #94a3b8;
     /* Slate Grey Text */
-    --card-bg: #ffffff;
-    /* Solid White Card */
-    --border-color: rgba(226, 232, 240, 0.8);
-    /* Soft Light Gray Border */
-    --glass-blur: blur(0px);
+    --card-bg: #020c24;
+    /* Dark Slate Card */
+    --border-color: #0d2146;
+    /* Deep Slate/Blue Border */
+    --glass-blur: blur(8px);
 
     /* Glowing Shadows */
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --shadow-premium: 0 4px 20px rgba(37, 99, 235, 0.08);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+    --shadow-premium: 0 4px 20px rgba(0, 168, 232, 0.15);
 
     --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -496,7 +496,7 @@ button,
 
 .form-control,
 .form-select {
-    background-color: #ffffff !important;
+    background-color: #041235 !important;
     border: 1px solid var(--border-color);
     color: var(--text-main) !important;
     border-radius: 10px;
@@ -511,16 +511,16 @@ button,
 
 .form-control:focus,
 .form-select:focus {
-    background-color: #ffffff !important;
+    background-color: #041235 !important;
     border-color: var(--primary-color) !important;
     color: var(--text-main) !important;
-    box-shadow: 0 0 15px rgba(37, 99, 235, 0.15) !important;
+    box-shadow: 0 0 15px rgba(0, 168, 232, 0.25) !important;
     outline: none;
 }
 
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: #f1f5f9 !important;
+    background-color: #020817 !important;
     color: var(--text-muted) !important;
     border-color: var(--border-color) !important;
     opacity: 0.6;
@@ -542,7 +542,7 @@ button,
     border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 16px;
-    background-color: #ffffff;
+    background-color: #041235;
 }
 
 .django-select-multiple-checkboxes label {
@@ -594,7 +594,7 @@ button,
 
 /* --- Auth / Login screens --- */
 .auth-bg {
-    background: #f8fafc !important;
+    background: var(--bg-main) !important;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -633,11 +633,11 @@ button,
 .auth-card {
     max-width: 480px;
     width: 100%;
-    background: #ffffff !important;
+    background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 24px;
     padding: 48px;
-    box-shadow: var(--shadow-lg), 0 0 40px rgba(37, 99, 235, 0.08) !important;
+    box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 168, 232, 0.15) !important;
     position: relative;
     z-index: 10;
     color: var(--text-main) !important;
@@ -779,13 +779,13 @@ button,
 }
 
 footer {
-    background: #ffffff !important;
+    background: var(--sidebar-bg) !important;
     border-top: 1px solid var(--border-color) !important;
 }
 
 /* Premium White & Blue Card Design */
 .candidate-card-premium-cyber {
-    background: #ffffff !important;
+    background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 28px !important;
     overflow: hidden !important;
@@ -855,7 +855,7 @@ footer {
 /* Bottom content section */
 .candidate-card-premium-cyber .card-content-cyber {
     padding: 24px;
-    background: #ffffff !important;
+    background: var(--card-bg) !important;
 }
 
 .candidate-card-premium-cyber .text-white {

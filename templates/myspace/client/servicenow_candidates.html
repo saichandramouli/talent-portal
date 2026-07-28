@@ -26,7 +26,7 @@
                 {% if candidate.profile_photo %}
                 <img src="{{ candidate.profile_photo_thumbnail_url }}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                 {% else %}
-                <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.jpg' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
+                <img src="{% if candidate.gender == 'female' %}{% static 'images/avatar_female.png' %}{% else %}{% static 'images/avatar_male.jpg' %}{% endif %}" alt="{{ candidate.full_name }}" class="candidate-img-full" loading="lazy" style="width: 140px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd;">
                 {% endif %}
             </div>
 

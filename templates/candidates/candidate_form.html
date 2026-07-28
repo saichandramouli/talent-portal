@@ -24,7 +24,7 @@
                     {% csrf_token %}
                     
                     <div class="mb-3">
-                        <label for="id_full_name" class="form-label">Full Name</label>
+                        <label for="id_full_name" class="form-label">Full Name <span class="text-danger">*</span></label>
                         {{ form.full_name }}
                         {% if form.full_name.errors %}
                             <div class="text-danger small mt-1">{{ form.full_name.errors }}</div>
@@ -32,7 +32,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_gender" class="form-label">Gender</label>
+                        <label for="id_gender" class="form-label">Gender <span class="text-danger">*</span></label>
                         {{ form.gender }}
                         {% if form.gender.errors %}
                             <div class="text-danger small mt-1">{{ form.gender.errors }}</div>
