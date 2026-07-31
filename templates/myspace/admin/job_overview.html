@@ -6,11 +6,26 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h4 fw-bold mb-0">All Job Requirements</h1>
-    <div class="d-flex gap-1 flex-wrap">
-        <a href="?" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">All</a>
-        {% for val, label in status_choices %}
-        <a href="?status={{ val }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">{{ label }}</a>
-        {% endfor %}
+    <div class="d-flex flex-column align-items-end gap-2">
+        <form method="GET" class="d-flex align-items-center gap-2">
+            <!-- Preserve status filter if any -->
+            {% if status_filter %}
+            <input type="hidden" name="status" value="{{ status_filter }}">
+            {% endif %}
+            <label class="text-white opacity-75 small text-nowrap mb-0">Client:</label>
+            <select name="client_id" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: auto; min-width: 150px;" onchange="this.form.submit()">
+                <option value="">All Clients</option>
+                {% for client in corporate_clients %}
+                <option value="{{ client.id }}" {% if client_filter == client.id|stringformat:"s" %}selected{% endif %}>{{ client.company_name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        <div class="d-flex gap-1 flex-wrap">
+            <a href="?client_id={{ client_filter }}" class="badge rounded-pill text-decoration-none {% if not status_filter %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">All</a>
+            {% for val, label in status_choices %}
+            <a href="?status={{ val }}&client_id={{ client_filter }}" class="badge rounded-pill text-decoration-none {% if status_filter == val %}bg-primary{% else %}bg-secondary bg-opacity-25 text-light{% endif %} px-3 py-2">{{ label }}</a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
@@ -43,9 +58,13 @@
                 <td class="text-center"><span class="badge bg-secondary">{{ job.submissions.count }}</span></td>
                 <td class="text-muted">{{ job.created_at|date:"M d, Y" }}</td>
                 <td class="text-end">
+                    {% if user.role != 'ceo' %}
                     <a href="{% url 'admin_myspace_job_delete' job.pk %}" class="btn btn-sm btn-outline-danger" title="Delete Job Requirement">
                         <i class="fa-solid fa-trash"></i> Delete
                     </a>
+                    {% else %}
+                    <span class="text-muted small">N/A</span>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}

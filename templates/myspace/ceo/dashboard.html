@@ -154,7 +154,7 @@
     </div>
 
     <!-- Hierarchy & Managers -->
-    <h5 class="fw-bold mb-3 mt-4 text-dark"><i class="fa-solid fa-sitemap me-2 text-primary"></i>Organization Hierarchy
+    <h5 class="fw-bold mb-3 mt-4 text-white"><i class="fa-solid fa-sitemap me-2 text-primary"></i>Organization Hierarchy
     </h5>
 
     <div class="row g-4">
@@ -163,10 +163,10 @@
             <div class="ms-card h-100">
                 <div class="ms-card-header bg-light d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="fw-bold mb-0 text-dark">
+                        <h6 class="fw-bold mb-0 text-white">
                             <i class="fa-solid fa-user-circle text-primary me-2"></i>{{ item.manager.full_name }}
                         </h6>
-                        <small class="text-muted">{{ item.manager.email }}</small>
+                        <small class="text-white opacity-75">{{ item.manager.email }}</small>
                     </div>
                     <div class="d-flex gap-2">
                         <span class="badge bg-primary rounded-pill" title="Clients assigned">Clients: {{ item.clients_count }}</span>
@@ -177,29 +177,29 @@
                 <div class="ms-card-body">
                     <!-- Recruiters under this manager -->
                     <div class="mb-3">
-                        <span class="fw-bold small text-dark d-block mb-2"><i
+                        <span class="fw-bold small text-white d-block mb-2"><i
                                 class="fa-solid fa-user-clock text-secondary me-2"></i>CWR Recruiters (Contract)</span>
                         <div class="d-flex flex-wrap gap-1">
                             {% for r in item.cwr_recruiters %}
-                            <span class="badge bg-light text-dark border p-2 mb-1" title="{{ r.email }}">
+                            <span class="badge bg-transparent text-white border border-secondary p-2 mb-1" title="{{ r.email }}">
                                 {{ r.full_name }}
                             </span>
                             {% empty %}
-                            <span class="text-muted small">None</span>
+                            <span class="text-white opacity-75 small">None</span>
                             {% endfor %}
                         </div>
                     </div>
 
                     <div>
-                        <span class="fw-bold small text-dark d-block mb-2"><i
+                        <span class="fw-bold small text-white d-block mb-2"><i
                                 class="fa-solid fa-user-tie text-secondary me-2"></i>FTE Recruiters (Full-Time)</span>
                         <div class="d-flex flex-wrap gap-1">
                             {% for r in item.fte_recruiters %}
-                            <span class="badge bg-light text-dark border p-2 mb-1" title="{{ r.email }}">
+                            <span class="badge bg-transparent text-white border border-secondary p-2 mb-1" title="{{ r.email }}">
                                 {{ r.full_name }}
                             </span>
                             {% empty %}
-                            <span class="text-muted small">None</span>
+                            <span class="text-white opacity-75 small">None</span>
                             {% endfor %}
                         </div>
                     </div>
@@ -209,57 +209,89 @@
         {% empty %}
         <div class="col-12">
             <div class="ms-card text-center py-5">
-                <i class="fa-solid fa-people-roof fa-3x text-muted mb-3 d-block opacity-50"></i>
-                <h5 class="text-muted fw-semibold">No Managers Found</h5>
-                <p class="text-muted mb-0">Use the Admin dashboard to register Manager accounts.</p>
+                <i class="fa-solid fa-people-roof fa-3x text-white mb-3 d-block opacity-50"></i>
+                <h5 class="text-white fw-semibold">No Managers Found</h5>
+                <p class="text-white opacity-75 mb-0">Use the Admin dashboard to register Manager accounts.</p>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <!-- Unassigned Recruiters Section -->
-    {% if unassigned_recruiters %}
-    <div class="ms-card mt-4 border-warning">
-        <div class="ms-card-header bg-warning text-dark py-2 px-3">
-            <h6 class="fw-bold mb-0"><i class="fa-solid fa-triangle-exclamation me-2"></i>Unassigned Recruiters (No
-                Manager Assigned)</h6>
-        </div>
+
+
+    <hr class="my-5 border-secondary">
+
+    <h4 class="fw-bold mb-4 text-white"><i class="fa-solid fa-building text-primary me-2"></i>Corporate Clients</h4>
+    <div class="ms-card mb-5">
         <div class="table-responsive">
             <table class="ms-table mb-0">
                 <thead>
                     <tr>
-                        <th>Recruiter</th>
-                        <th>Email</th>
-                        <th>Classification</th>
-                        <th>Team</th>
+                        <th>Company Name</th>
+                        <th>Industry</th>
+                        <th>Status</th>
+                        <th>ServiceNow Client</th>
+                        <th>Joined</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for r in unassigned_recruiters %}
+                    {% for client in corporate_clients_list %}
                     <tr>
-                        <td class="fw-semibold">{{ r.full_name }}</td>
-                        <td>{{ r.email }}</td>
+                        <td class="fw-semibold text-white">{{ client.company_name }}</td>
+                        <td class="text-white opacity-75">{{ client.industry|default:"-" }}</td>
                         <td>
-                            {% if r.recruiter_type %}
-                            <span class="badge bg-secondary">{{ r.get_recruiter_type_display }}</span>
+                            {% if client.is_active %}
+                            <span class="badge bg-success">Active</span>
                             {% else %}
-                            <span class="text-muted">-</span>
+                            <span class="badge bg-danger">Inactive</span>
                             {% endif %}
                         </td>
                         <td>
-                            {% if r.team %}
-                            <span class="badge bg-info text-dark">{{ r.team.name }}</span>
+                            {% if client.is_servicenow_client %}
+                            <span class="badge bg-info text-dark">Yes</span>
                             {% else %}
-                            <span class="text-muted">-</span>
+                            <span class="text-white opacity-75">-</span>
                             {% endif %}
                         </td>
+                        <td class="text-white opacity-75">{{ client.created_at|date:"M d, Y" }}</td>
                     </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-white opacity-50 py-3">No corporate clients found.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    {% endif %}
+
+
+
+
+
+    <h4 class="fw-bold mb-4 text-white"><i class="fa-solid fa-layer-group text-primary me-2"></i>Teams & Stacks</h4>
+    <div class="row g-4 mb-5">
+        {% for team in teams_and_stacks %}
+        <div class="col-md-4">
+            <div class="ms-card h-100">
+                <div class="ms-card-header bg-transparent border-bottom border-secondary">
+                    <h6 class="fw-bold mb-0 text-white"><i class="fa-solid fa-people-group text-primary me-2"></i>{{ team.name }}</h6>
+                </div>
+                <div class="ms-card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for stack in team.technology_stacks.all %}
+                        <span class="badge bg-transparent border border-secondary text-white">{{ stack.name }}</span>
+                        {% empty %}
+                        <span class="text-white opacity-50 small">No tech stacks assigned</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-white opacity-50 py-4">No teams found.</div>
+        {% endfor %}
+    </div>
+
+
 
 </div>
 {% endblock %}

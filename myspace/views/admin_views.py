@@ -28,6 +28,19 @@ def admin_corporate_client_list(request):
     clients = CorporateClient.objects.prefetch_related('users', 'recruiter_assignments__recruiter')
     return render(request, 'myspace/admin/corporate_client_list.html', {'clients': clients})
 
+@login_required
+@admin_or_ceo_required
+def admin_corporate_client_detail(request, pk):
+    """View detailed information about a Corporate Client."""
+    client = get_object_or_404(CorporateClient, pk=pk)
+    
+    context = {
+        'client_profile': client,
+        'users': client.users.all(),
+        'jobs': client.job_requirements.all().order_by('-created_at'),
+        'recruiter_assignments': client.recruiter_assignments.select_related('recruiter').all(),
+    }
+    return render(request, 'myspace/admin/corporate_client_detail.html', context)
 
 @login_required
 @admin_required
@@ -144,13 +157,23 @@ def admin_assign_recruiters(request, pk):
 def admin_job_overview(request):
     """Admin: view all job requirements across all corporate clients."""
     jobs = JobRequirement.objects.select_related('client', 'creator').order_by('-created_at')
+    
     status_filter = request.GET.get('status', '')
     if status_filter:
         jobs = jobs.filter(status=status_filter)
+        
+    client_filter = request.GET.get('client_id', '')
+    if client_filter:
+        jobs = jobs.filter(client_id=client_filter)
+        
+    corporate_clients = CorporateClient.objects.all().order_by('company_name')
+        
     return render(request, 'myspace/admin/job_overview.html', {
         'jobs': jobs,
         'status_filter': status_filter,
+        'client_filter': client_filter,
         'status_choices': JobRequirement.STATUS_CHOICES,
+        'corporate_clients': corporate_clients,
     })
 
 
@@ -164,10 +187,19 @@ def admin_submission_overview(request):
     status_filter = request.GET.get('status', '')
     if status_filter:
         submissions = submissions.filter(status=status_filter)
+        
+    client_filter = request.GET.get('client_id', '')
+    if client_filter:
+        submissions = submissions.filter(job__client_id=client_filter)
+        
+    corporate_clients = CorporateClient.objects.all().order_by('company_name')
+        
     return render(request, 'myspace/admin/submission_overview.html', {
         'submissions': submissions,
         'status_filter': status_filter,
+        'client_filter': client_filter,
         'status_choices': CandidateSubmission.STATUS_CHOICES,
+        'corporate_clients': corporate_clients,
     })
 
 

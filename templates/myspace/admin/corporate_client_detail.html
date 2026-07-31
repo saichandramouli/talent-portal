@@ -1,0 +1,118 @@
+{% extends 'myspace/base_myspace.html' %}
+{% block title %}{{ client_profile.company_name }} – Client Details{% endblock %}
+{% block page_title %}{{ client_profile.company_name }} Details{% endblock %}
+{% block page_subtitle %}Corporate Client Profile{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 fw-bold mb-0">Client Overview</h1>
+    <a href="{% url 'admin_corporate_client_list' %}" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-arrow-left me-1"></i> Back to Clients
+    </a>
+</div>
+
+<div class="row g-4">
+    <!-- Client Profile Info -->
+    <div class="col-md-4">
+        <div class="ms-card h-100">
+            <h5 class="fw-bold text-white border-bottom border-secondary pb-2 mb-3">Company Information</h5>
+            <div class="mb-2 d-flex"><span class="text-white opacity-75" style="min-width: 130px;">Name:</span><span class="fw-semibold text-white">{{ client_profile.company_name }}</span></div>
+            <div class="mb-2 d-flex"><span class="text-white opacity-75" style="min-width: 130px;">Industry:</span><span class="fw-semibold text-white">{{ client_profile.industry|default:"N/A" }}</span></div>
+            <div class="mb-2 d-flex align-items-center">
+                <span class="text-white opacity-75" style="min-width: 130px;">Status:</span>
+                {% if client_profile.is_active %}<span class="badge bg-success">Active</span>
+                {% else %}<span class="badge bg-danger">Inactive</span>{% endif %}
+            </div>
+            <div class="mb-2 d-flex align-items-center">
+                <span class="text-white opacity-75" style="min-width: 130px;">ServiceNow Client:</span>
+                {% if client_profile.is_servicenow_client %}<span class="badge bg-info text-dark">Yes</span>{% else %}<span class="fw-semibold text-white">No</span>{% endif %}
+            </div>
+            <div class="mb-0 d-flex"><span class="text-white opacity-75" style="min-width: 130px;">Joined:</span><span class="fw-semibold text-white">{{ client_profile.created_at|date:"M d, Y" }}</span></div>
+        </div>
+    </div>
+
+    <!-- Assigned Recruiters -->
+    <div class="col-md-4">
+        <div class="ms-card h-100">
+            <h5 class="fw-bold text-white border-bottom border-secondary pb-2 mb-3">Assigned Recruiters</h5>
+            {% if recruiter_assignments %}
+            <ul class="list-unstyled mb-0">
+                {% for assignment in recruiter_assignments %}
+                <li class="mb-3 d-flex align-items-center">
+                    <div style="width: 24px;" class="text-center me-2">
+                        <i class="fa-solid fa-user-tie text-primary"></i>
+                    </div>
+                    <span class="fw-semibold text-white">{{ assignment.recruiter.full_name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted">No recruiters currently assigned.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Logins (Users) -->
+    <div class="col-md-4">
+        <div class="ms-card h-100">
+            <h5 class="fw-bold text-white border-bottom border-secondary pb-2 mb-3">Client Logins</h5>
+            {% if users %}
+            <ul class="list-unstyled mb-0">
+                {% for u in users %}
+                <li class="mb-3 d-flex align-items-start">
+                    <div style="width: 24px;" class="text-center me-2 mt-1">
+                        <i class="fa-solid fa-user text-info"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold text-white">{{ u.full_name }}</div>
+                        <div class="text-white opacity-75 small">{{ u.email }}</div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted">No logins found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Jobs Table -->
+    <div class="col-12 mt-4">
+        <h5 class="fw-bold text-white mb-3">Job Requirements</h5>
+        <div class="ms-card">
+            <div class="table-responsive">
+                <table class="ms-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Type</th>
+                            <th>Positions</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td class="fw-semibold text-white">{{ job.job_title }}</td>
+                            <td class="text-white opacity-75">{{ job.employment_type }}</td>
+                            <td class="text-white opacity-75">{{ job.num_positions }}</td>
+                            <td>
+                                {% if job.status == 'open' %}<span class="badge bg-success">Open</span>
+                                {% elif job.status == 'closed' %}<span class="badge bg-danger">Closed</span>
+                                {% elif job.status == 'filled' %}<span class="badge bg-info">Filled</span>
+                                {% else %}<span class="badge bg-secondary">{{ job.get_status_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-white opacity-75">{{ job.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-3">No jobs posted yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

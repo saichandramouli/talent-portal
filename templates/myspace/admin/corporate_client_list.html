@@ -6,9 +6,11 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h4 fw-bold mb-0">Corporate Clients</h1>
+    {% if user.role != 'ceo' %}
     <a href="{% url 'admin_corporate_client_create' %}" class="btn-ms-primary">
         <i class="fa-solid fa-plus me-1"></i> Create Client
     </a>
+    {% endif %}
 </div>
 
 {% if clients %}
@@ -20,22 +22,32 @@
                 <th>Contact Person</th>
                 <th>Assigned Recruiters</th>
                 <th>Jobs</th>
+                {% if user.role != 'ceo' %}
                 <th>Status</th>
                 <th class="text-end">Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for client in clients %}
             <tr>
                 <td>
-                    <div class="fw-semibold">{{ client.company_name }}</div>
+                    <div class="fw-semibold">
+                        {% if user.role == 'ceo' %}
+                        <a href="{% url 'admin_corporate_client_detail' client.pk %}" class="text-decoration-none text-white">{{ client.company_name }}</a>
+                        {% else %}
+                        {{ client.company_name }}
+                        {% endif %}
+                    </div>
                     {% if client.industry %}<div class="text-muted" style="font-size:0.72rem;">{{ client.industry }}</div>{% endif %}
                 </td>
                 <td>
                     <div class="fw-semibold">{{ client.users.count }} Login(s)</div>
+                    {% if user.role != 'ceo' %}
                     <a href="{% url 'admin_corporate_client_users' client.pk %}" class="small text-primary text-decoration-none" style="font-size:0.75rem;">
                         <i class="fa-solid fa-users me-1"></i>Manage Logins
                     </a>
+                    {% endif %}
                 </td>
                 <td>
                     {% for assignment in client.recruiter_assignments.all %}
@@ -47,6 +59,7 @@
                 <td class="text-center">
                     <span class="badge bg-secondary">{{ client.job_requirements.count }}</span>
                 </td>
+                {% if user.role != 'ceo' %}
                 <td>
                     <span class="ms-badge {% if client.is_active %}ms-badge-active{% else %}ms-badge-inactive{% endif %}">
                         {% if client.is_active %}Active{% else %}Inactive{% endif %}
@@ -77,6 +90,7 @@
                     </a>
                     {% endif %}
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
@@ -86,9 +100,11 @@
 <div class="ms-card text-center py-5">
     <i class="fa-solid fa-building fa-3x text-muted mb-3 d-block opacity-50"></i>
     <h5 class="text-muted fw-semibold">No Corporate Clients Yet</h5>
+    {% if user.role != 'ceo' %}
     <a href="{% url 'admin_corporate_client_create' %}" class="btn-ms-primary mt-2">
         <i class="fa-solid fa-plus me-1"></i> Create First Client
     </a>
+    {% endif %}
 </div>
 {% endif %}
 {% endblock %}

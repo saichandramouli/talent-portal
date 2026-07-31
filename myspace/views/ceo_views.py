@@ -5,7 +5,7 @@ from accounts.decorators import ceo_required
 from accounts.models import User
 from myspace.models import CorporateClient, JobRequirement, CandidateSubmission
 from candidates.models import Candidate, JobTitle, Skill
-from teams.models import TechnologyStack
+from teams.models import TechnologyStack, Team
 
 @login_required
 @ceo_required
@@ -58,7 +58,9 @@ def ceo_dashboard(request):
         })
 
     # Recruiters without any manager assigned
-    unassigned_recruiters = User.objects.filter(role='recruiter', manager__isnull=True)
+    # New Datasets for Detailed Tables
+    corporate_clients_list = CorporateClient.objects.all().order_by('company_name')
+    teams_and_stacks = Team.objects.prefetch_related('technology_stacks').all().order_by('name')
 
     context = {
         'total_managers': total_managers,
@@ -70,7 +72,8 @@ def ceo_dashboard(request):
         'total_submissions': total_submissions,
         'status_summary': status_summary,
         'managers_data': managers_data,
-        'unassigned_recruiters': unassigned_recruiters,
+        'corporate_clients_list': corporate_clients_list,
+        'teams_and_stacks': teams_and_stacks,
     }
     return render(request, 'myspace/ceo/dashboard.html', context)
 
