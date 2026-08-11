@@ -27,11 +27,11 @@
                 </div>
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    <div class="border rounded p-3 mb-3" style="background:#f8fafc;">
+                    <div class="rounded p-3 mb-3" style="background: var(--ms-dark); border: 1px solid var(--ms-border);">
                         {% for checkbox in form.recruiters %}
-                        <div class="form-check py-2 border-bottom">
+                        <div class="form-check py-2 border-bottom" style="border-color: var(--ms-border) !important;">
                             {{ checkbox.tag }}
-                            <label class="form-check-label ms-2 fw-semibold text-dark" for="{{ checkbox.id_for_label }}">
+                            <label class="form-check-label ms-2 fw-semibold" for="{{ checkbox.id_for_label }}">
                                 {{ checkbox.choice_label }}
                             </label>
                         </div>
