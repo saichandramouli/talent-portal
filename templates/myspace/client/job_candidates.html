@@ -65,54 +65,54 @@
             <div class="card-content flex-grow-1 d-flex flex-column justify-content-between">
                 <div class="mb-3">
                     <!-- Name -->
-                    <h5 class="fw-bold mb-1" style="color: #1e40af !important; font-family: var(--font-heading); font-size: 1.15rem;">
+                    <h5 class="fw-bold mb-1" style="color: #ffffff !important; font-family: var(--font-heading); font-size: 1.15rem;">
                         {{ candidate.full_name }}
                     </h5>
 
                     <!-- Technical Stack / Job Title -->
-                    <div class="mb-2 fw-semibold" style="color: #2563eb !important; font-size: 0.95rem;">
+                    <div class="mb-2 fw-semibold" style="color: #38bdf8 !important; font-size: 0.95rem;">
                         {{ candidate.technology_stack|default:"Professional" }}
                     </div>
 
                     <!-- Profile Details -->
-                    <div class="text-muted small lh-base text-start px-2 mt-2" style="color: #334155 !important; font-size: 11px; letter-spacing: -0.025em;">
-                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Exp:</strong> {{ candidate.total_experience }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Location:</strong> {{ candidate.current_location }}{% if "remote" not in candidate.current_location|lower %}/Remote{% endif %}</div>
-                        <div class="mb-1"><i class="fa-solid fa-briefcase me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Type:</strong> {{ candidate.employment_type }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Rate Card:</strong> 
+                    <div class="small lh-base text-start px-2 mt-2" style="color: #cbd5e1 !important; font-size: 11.5px; letter-spacing: -0.01em;">
+                        <div class="mb-1"><i class="fa-solid fa-user-check me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Exp:</strong> <span style="color: #cbd5e1;">{{ candidate.total_experience }}</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-location-dot me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Location:</strong> <span style="color: #cbd5e1;">{{ candidate.current_location }}{% if "remote" not in candidate.current_location|lower %}/Remote{% endif %}</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-id-badge me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Type:</strong> <span style="color: #cbd5e1;">{{ candidate.employment_type }}</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-dollar-to-slot me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Rate Card:</strong> 
                         {% if corp.is_qatar_client %}
                             {% if 'Full Time' in candidate.employment_type and candidate.salary_inr %}
-                                QAR {{ candidate.salary_qar|floatformat:0 }}/yr
+                                <span style="color: #38bdf8; font-weight: 600;">QAR {{ candidate.salary_qar|floatformat:0 }}/yr</span>
                             {% elif candidate.rate_card %}
-                                QAR {{ candidate.rate_card_qar|floatformat:0 }}/hr <span class="text-muted" style="font-size:10px;">(~${{ candidate.rate_card_usd|floatformat:0 }}/hr)</span>
+                                <span style="color: #38bdf8; font-weight: 600;">QAR {{ candidate.rate_card_qar|floatformat:0 }}/hr</span> <span style="color: #94a3b8; font-size:10px;">(~${{ candidate.rate_card_usd|floatformat:0 }}/hr)</span>
                             {% else %}
                                 N/A
                             {% endif %}
                         {% elif 'Full Time' in candidate.employment_type %}
-                            ₹{{ candidate.salary_inr|floatformat:0 }}/yr
+                            <span style="color: #38bdf8; font-weight: 600;">₹{{ candidate.salary_inr|floatformat:0 }}/yr</span>
                         {% else %}
-                            ${{ candidate.rate_card|floatformat:0 }}/hr{% if corp.is_servicenow_client %} (~₹{{ candidate.rate_card_inr|floatformat:0 }}/hr){% endif %}
+                            <span style="color: #38bdf8; font-weight: 600;">${{ candidate.rate_card|floatformat:0 }}/hr</span>{% if corp.is_servicenow_client %} <span style="color: #94a3b8; font-size:10px;">(~₹{{ candidate.rate_card_inr|floatformat:0 }}/hr)</span>{% endif %}
                         {% endif %}
                         </div>
-                        <div class="mb-1"><i class="fa-solid fa-clock me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Notice Period:</strong> {{ candidate.notice_period }}</div>
-                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Resume:</strong> 
+                        <div class="mb-1"><i class="fa-solid fa-clock me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Notice Period:</strong> <span style="color: #cbd5e1;">{{ candidate.notice_period }}</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-file-pdf me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Resume:</strong> 
                         {% if candidate.resume %}
-                            <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" class="text-primary fw-semibold">Available</a>
+                            <a href="{% url 'download_corporate_candidate_resume' candidate.id %}" target="_blank" style="color: #38bdf8; font-weight: 600;">Available</a>
                         {% else %}
-                            Not uploaded
+                            <span style="color: #94a3b8;">Not uploaded</span>
                         {% endif %}
                         </div>
                         {% if corp.is_servicenow_client and candidate.ltm_ripple_ats_check %}
-                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>LTM Ripple ATS Check:</strong> {{ candidate.get_ltm_ripple_ats_check_display }}</div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">LTM Ripple ATS Check:</strong> <span style="color: #cbd5e1;">{{ candidate.get_ltm_ripple_ats_check_display }}</span></div>
                         {% endif %}
-                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Interviewed Sheet:</strong> On Demand</div>
-                        <div class="mb-1"><i class="fa-solid fa-shield-halved me-1 text-primary opacity-75" style="width:14px;"></i> <strong>Background Verification Clearance:</strong> On Demand</div>
+                        <div class="mb-1"><i class="fa-solid fa-circle-question me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Interviewed Sheet:</strong> <span style="color: #cbd5e1;">On Demand</span></div>
+                        <div class="mb-1"><i class="fa-solid fa-shield-halved me-1" style="color: #38bdf8; width:14px;"></i> <strong style="color: #ffffff;">Background Verification Clearance:</strong> <span style="color: #cbd5e1;">On Demand</span></div>
                     </div>
                 </div>
 
                 <!-- Interactive Buttons -->
                 <div class="pt-3 border-top d-flex justify-content-between gap-2 mt-auto">
-                    <a href="{% url 'corporate_candidate_detail' candidate.id %}" class="btn btn-sm btn-outline-primary w-50 text-nowrap">
+                    <a href="{% url 'corporate_candidate_detail' candidate.id %}" class="btn btn-sm w-50 text-nowrap" style="border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; background: rgba(56, 189, 248, 0.06); font-weight: 500;">
                         <i class="fa-solid fa-circle-info me-1"></i>Details
                     </a>
                     {% if candidate.id in cart_candidate_ids %}
