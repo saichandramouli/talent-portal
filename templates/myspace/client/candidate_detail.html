@@ -75,7 +75,15 @@
                         </div>
                         <div class="text-secondary small mb-2 d-flex align-items-center gap-2" style="font-size: 0.9rem;">
                             <i class="fa-solid fa-circle-dollar-to-slot text-muted" style="width: 16px;"></i> Rate Card: 
-                            {% if 'Full Time' in candidate.employment_type %}
+                            {% if corp.is_qatar_client %}
+                                {% if 'Full Time' in candidate.employment_type and candidate.salary_inr %}
+                                    QAR {{ candidate.salary_qar|floatformat:0 }} per annum
+                                {% elif candidate.rate_card %}
+                                    QAR {{ candidate.rate_card_qar|floatformat:0 }}/hr <span class="text-white-50">(~${{ candidate.rate_card_usd|floatformat:0 }}/hr)</span>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            {% elif 'Full Time' in candidate.employment_type %}
                                 ₹{{ candidate.salary_inr|floatformat:0 }} per annum
                             {% else %}
                                 ${{ candidate.rate_card|floatformat:0 }}/hr{% if corp.is_servicenow_client %} (~₹{{ candidate.rate_card_inr|floatformat:0 }}/hr){% endif %}

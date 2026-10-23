@@ -118,6 +118,12 @@ class Candidate(models.Model):
         return int(float(self.rate_card) * 95.75)
 
     @property
+    def rate_card_qar(self):
+        if self.rate_card:
+            return round(float(self.rate_card) * 3.64, 2)
+        return None
+
+    @property
     def profile_photo_optimized_url(self):
         if not self.profile_photo:
             return ""

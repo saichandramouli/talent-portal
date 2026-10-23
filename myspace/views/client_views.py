@@ -99,7 +99,7 @@ def corporate_client_job_create(request):
     """Allow Corporate Client to create a Job Posting."""
     corp = _get_corporate_client(request.user)
     if request.method == 'POST':
-        form = CorporateClientJobRequirementForm(request.POST)
+        form = CorporateClientJobRequirementForm(request.POST, corp=corp)
         if form.is_valid():
             job = form.save(commit=False)
             job.client = corp
@@ -108,7 +108,7 @@ def corporate_client_job_create(request):
             messages.success(request, f"Job requirement '{job.job_title}' posted successfully.")
             return redirect('corporate_client_dashboard')
     else:
-        form = CorporateClientJobRequirementForm()
+        form = CorporateClientJobRequirementForm(corp=corp)
     return render(request, 'myspace/client/job_form.html', {
         'form': form,
         'corp': corp,
@@ -124,13 +124,13 @@ def corporate_client_job_edit(request, job_pk):
     corp = _get_corporate_client(request.user)
     job = get_object_or_404(JobRequirement, pk=job_pk, client=corp)
     if request.method == 'POST':
-        form = CorporateClientJobRequirementForm(request.POST, instance=job)
+        form = CorporateClientJobRequirementForm(request.POST, instance=job, corp=corp)
         if form.is_valid():
             form.save()
             messages.success(request, f"Job '{job.job_title}' updated successfully.")
             return redirect('corporate_client_dashboard')
     else:
-        form = CorporateClientJobRequirementForm(instance=job)
+        form = CorporateClientJobRequirementForm(instance=job, corp=corp)
     return render(request, 'myspace/client/job_form.html', {
         'form': form,
         'corp': corp,

@@ -72,7 +72,7 @@ def recruiter_job_create(request, client_pk):
     """Create a new Job Requirement for this Corporate Client."""
     client = _get_assigned_client_or_404(request.user, client_pk)
     if request.method == 'POST':
-        form = JobRequirementForm(request.POST)
+        form = JobRequirementForm(request.POST, client=client)
         if form.is_valid():
             job = form.save(commit=False)
             job.client = client
@@ -81,7 +81,7 @@ def recruiter_job_create(request, client_pk):
             messages.success(request, f"Job '{job.job_title}' created successfully.")
             return redirect('recruiter_job_list', client_pk=client_pk)
     else:
-        form = JobRequirementForm()
+        form = JobRequirementForm(client=client)
     return render(request, 'myspace/recruiter/job_form.html', {
         'form': form,
         'client': client,
@@ -97,13 +97,13 @@ def recruiter_job_edit(request, client_pk, job_pk):
     client = _get_assigned_client_or_404(request.user, client_pk)
     job = get_object_or_404(JobRequirement, pk=job_pk, client=client, creator=request.user)
     if request.method == 'POST':
-        form = JobRequirementForm(request.POST, instance=job)
+        form = JobRequirementForm(request.POST, instance=job, client=client)
         if form.is_valid():
             form.save()
             messages.success(request, f"Job '{job.job_title}' updated.")
             return redirect('recruiter_job_list', client_pk=client_pk)
     else:
-        form = JobRequirementForm(instance=job)
+        form = JobRequirementForm(instance=job, client=client)
     return render(request, 'myspace/recruiter/job_form.html', {
         'form': form,
         'client': client,

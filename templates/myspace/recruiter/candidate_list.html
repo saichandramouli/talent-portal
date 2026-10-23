@@ -71,7 +71,15 @@
                     <td>{{ cand.total_experience }}</td>
                     <td>{{ cand.employment_type }}</td>
                     <td class="text-nowrap">
-                        {% if 'Full Time' in cand.employment_type %}
+                        {% if cand.client.is_qatar_client %}
+                            {% if 'Full Time' in cand.employment_type and cand.salary_inr %}
+                                QAR {{ cand.salary_qar|floatformat:0 }}/yr
+                            {% elif cand.rate_card %}
+                                QAR {{ cand.rate_card_qar|floatformat:0 }}/hr
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        {% elif 'Full Time' in cand.employment_type %}
                             ₹{{ cand.salary_inr|floatformat:0 }}/yr
                         {% else %}
                             ${{ cand.rate_card|floatformat:0 }}/hr

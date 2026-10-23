@@ -123,7 +123,15 @@
                     </td>
                     <td>{{ item.candidate.technology_stack|truncatechars:25 }}</td>
                     <td class="text-nowrap">
-                        {% if 'Full Time' in item.candidate.employment_type %}
+                        {% if corp.is_qatar_client %}
+                            {% if 'Full Time' in item.candidate.employment_type and item.candidate.salary_inr %}
+                            QAR {{ item.candidate.salary_qar|floatformat:0 }}/yr
+                            {% elif item.candidate.rate_card %}
+                            QAR {{ item.candidate.rate_card_qar|floatformat:0 }}/hr <span class="text-muted" style="font-size:10px;">(~${{ item.candidate.rate_card_usd|floatformat:0 }}/hr)</span>
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        {% elif 'Full Time' in item.candidate.employment_type %}
                         ₹{{ item.candidate.salary_inr|floatformat:0 }}/yr
                         {% else %}
                         ${{ item.candidate.rate_card|floatformat:0 }}/hr

@@ -204,11 +204,6 @@ class CorporateCandidate(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    @property
-    def rate_card_inr(self):
-        if self.rate_card:
-            return self.rate_card * 83
-        return None
 
     class Meta:
         ordering = ['-created_at']
@@ -237,7 +232,40 @@ class CorporateCandidate(models.Model):
 
     @property
     def rate_card_inr(self):
-        return int(float(self.rate_card) * 95.75)
+        if self.rate_card:
+            return int(float(self.rate_card) * 83)
+        return None
+
+    @property
+    def is_qatar_candidate(self):
+        return bool(self.client and self.client.is_qatar_client)
+
+    @property
+    def rate_card_qar(self):
+        if not self.rate_card:
+            return None
+        if self.is_qatar_candidate:
+            return self.rate_card
+        from decimal import Decimal
+        return round(Decimal(str(self.rate_card)) * Decimal('3.64'), 2)
+
+    @property
+    def rate_card_usd(self):
+        if not self.rate_card:
+            return None
+        if self.is_qatar_candidate:
+            from decimal import Decimal
+            return round(Decimal(str(self.rate_card)) / Decimal('3.64'), 2)
+        return self.rate_card
+
+    @property
+    def salary_qar(self):
+        if not self.salary_inr:
+            return None
+        if self.is_qatar_candidate:
+            return self.salary_inr
+        from decimal import Decimal
+        return round(Decimal(str(self.salary_inr)) / Decimal('22.8'), 2)
 
 
 class JobRequirement(models.Model):

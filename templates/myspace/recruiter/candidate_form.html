@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateLTMFields() {
         if (!clientSelect || !ltmContainer) return;
-        const selectedText = clientSelect.options[clientSelect.selectedIndex].text.toLowerCase();
+        const selectedText = clientSelect.options[clientSelect.selectedIndex] ? clientSelect.options[clientSelect.selectedIndex].text.toLowerCase() : '';
         if (selectedText.includes('ltm') || selectedText.includes('anshu')) {
             ltmContainer.style.display = 'block';
         } else {
@@ -123,10 +123,46 @@ document.addEventListener('DOMContentLoaded', function() {
             radios.forEach(r => r.checked = false);
         }
     }
+
+    function updateQatarCurrency() {
+        if (!clientSelect) return;
+        const selectedText = clientSelect.options[clientSelect.selectedIndex] ? clientSelect.options[clientSelect.selectedIndex].text.toLowerCase() : '';
+        const isQatar = selectedText.includes('qatar') || selectedText.includes('oil & gas');
+        
+        const rateCardLabel = rateCardContainer ? rateCardContainer.querySelector('label') : null;
+        const rateCardInput = document.getElementById('id_rate_card');
+        const rateCardHelp = rateCardContainer ? rateCardContainer.querySelector('.form-text') : null;
+
+        const salaryLabel = salaryInrContainer ? salaryInrContainer.querySelector('label') : null;
+        const salaryInput = document.getElementById('id_salary_inr');
+        const salaryHelp = salaryInrContainer ? salaryInrContainer.querySelector('.form-text') : null;
+
+        if (isQatar) {
+            if (rateCardLabel) rateCardLabel.innerHTML = 'Rate Card (QAR / hr)';
+            if (rateCardInput) rateCardInput.placeholder = '0.00 (QAR/hr)';
+            if (rateCardHelp) rateCardHelp.textContent = 'Rate card in Qatar Riyal (QAR) per hour';
+
+            if (salaryLabel) salaryLabel.innerHTML = 'Salary (QAR / yr)';
+            if (salaryInput) salaryInput.placeholder = '0.00 (QAR/yr)';
+            if (salaryHelp) salaryHelp.textContent = 'Salary in Qatar Riyal (QAR) per annum for Full Time employment';
+        } else {
+            if (rateCardLabel) rateCardLabel.innerHTML = 'Rate Card (USD / hr)';
+            if (rateCardInput) rateCardInput.placeholder = '0.00';
+            if (rateCardHelp) rateCardHelp.textContent = 'Rate card in USD per hour';
+
+            if (salaryLabel) salaryLabel.innerHTML = 'Salary in INR (₹ / yr)';
+            if (salaryInput) salaryInput.placeholder = '0.00';
+            if (salaryHelp) salaryHelp.textContent = 'Salary in INR per annum for Full Time employment';
+        }
+    }
     
     if (clientSelect) {
-        clientSelect.addEventListener('change', updateLTMFields);
+        clientSelect.addEventListener('change', function() {
+            updateLTMFields();
+            updateQatarCurrency();
+        });
         updateLTMFields();
+        updateQatarCurrency();
     }
     
     updateFields();

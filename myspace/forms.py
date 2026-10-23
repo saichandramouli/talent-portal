@@ -119,6 +119,14 @@ class JobRequirementForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
 
+    def __init__(self, *args, client=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        target_client = client or (self.instance.client if self.instance and self.instance.pk else None)
+        if target_client and target_client.is_qatar_client:
+            self.fields['rate_card'].label = "Rate Card (QAR)"
+            self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (e.g. QAR 300/hr or QAR 25,000/month)"
+            self.fields['rate_card'].widget.attrs['placeholder'] = "e.g. QAR 300/hr or QAR 25,000/month"
+
 
 class CorporateClientJobRequirementForm(forms.ModelForm):
     employment_type = forms.ChoiceField(
@@ -149,6 +157,14 @@ class CorporateClientJobRequirementForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Describe the job roles and responsibilities...'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, corp=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        target_client = corp or (self.instance.client if self.instance and self.instance.pk else None)
+        if target_client and target_client.is_qatar_client:
+            self.fields['rate_card'].label = "Rate Card (QAR)"
+            self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (e.g. QAR 300/hr or QAR 25,000/month)"
+            self.fields['rate_card'].widget.attrs['placeholder'] = "e.g. QAR 300/hr or QAR 25,000/month"
 
 
 
@@ -227,6 +243,15 @@ class CorporateCandidateForm(forms.ModelForm):
         if not self.instance or not self.instance.pk:
             self.fields['gender'].initial = ''
 
+        target_client = self.instance.client if (self.instance and self.instance.pk) else None
+        if target_client and target_client.is_qatar_client:
+            self.fields['rate_card'].label = "Rate Card (QAR / hr)"
+            self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (QAR) per hour"
+            self.fields['rate_card'].widget.attrs['placeholder'] = "0.00 (QAR/hr)"
+            self.fields['salary_inr'].label = "Salary (QAR / yr)"
+            self.fields['salary_inr'].help_text = "Salary in Qatar Riyal (QAR) per annum for Full Time employment"
+            self.fields['salary_inr'].widget.attrs['placeholder'] = "0.00 (QAR/yr)"
+
         if self.instance and self.instance.pk:
             if self.instance.employment_type:
                 self.initial['employment_type'] = [x.strip() for x in self.instance.employment_type.split(',') if x.strip()]
@@ -247,13 +272,21 @@ class CorporateCandidateForm(forms.ModelForm):
         emp_types = cleaned_data.get('employment_type', [])
         rate_card = cleaned_data.get('rate_card')
         salary_inr = cleaned_data.get('salary_inr')
+        client = cleaned_data.get('client')
+        is_qatar = bool(client and client.is_qatar_client)
 
         if 'Full Time' in emp_types:
             if not salary_inr:
-                self.add_error('salary_inr', 'Salary in INR per annum is required for Full Time employment.')
+                if is_qatar:
+                    self.add_error('salary_inr', 'Salary in QAR per annum is required for Full Time employment.')
+                else:
+                    self.add_error('salary_inr', 'Salary in INR per annum is required for Full Time employment.')
         if 'Contract' in emp_types or 'Remote' in emp_types:
             if not rate_card:
-                self.add_error('rate_card', 'Rate card in USD per hour is required for Contract or Remote employment.')
+                if is_qatar:
+                    self.add_error('rate_card', 'Rate card in QAR per hour is required for Contract or Remote employment.')
+                else:
+                    self.add_error('rate_card', 'Rate card in USD per hour is required for Contract or Remote employment.')
 
         return cleaned_data
 

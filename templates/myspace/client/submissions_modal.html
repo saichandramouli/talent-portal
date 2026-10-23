@@ -25,7 +25,15 @@
                 </td>
                 <td class="py-3 px-3 text-dark">{{ cand.total_experience }}</td>
                 <td class="py-3 px-3 text-dark">
-                    {% if 'Full Time' in cand.employment_type %}
+                    {% if corp.is_qatar_client %}
+                        {% if 'Full Time' in cand.employment_type and cand.salary_inr %}
+                        QAR {{ cand.salary_qar|floatformat:0 }}/yr
+                        {% elif cand.rate_card %}
+                        QAR {{ cand.rate_card_qar|floatformat:0 }}/hr <span class="text-muted" style="font-size:10px;">(~${{ cand.rate_card_usd|floatformat:0 }}/hr)</span>
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    {% elif 'Full Time' in cand.employment_type %}
                     ₹{{ cand.salary_inr|floatformat:0 }}/yr
                     {% else %}
                     ${{ cand.rate_card|floatformat:0 }}/hr{% if is_servicenow_client %} (~₹{{
