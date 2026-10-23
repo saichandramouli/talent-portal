@@ -1,54 +1,219 @@
 {% extends 'myspace/base_myspace.html' %}
-{% block title %}Assign Recruiters – {{ client_profile.company_name }}{% endblock %}
-{% block page_title %}Assign Recruiters{% endblock %}
+{% block title %}Assign Team – {{ client_profile.company_name }}{% endblock %}
+{% block page_title %}Assign Team{% endblock %}
 {% block page_subtitle %}{{ client_profile.company_name }}{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb" style="font-size:0.82rem;">
         <li class="breadcrumb-item"><a href="{% url 'admin_corporate_client_list' %}">Corporate Clients</a></li>
-        <li class="breadcrumb-item active">Assign Recruiters</li>
+        <li class="breadcrumb-item active">Assign Team (Managers & Recruiters)</li>
     </ol>
 </nav>
 
-<div class="row justify-content-center">
-    <div class="col-lg-7">
-        <div class="ms-card">
-            <div class="ms-card-header">
-                <h5 class="fw-bold mb-0">
-                    <i class="fa-solid fa-user-tie text-primary me-2"></i>
-                    Recruiter Assignments for {{ client_profile.company_name }}
-                </h5>
-            </div>
-            <div class="ms-card-body">
-                <div class="alert alert-info d-flex gap-2 align-items-start" style="font-size:0.85rem;">
-                    <i class="fa-solid fa-info-circle mt-1 flex-shrink-0"></i>
-                    <span>Check the recruiters to assign to this client. Unchecked recruiters will be removed from the assignment.</span>
+<form method="post" id="assignment-form" novalidate>
+    {% csrf_token %}
+    <div class="row g-4 justify-content-center">
+        <!-- Top Status & Actions Card -->
+        <div class="col-12">
+            <div class="ms-card">
+                <div class="ms-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h5 class="fw-bold mb-1">
+                            <i class="fa-solid fa-users-gear text-primary me-2"></i>Team Assignments for {{ client_profile.company_name }}
+                        </h5>
+                        <p class="text-muted small mb-0">Assign managers to automatically assign all recruiters under them, or fine-tune recruiters individually.</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-dark border border-secondary py-2 px-3 fs-6" id="selection-summary">
+                            <i class="fa-solid fa-check-double text-success me-1"></i><span id="mgr-count">0</span> Managers, <span id="rec-count">0</span> Recruiters
+                        </span>
+                        <button type="submit" class="btn-ms-primary px-4 py-2">
+                            <i class="fa-solid fa-check me-1"></i> Save Assignments
+                        </button>
+                        <a href="{% url 'admin_corporate_client_list' %}" class="btn btn-outline-secondary py-2 px-3">Cancel</a>
+                    </div>
                 </div>
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    <div class="rounded p-3 mb-3" style="background: var(--ms-dark); border: 1px solid var(--ms-border);">
-                        {% for checkbox in form.recruiters %}
-                        <div class="form-check py-2 border-bottom" style="border-color: var(--ms-border) !important;">
-                            {{ checkbox.tag }}
-                            <label class="form-check-label ms-2 fw-semibold" for="{{ checkbox.id_for_label }}">
-                                {{ checkbox.choice_label }}
-                            </label>
+            </div>
+        </div>
+
+        <!-- Section 1: Managers -->
+        <div class="col-lg-6">
+            <div class="ms-card h-100 d-flex flex-column">
+                <div class="ms-card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-0 text-warning">
+                            <i class="fa-solid fa-user-shield me-2"></i>Managers
+                        </h6>
+                        <small class="text-muted" style="font-size:0.75rem;">Selecting a manager automatically assigns all recruiters under them</small>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-warning btn-sm" id="btn-select-all-mgrs">Select All</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-clear-mgrs">Clear</button>
+                    </div>
+                </div>
+                <div class="ms-card-body flex-grow-1">
+                    <div class="rounded p-2" style="background: var(--ms-dark); border: 1px solid var(--ms-border); max-height: 480px; overflow-y: auto;">
+                        {% for mgr_item in managers_data %}
+                        <div class="form-check p-3 border-bottom d-flex align-items-center justify-content-between manager-row"
+                             style="border-color: var(--ms-border) !important; transition: background 0.2s ease;">
+                            <div class="d-flex align-items-center gap-2 flex-grow-1">
+                                <input class="form-check-input manager-checkbox mt-0"
+                                       type="checkbox"
+                                       name="managers"
+                                       value="{{ mgr_item.manager.id }}"
+                                       id="mgr-chk-{{ mgr_item.manager.id }}"
+                                       data-recruiter-ids="{{ mgr_item.recruiter_ids|join:',' }}"
+                                       {% if mgr_item.is_assigned %}checked{% endif %}>
+                                <label class="form-check-label fw-bold ms-1 cursor-pointer" for="mgr-chk-{{ mgr_item.manager.id }}" style="cursor: pointer;">
+                                    {{ mgr_item.manager.full_name }}
+                                    <small class="text-muted d-block fw-normal" style="font-size:0.75rem;">{{ mgr_item.manager.email }}</small>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="badge bg-primary bg-opacity-20 text-primary border border-primary border-opacity-25" style="font-size: 0.72rem;">
+                                    <i class="fa-solid fa-users me-1"></i>{{ mgr_item.recruiter_count }} Recruiter{{ mgr_item.recruiter_count|pluralize }}
+                                </span>
+                            </div>
                         </div>
                         {% empty %}
-                        <p class="text-muted text-center py-3">No active recruiters available.</p>
+                        <div class="text-center py-4 text-muted">
+                            <i class="fa-solid fa-user-shield fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0 small">No active managers available.</p>
+                        </div>
                         {% endfor %}
                     </div>
-                    {% for error in form.recruiters.errors %}
-                    <div class="text-danger small mb-2">{{ error }}</div>
-                    {% endfor %}
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn-ms-primary"><i class="fa-solid fa-check me-1"></i>Save Assignments</button>
-                        <a href="{% url 'admin_corporate_client_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Recruiters -->
+        <div class="col-lg-6">
+            <div class="ms-card h-100 d-flex flex-column">
+                <div class="ms-card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-0 text-primary">
+                            <i class="fa-solid fa-user-tie me-2"></i>Recruiters
+                        </h6>
+                        <small class="text-muted" style="font-size:0.75rem;">Active recruiters who will have access to this client</small>
                     </div>
-                </form>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="btn-select-all-recs">Select All</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-clear-recs">Clear</button>
+                    </div>
+                </div>
+                <div class="ms-card-body flex-grow-1">
+                    <div class="rounded p-2" style="background: var(--ms-dark); border: 1px solid var(--ms-border); max-height: 480px; overflow-y: auto;">
+                        {% for rec_item in recruiters_data %}
+                        <div class="form-check p-3 border-bottom d-flex align-items-center justify-content-between recruiter-row"
+                             id="rec-row-{{ rec_item.recruiter.id }}"
+                             style="border-color: var(--ms-border) !important; transition: background 0.3s ease;">
+                            <div class="d-flex align-items-center gap-2 flex-grow-1">
+                                <input class="form-check-input recruiter-checkbox mt-0"
+                                       type="checkbox"
+                                       name="recruiters"
+                                       value="{{ rec_item.recruiter.id }}"
+                                       id="rec-chk-{{ rec_item.recruiter.id }}"
+                                       data-manager-id="{{ rec_item.manager_id|default:'' }}"
+                                       {% if rec_item.is_assigned %}checked{% endif %}>
+                                <label class="form-check-label fw-bold ms-1 cursor-pointer" for="rec-chk-{{ rec_item.recruiter.id }}" style="cursor: pointer;">
+                                    {{ rec_item.recruiter.full_name }}
+                                    <small class="text-muted d-block fw-normal" style="font-size:0.75rem;">{{ rec_item.recruiter.email }}</small>
+                                </label>
+                            </div>
+                            <div class="text-end">
+                                {% if rec_item.manager_name %}
+                                <span class="badge bg-secondary bg-opacity-25 text-info border border-info border-opacity-25" style="font-size: 0.72rem;">
+                                    <i class="fa-solid fa-user-shield me-1"></i>{{ rec_item.manager_name }}
+                                </span>
+                                {% else %}
+                                <span class="badge bg-dark text-muted" style="font-size: 0.72rem;">No Manager</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="fa-solid fa-user-tie fa-2x mb-2 opacity-50"></i>
+                            <p class="mb-0 small">No active recruiters available.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mgrCheckboxes = document.querySelectorAll('.manager-checkbox');
+    const recCheckboxes = document.querySelectorAll('.recruiter-checkbox');
+    const mgrCountSpan = document.getElementById('mgr-count');
+    const recCountSpan = document.getElementById('rec-count');
+
+    function updateSummary() {
+        let mgrCount = 0;
+        let recCount = 0;
+        mgrCheckboxes.forEach(cb => { if (cb.checked) mgrCount++; });
+        recCheckboxes.forEach(cb => { if (cb.checked) recCount++; });
+        if (mgrCountSpan) mgrCountSpan.textContent = mgrCount;
+        if (recCountSpan) recCountSpan.textContent = recCount;
+    }
+
+    // When a manager checkbox is toggled, auto-toggle their recruiters
+    mgrCheckboxes.forEach(mgrCb => {
+        mgrCb.addEventListener('change', function() {
+            const mgrId = this.value;
+            const isChecked = this.checked;
+            const recIds = (this.getAttribute('data-recruiter-ids') || '').split(',').map(s => s.trim()).filter(Boolean);
+
+            recCheckboxes.forEach(recCb => {
+                const recMgrId = recCb.getAttribute('data-manager-id');
+                if (recMgrId === mgrId || recIds.includes(recCb.value)) {
+                    recCb.checked = isChecked;
+                    const row = document.getElementById('rec-row-' + recCb.value);
+                    if (row) {
+                        if (isChecked) {
+                            row.style.background = 'rgba(16, 185, 129, 0.12)';
+                            setTimeout(() => { row.style.background = ''; }, 800);
+                        }
+                    }
+                }
+            });
+            updateSummary();
+        });
+    });
+
+    // Quick Action Buttons
+    document.getElementById('btn-select-all-mgrs')?.addEventListener('click', function() {
+        mgrCheckboxes.forEach(cb => {
+            cb.checked = true;
+            cb.dispatchEvent(new Event('change'));
+        });
+    });
+
+    document.getElementById('btn-clear-mgrs')?.addEventListener('click', function() {
+        mgrCheckboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        updateSummary();
+    });
+
+    document.getElementById('btn-select-all-recs')?.addEventListener('click', function() {
+        recCheckboxes.forEach(cb => { cb.checked = true; });
+        updateSummary();
+    });
+
+    document.getElementById('btn-clear-recs')?.addEventListener('click', function() {
+        recCheckboxes.forEach(cb => { cb.checked = false; });
+        updateSummary();
+    });
+
+    recCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSummary);
+    });
+
+    updateSummary();
+});
+</script>
 {% endblock %}

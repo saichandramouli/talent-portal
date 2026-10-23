@@ -1,19 +1,19 @@
 {% extends 'myspace/base_myspace.html' %}
 {% load static %}
-{% block title %}ServiceNow Candidates ({{ module_name }}) – {{ corp.company_name }}{% endblock %}
-{% block page_title %}ServiceNow: {{ module_name }} Candidates{% endblock %}
-{% block page_subtitle %}Filtered candidates submitted for your requirements under {{ module_name }} module{% endblock %}
+{% block title %}{% if corp.is_qatar_client %}{{ module_name }} Candidates – {{ corp.company_name }}{% else %}ServiceNow Candidates ({{ module_name }}) – {{ corp.company_name }}{% endif %}{% endblock %}
+{% block page_title %}{% if corp.is_qatar_client %}{{ module_name }} Candidates{% else %}ServiceNow: {{ module_name }} Candidates{% endif %}{% endblock %}
+{% block page_subtitle %}Filtered candidates submitted for your requirements under {{ module_name }}{% endblock %}
 
 {% block content %}
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb" style="font-size:0.82rem;">
         <li class="breadcrumb-item"><a href="{% url 'corporate_client_dashboard' %}">Dashboard</a></li>
-        <li class="breadcrumb-item active">ServiceNow Candidates ({{ module_name }})</li>
+        <li class="breadcrumb-item active">{% if corp.is_qatar_client %}{{ module_name }} Candidates{% else %}ServiceNow Candidates ({{ module_name }}){% endif %}</li>
     </ol>
 </nav>
 
 <!-- Candidates List -->
-<h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>ServiceNow {{ module_name }} Candidates <span class="badge bg-primary">{{ submissions.count }}</span></h5>
+<h5 class="fw-bold mb-3"><i class="fa-solid fa-users me-2 text-primary"></i>{% if corp.is_qatar_client %}{{ module_name }}{% else %}ServiceNow {{ module_name }}{% endif %} Candidates <span class="badge bg-primary">{{ submissions.count }}</span></h5>
 
 {% if submissions %}
 <div class="row g-4">
@@ -98,7 +98,7 @@
 <div class="ms-card text-center py-5">
     <i class="fa-solid fa-user-group fa-3x mb-3 d-block opacity-50"></i>
     <h5 class="fw-semibold">No Candidates Tagged under {{ module_name }}</h5>
-    <p class="mb-0 text-muted">Assigned recruiters have not submitted candidates tagged with this ServiceNow module yet.</p>
+    <p class="mb-0 text-muted">Assigned recruiters have not submitted candidates tagged with this module yet.</p>
 </div>
 {% endif %}
 {% endblock %}

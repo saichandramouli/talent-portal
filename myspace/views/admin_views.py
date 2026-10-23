@@ -115,40 +115,99 @@ def admin_corporate_client_toggle_active(request, pk):
 @login_required
 @admin_required
 def admin_assign_recruiters(request, pk):
-    """Assign/un-assign recruiters to a Corporate Client."""
+    """Assign/un-assign managers and recruiters to a Corporate Client."""
     client_profile = get_object_or_404(CorporateClient, pk=pk)
+
     current_recruiter_ids = list(
-        RecruiterClientAssignment.objects.filter(client=client_profile).values_list('recruiter_id', flat=True)
+        RecruiterClientAssignment.objects.filter(
+            client=client_profile,
+            recruiter__role='recruiter'
+        ).values_list('recruiter_id', flat=True)
+    )
+
+    current_manager_ids = list(
+        RecruiterClientAssignment.objects.filter(
+            client=client_profile,
+            recruiter__role='manager'
+        ).values_list('recruiter_id', flat=True)
     )
 
     if request.method == 'POST':
         form = RecruiterAssignmentForm(request.POST)
         if form.is_valid():
-            selected_recruiters = form.cleaned_data['recruiters']
-            selected_ids = [r.id for r in selected_recruiters]
+            selected_managers = list(form.cleaned_data.get('managers') or [])
+            selected_recruiters = list(form.cleaned_data.get('recruiters') or [])
+
+            # Automatically assign all active recruiters under the selected managers
+            if selected_managers:
+                auto_recruiters = User.objects.filter(
+                    role='recruiter',
+                    manager__in=selected_managers,
+                    is_active=True
+                )
+                recruiter_ids_set = set(r.id for r in selected_recruiters)
+                for ar in auto_recruiters:
+                    if ar.id not in recruiter_ids_set:
+                        selected_recruiters.append(ar)
+                        recruiter_ids_set.add(ar.id)
+
+            all_assigned_users = selected_recruiters + selected_managers
+            all_assigned_ids = [u.id for u in all_assigned_users]
 
             with transaction.atomic():
-                # Remove unselected
+                # Remove unselected users
                 RecruiterClientAssignment.objects.filter(
                     client=client_profile
-                ).exclude(recruiter_id__in=selected_ids).delete()
+                ).exclude(recruiter_id__in=all_assigned_ids).delete()
 
-                # Add newly selected
-                for recruiter in selected_recruiters:
+                # Add newly selected recruiters and managers
+                for u in all_assigned_users:
                     RecruiterClientAssignment.objects.get_or_create(
                         client=client_profile,
-                        recruiter=recruiter
+                        recruiter=u
                     )
 
-            messages.success(request, f"Recruiter assignments for '{client_profile.company_name}' updated.")
+            messages.success(
+                request,
+                f"Assignments for '{client_profile.company_name}' updated: "
+                f"{len(selected_managers)} manager(s) and {len(selected_recruiters)} recruiter(s) assigned."
+            )
             return redirect('admin_corporate_client_list')
     else:
-        form = RecruiterAssignmentForm(initial={'recruiters': current_recruiter_ids})
+        form = RecruiterAssignmentForm(initial={
+            'managers': current_manager_ids,
+            'recruiters': current_recruiter_ids,
+        })
+
+    # Prepare structured data for managers and recruiters to enable interactive UI
+    active_managers = User.objects.filter(role='manager', is_active=True).prefetch_related('recruiters_managed').order_by('full_name')
+    managers_data = []
+    for mgr in active_managers:
+        recruiter_ids = list(mgr.recruiters_managed.filter(is_active=True).values_list('id', flat=True))
+        managers_data.append({
+            'manager': mgr,
+            'recruiter_ids': recruiter_ids,
+            'recruiter_count': len(recruiter_ids),
+            'is_assigned': mgr.id in current_manager_ids,
+        })
+
+    active_recruiters = User.objects.filter(role='recruiter', is_active=True).select_related('manager').order_by('full_name')
+    recruiters_data = []
+    for rec in active_recruiters:
+        recruiters_data.append({
+            'recruiter': rec,
+            'manager_id': rec.manager_id,
+            'manager_name': rec.manager.full_name if rec.manager else '',
+            'is_assigned': rec.id in current_recruiter_ids,
+        })
 
     return render(request, 'myspace/admin/assign_recruiters.html', {
         'form': form,
         'client_profile': client_profile,
         'current_recruiter_ids': current_recruiter_ids,
+        'current_manager_ids': current_manager_ids,
+        'managers_data': managers_data,
+        'recruiters_data': recruiters_data,
     })
 
 

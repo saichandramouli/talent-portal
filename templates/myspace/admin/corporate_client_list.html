@@ -50,11 +50,28 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% for assignment in client.recruiter_assignments.all %}
-                    <span class="badge bg-primary bg-opacity-10 text-primary me-1 mb-1">{{ assignment.recruiter.full_name }}</span>
-                    {% empty %}
-                    <span class="text-muted small">None assigned</span>
-                    {% endfor %}
+                    {% if client.assigned_managers %}
+                    <div class="mb-1">
+                        <span class="text-muted small d-block" style="font-size:0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Manager(s):</span>
+                        {% for mgr in client.assigned_managers %}
+                        <span class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-25 me-1 mb-1">
+                            <i class="fa-solid fa-user-shield me-1"></i>{{ mgr.full_name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        {% if client.assigned_managers %}
+                        <span class="text-muted small d-block" style="font-size:0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Recruiter(s):</span>
+                        {% endif %}
+                        {% for rec in client.assigned_recruiters %}
+                        <span class="badge bg-primary bg-opacity-15 text-primary border border-primary border-opacity-25 me-1 mb-1">{{ rec.full_name }}</span>
+                        {% empty %}
+                        {% if not client.assigned_managers %}
+                        <span class="text-muted small">None assigned</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </td>
                 <td class="text-center">
                     <span class="badge bg-secondary">{{ client.job_requirements.count }}</span>
@@ -66,7 +83,7 @@
                     </span>
                 </td>
                 <td class="text-end text-nowrap">
-                    <a href="{% url 'admin_assign_recruiters' client.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Assign Recruiters">
+                    <a href="{% url 'admin_assign_recruiters' client.pk %}" class="btn btn-sm btn-outline-primary me-1" title="Assign Managers & Recruiters">
                         <i class="fa-solid fa-user-plus"></i>
                     </a>
                     <a href="{% url 'admin_corporate_client_users' client.pk %}" class="btn btn-sm btn-outline-info me-1" title="Manage Logins">

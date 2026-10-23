@@ -84,9 +84,15 @@ class CorporateClientEditUserForm(forms.ModelForm):
 
 
 class RecruiterAssignmentForm(forms.Form):
-    """Multi-select form to assign recruiters to a corporate client."""
+    """Multi-select form to assign managers and recruiters to a corporate client."""
+    managers = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(role='manager', is_active=True).order_by('full_name'),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        label='Assign Managers'
+    )
     recruiters = forms.ModelMultipleChoiceField(
-        queryset=User.objects.filter(role='recruiter', is_active=True).order_by('full_name'),
+        queryset=User.objects.filter(role='recruiter', is_active=True).select_related('manager').order_by('full_name'),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
         label='Assign Recruiters'
@@ -208,7 +214,8 @@ class CorporateCandidateForm(forms.ModelForm):
             self.fields['client'].queryset = CorporateClient.objects.filter(
                 recruiter_assignments__recruiter=user
             )
-        self.fields['servicenow_module'].required = True
+        self.fields['servicenow_module'].label = "Module / Domain Specialization"
+        self.fields['servicenow_module'].required = False
         self.fields['client'].required = True
 
         # Make gender a mandatory field

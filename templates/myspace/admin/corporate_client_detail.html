@@ -31,23 +31,37 @@
         </div>
     </div>
 
-    <!-- Assigned Recruiters -->
+    <!-- Assigned Team (Managers & Recruiters) -->
     <div class="col-md-4">
         <div class="ms-card h-100">
-            <h5 class="fw-bold text-white border-bottom border-secondary pb-2 mb-3">Assigned Recruiters</h5>
-            {% if recruiter_assignments %}
+            <h5 class="fw-bold text-white border-bottom border-secondary pb-2 mb-3">Assigned Team</h5>
+            {% if client_profile.assigned_managers or client_profile.assigned_recruiters %}
             <ul class="list-unstyled mb-0">
-                {% for assignment in recruiter_assignments %}
+                {% for mgr in client_profile.assigned_managers %}
+                <li class="mb-3 d-flex align-items-center">
+                    <div style="width: 24px;" class="text-center me-2">
+                        <i class="fa-solid fa-user-shield text-warning"></i>
+                    </div>
+                    <div>
+                        <span class="fw-semibold text-white">{{ mgr.full_name }}</span>
+                        <span class="badge bg-warning bg-opacity-15 text-warning ms-1" style="font-size:0.68rem;">Manager</span>
+                    </div>
+                </li>
+                {% endfor %}
+                {% for rec in client_profile.assigned_recruiters %}
                 <li class="mb-3 d-flex align-items-center">
                     <div style="width: 24px;" class="text-center me-2">
                         <i class="fa-solid fa-user-tie text-primary"></i>
                     </div>
-                    <span class="fw-semibold text-white">{{ assignment.recruiter.full_name }}</span>
+                    <div>
+                        <span class="fw-semibold text-white">{{ rec.full_name }}</span>
+                        <span class="badge bg-primary bg-opacity-15 text-primary ms-1" style="font-size:0.68rem;">Recruiter</span>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="text-muted">No recruiters currently assigned.</p>
+            <p class="text-muted">No team members currently assigned.</p>
             {% endif %}
         </div>
     </div>

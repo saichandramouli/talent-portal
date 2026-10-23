@@ -28,8 +28,19 @@ class CorporateClient(models.Model):
         return self.company_name
 
     @property
+    def is_qatar_client(self):
+        if not self.company_name:
+            return False
+        name = self.company_name.lower()
+        return 'qatar' in name or 'oil & gas' in name
+
+    @property
     def assigned_recruiters(self):
-        return [a.recruiter for a in self.recruiter_assignments.select_related('recruiter')]
+        return [a.recruiter for a in self.recruiter_assignments.filter(recruiter__role='recruiter').select_related('recruiter')]
+
+    @property
+    def assigned_managers(self):
+        return [a.recruiter for a in self.recruiter_assignments.filter(recruiter__role='manager').select_related('recruiter')]
 
 
 class RecruiterClientAssignment(models.Model):
@@ -153,10 +164,18 @@ class CorporateCandidate(models.Model):
             ('HAM', 'HAM'),
             ('SAM_Pro', 'SAM Pro'),
             ('FSM', 'FSM'),
+            ('IT_Project_Manager', 'IT Project Manager'),
+            ('Database_Administration', 'Database Administration'),
+            ('IT_Management_Enterprise_Architect', 'IT Management & planning (Enterprise Architect)'),
+            ('SAP_PM', 'SAP – PM (Plant Maintenance)'),
+            ('SAP_FICO', 'SAP – FI/CO | Consultant'),
+            ('SAP_HR', 'SAP – HR (Human Resources)'),
+            ('Application_Security_Analyst', 'Application Security Analyst'),
+            ('Vulnerability_Threat_Analyst', 'Vulnerability & Threat Management Analyst'),
         ],
         blank=True,
         null=True,
-        verbose_name="ServiceNow Module"
+        verbose_name="ServiceNow / Specialized Module"
     )
     GENDER_CHOICES = [
         ('male', 'Male'),

@@ -471,19 +471,77 @@ def corporate_candidate_detail(request, candidate_pk):
     })
 
 
+QATAR_MODULES_CONFIG = {
+    'IT_Project_Manager': {
+        'display': 'IT Project Manager',
+        'keywords': ['project manager', 'it project manager', 'pmp'],
+    },
+    'Database_Administration': {
+        'display': 'Database Administration',
+        'keywords': ['database', 'dba', 'database administration', 'oracle dba', 'sql dba'],
+    },
+    'IT_Management_Enterprise_Architect': {
+        'display': 'IT Management & planning (Enterprise Architect)',
+        'keywords': ['enterprise architect', 'it management', 'it planning', 'solution architect'],
+    },
+    'SAP_PM': {
+        'display': 'SAP – PM (Plant Maintenance)',
+        'keywords': ['plant maintenance', 'sap pm', 'sap – pm', 'sap-pm'],
+    },
+    'SAP_FICO': {
+        'display': 'SAP – FI/CO | Consultant',
+        'keywords': ['fico', 'fi/co', 'sap fico', 'sap fi/co', 'fi-co'],
+    },
+    'SAP_HR': {
+        'display': 'SAP – HR (Human Resources)',
+        'keywords': ['sap hr', 'sap hcm', 'human resources', 'sap – hr'],
+    },
+    'Application_Security_Analyst': {
+        'display': 'Application Security Analyst',
+        'keywords': ['application security', 'appsec', 'app sec'],
+    },
+    'Vulnerability_Threat_Analyst': {
+        'display': 'Vulnerability & Threat Management Analyst',
+        'keywords': ['vulnerability', 'threat management', 'threat analyst', 'vulnerability management'],
+    },
+}
+
+
 @login_required
 @corporate_client_required
 def corporate_client_servicenow_candidates(request, module_name):
-    """Filter and display submitted candidates matching a ServiceNow module."""
+    """Filter and display submitted candidates matching a ServiceNow or Qatar module."""
     corp = _get_corporate_client(request.user)
-    if not corp.is_servicenow_client:
-        messages.error(request, "ServiceNow Dashboard is not enabled for your account.")
+    if not (corp.is_servicenow_client or corp.is_qatar_client):
+        messages.error(request, "Specialized Module Dashboard is not enabled for your account.")
         return redirect('corporate_client_dashboard')
 
-    submissions = CandidateSubmission.objects.filter(
-        job__client=corp,
-        candidate__servicenow_module=module_name
-    ).select_related('candidate', 'job').order_by('-created_at')
+    display_name = module_name
+    if module_name in QATAR_MODULES_CONFIG:
+        config = QATAR_MODULES_CONFIG[module_name]
+        display_name = config['display']
+        query = (
+            Q(candidate__servicenow_module=module_name) |
+            Q(candidate__servicenow_module=display_name)
+        )
+        for kw in config['keywords']:
+            query |= Q(job__job_title__icontains=kw) | Q(candidate__technology_stack__icontains=kw)
+        submissions = CandidateSubmission.objects.filter(
+            Q(job__client=corp) & query
+        ).select_related('candidate', 'job').distinct().order_by('-created_at')
+    else:
+        if module_name == 'IRM_GRC':
+            display_name = 'IRM/GRC'
+            query = Q(candidate__servicenow_module='IRM_GRC') | Q(candidate__servicenow_module='IRM/GRC')
+        elif module_name == 'SAM_Pro':
+            display_name = 'SAM Pro'
+            query = Q(candidate__servicenow_module='SAM_Pro') | Q(candidate__servicenow_module='SAM Pro')
+        else:
+            query = Q(candidate__servicenow_module=module_name)
+
+        submissions = CandidateSubmission.objects.filter(
+            Q(job__client=corp) & query
+        ).select_related('candidate', 'job').order_by('-created_at')
 
     credential_requests = {
         req.candidate_id: req
@@ -499,7 +557,8 @@ def corporate_client_servicenow_candidates(request, module_name):
 
     return render(request, 'myspace/client/servicenow_candidates.html', {
         'corp': corp,
-        'module_name': module_name,
+        'module_name': display_name,
+        'raw_module_name': module_name,
         'submissions': submissions,
         'cart_candidate_ids': cart_candidate_ids,
     })
