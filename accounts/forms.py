@@ -8,11 +8,27 @@ User = get_user_model()
 class CustomLoginForm(forms.Form):
     username = forms.EmailField(
         label="Email Address",
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'name@example.com'})
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'name@example.com',
+            'autocapitalize': 'none',
+            'autocorrect': 'off',
+            'autocomplete': 'username',
+        })
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password',
+            'autocomplete': 'current-password',
+        })
     )
+
+    def clean_username(self):
+        email = self.cleaned_data.get('username')
+        if email:
+            return email.strip()
+        return email
 
 class RecruiterRegistrationForm(forms.ModelForm):
     password = forms.CharField(

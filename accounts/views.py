@@ -17,9 +17,17 @@ def login_view(request):
     if request.method == 'POST':
         form = CustomLoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['username']
+            email = form.cleaned_data['username'].strip()
             password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
+
+            # Case-insensitive lookup so users can log in regardless of email casing in PostgreSQL
+            user_obj = User.objects.filter(email__iexact=email).first()
+            actual_email = user_obj.email if user_obj else email
+
+            user = authenticate(request, email=actual_email, password=password)
+            if user is None:
+                user = authenticate(request, username=actual_email, password=password)
+
             if user is not None:
                 if user.is_active:
                     login(request, user)
