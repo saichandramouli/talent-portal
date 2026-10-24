@@ -290,10 +290,10 @@
             <!-- Content Body Area -->
             <div class="content-body flex-grow-1">
                 <!-- Django Messages Alerts System -->
-                {% if messages %}
+                {% if messages and request.resolver_match.url_name != 'login' %}
                 <div class="container-fluid px-0">
                     {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show shadow-sm" role="alert">
                         {% if message.tags == 'success' %}
                         <i class="fa-solid fa-circle-check me-2"></i>
                         {% elif message.tags == 'error' or message.tags == 'danger' %}

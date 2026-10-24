@@ -237,3 +237,32 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # In local development, run tasks synchronously (eager mode) by default unless CELERY_TASK_ALWAYS_EAGER is set to False in .env
 CELERY_TASK_ALWAYS_EAGER = os.environ['CELERY_TASK_ALWAYS_EAGER'].lower() == 'true'
+
+# Message Tags mapping for Bootstrap 5 alerts
+from django.contrib.messages import constants as messages_constants
+MESSAGE_TAGS = {
+    messages_constants.DEBUG: 'secondary',
+    messages_constants.INFO: 'info',
+    messages_constants.SUCCESS: 'success',
+    messages_constants.WARNING: 'warning',
+    messages_constants.ERROR: 'danger',
+}
+
+# CSRF and Reverse Proxy settings for AWS deployment
+csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if csrf_origins_env:
+    CSRF_TRUSTED_ORIGINS = [orig.strip() for orig in csrf_origins_env.split(',') if orig.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost',
+        'http://127.0.0.1',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+        'https://*.amazonaws.com',
+        'http://*.amazonaws.com',
+        'https://*.compute.amazonaws.com',
+        'http://*.compute.amazonaws.com',
+    ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+

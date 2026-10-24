@@ -24,29 +24,46 @@ def login_view(request):
             user = authenticate(request, email=email, password=password)
             if user is None:
                 user = authenticate(request, username=email, password=password)
+            if user is None and password != password.strip():
+                user = authenticate(request, email=email, password=password.strip())
+                if user is None:
+                    user = authenticate(request, username=email, password=password.strip())
 
             # 2. If exact match fails, check case-insensitive matches (e.g. for PostgreSQL casing differences)
-            if user is None:
-                matching_users = User.objects.filter(email__iexact=email)
+            matching_users = list(User.objects.filter(email__iexact=email))
+            if user is None and matching_users:
+                passwords_to_try = [password]
+                if password != password.strip():
+                    passwords_to_try.append(password.strip())
+
                 for candidate in matching_users:
-                    if candidate.check_password(password):
-                        if candidate.is_active:
-                            user = candidate
-                            user.backend = 'django.contrib.auth.backends.ModelBackend'
-                            break
-                        else:
-                            messages.error(request, "Your account has been deactivated. Please contact support.")
-                            return render(request, 'accounts/login.html', {'form': form})
+                    for p in passwords_to_try:
+                        if candidate.check_password(p):
+                            if candidate.is_active:
+                                user = candidate
+                                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                                break
+                            else:
+                                messages.error(request, "Your account has been deactivated. Please contact support.")
+                                return render(request, 'accounts/login.html', {'form': form})
+                    if user is not None:
+                        break
 
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     messages.success(request, f"Welcome back, {user.full_name}!")
+                    next_url = request.POST.get('next') or request.GET.get('next')
+                    if next_url and next_url.startswith('/') and not next_url.startswith('//'):
+                        return redirect(next_url)
                     return redirect('home')
                 else:
                     messages.error(request, "Your account has been deactivated. Please contact support.")
             else:
-                messages.error(request, "Invalid email or password.")
+                if not matching_users:
+                    messages.error(request, f"No account found matching '{email}'. Please check your email address.")
+                else:
+                    messages.error(request, "Incorrect password. Please verify and try again, or click 'Forgot Password?'.")
         else:
             messages.error(request, "Please enter a valid email address and password.")
     else:
