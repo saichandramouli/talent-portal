@@ -6,7 +6,7 @@ from teams.models import Team
 User = get_user_model()
 
 class CustomLoginForm(forms.Form):
-    username = forms.EmailField(
+    username = forms.CharField(
         label="Email Address",
         widget=forms.EmailInput(attrs={
             'class': 'form-control',

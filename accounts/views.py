@@ -20,13 +20,23 @@ def login_view(request):
             email = form.cleaned_data['username'].strip()
             password = form.cleaned_data['password']
 
-            # Case-insensitive lookup so users can log in regardless of email casing in PostgreSQL
-            user_obj = User.objects.filter(email__iexact=email).first()
-            actual_email = user_obj.email if user_obj else email
-
-            user = authenticate(request, email=actual_email, password=password)
+            # 1. Try exact match first
+            user = authenticate(request, email=email, password=password)
             if user is None:
-                user = authenticate(request, username=actual_email, password=password)
+                user = authenticate(request, username=email, password=password)
+
+            # 2. If exact match fails, check case-insensitive matches (e.g. for PostgreSQL casing differences)
+            if user is None:
+                matching_users = User.objects.filter(email__iexact=email)
+                for candidate in matching_users:
+                    if candidate.check_password(password):
+                        if candidate.is_active:
+                            user = candidate
+                            user.backend = 'django.contrib.auth.backends.ModelBackend'
+                            break
+                        else:
+                            messages.error(request, "Your account has been deactivated. Please contact support.")
+                            return render(request, 'accounts/login.html', {'form': form})
 
             if user is not None:
                 if user.is_active:
@@ -37,6 +47,8 @@ def login_view(request):
                     messages.error(request, "Your account has been deactivated. Please contact support.")
             else:
                 messages.error(request, "Invalid email or password.")
+        else:
+            messages.error(request, "Please enter a valid email address and password.")
     else:
         form = CustomLoginForm()
     return render(request, 'accounts/login.html', {'form': form})
