@@ -95,7 +95,7 @@ class CorporateCandidate(models.Model):
         blank=True
     )
     full_name = models.CharField(max_length=255)
-    email = models.EmailField()
+    email = models.EmailField(blank=True, default='')
     phone = models.CharField(max_length=20, blank=True, default='')
     total_experience = models.CharField(
         max_length=100,

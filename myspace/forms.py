@@ -203,7 +203,7 @@ class CorporateCandidateForm(forms.ModelForm):
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
             'gender': forms.Select(attrs={'class': 'form-select'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'candidate@email.com'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'candidate@email.com (optional)'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+91 98765 43210'}),
             'total_experience': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 6 Years'}),
             'current_location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Bangalore'}),
@@ -233,6 +233,7 @@ class CorporateCandidateForm(forms.ModelForm):
         self.fields['servicenow_module'].label = "Module / Domain Specialization"
         self.fields['servicenow_module'].required = False
         self.fields['client'].required = True
+        self.fields['email'].required = False
 
         # Make gender a mandatory field
         choices = list(self.fields['gender'].choices)
