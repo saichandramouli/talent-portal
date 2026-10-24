@@ -424,7 +424,11 @@ def download_corporate_candidate_document(request, candidate_id, doc_type):
         return redirect(file_field.url)
         
     try:
-        response = FileResponse(file_field.open(), content_type='application/pdf')
+        import mimetypes
+        content_type, _ = mimetypes.guess_type(file_field.name)
+        if not content_type:
+            content_type = 'application/octet-stream'
+        response = FileResponse(file_field.open(), content_type=content_type)
         response['Content-Disposition'] = f'inline; filename="{file_field.name.split("/")[-1]}"'
         return response
     except (OSError, ValueError):

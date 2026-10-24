@@ -70,64 +70,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     const rateCardContainer = document.getElementById('rate_card_container');
     const salaryInrContainer = document.getElementById('salary_inr_container');
-    
-    function updateFields() {
-        const checkboxes = document.querySelectorAll('input[name="employment_type"]');
-        let showRateCard = false;
-        let showSalaryInr = false;
-        
-        checkboxes.forEach(cb => {
-            if (cb.checked) {
-                if (cb.value === 'Contract' || cb.value === 'Remote') {
-                    showRateCard = true;
-                }
-                if (cb.value === 'Full Time') {
-                    showSalaryInr = true;
-                }
-            }
-        });
-        
-        if (rateCardContainer) rateCardContainer.style.display = showRateCard ? 'block' : 'none';
-        if (salaryInrContainer) salaryInrContainer.style.display = showSalaryInr ? 'block' : 'none';
-    }
-    
-    function makeMutuallyExclusive(name) {
-        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
-        checkboxes.forEach(cb => {
-            cb.addEventListener('change', function() {
-                if (this.checked) {
-                    checkboxes.forEach(other => {
-                        if (other !== this) other.checked = false;
-                    });
-                }
-                updateFields();
-            });
-        });
-    }
-    
-    makeMutuallyExclusive('employment_type');
-    makeMutuallyExclusive('notice_period');
-    
     const clientSelect = document.querySelector('select[name="client"]');
     const ltmContainer = document.getElementById('ltm_ripple_ats_check_container');
+    const isQatarRecruiter = {{ is_qatar_recruiter|default:False|yesno:"true,false" }};
     
-    function updateLTMFields() {
-        if (!clientSelect || !ltmContainer) return;
-        const selectedText = clientSelect.options[clientSelect.selectedIndex] ? clientSelect.options[clientSelect.selectedIndex].text.toLowerCase() : '';
-        if (selectedText.includes('ltm') || selectedText.includes('anshu')) {
-            ltmContainer.style.display = 'block';
-        } else {
-            ltmContainer.style.display = 'none';
-            // Clear choices
-            const radios = ltmContainer.querySelectorAll('input[type="radio"]');
-            radios.forEach(r => r.checked = false);
+    function isCurrentClientQatar() {
+        if (!clientSelect) return isQatarRecruiter;
+        const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const selectedText = selectedOption.text.toLowerCase();
+            return selectedText.includes('qatar') || selectedText.includes('oil & gas');
         }
+        return isQatarRecruiter;
     }
 
     function updateQatarCurrency() {
-        if (!clientSelect) return;
-        const selectedText = clientSelect.options[clientSelect.selectedIndex] ? clientSelect.options[clientSelect.selectedIndex].text.toLowerCase() : '';
-        const isQatar = selectedText.includes('qatar') || selectedText.includes('oil & gas');
+        const isQatar = isCurrentClientQatar();
         
         const rateCardLabel = rateCardContainer ? rateCardContainer.querySelector('label') : null;
         const rateCardInput = document.getElementById('id_rate_card');
@@ -155,16 +113,68 @@ document.addEventListener('DOMContentLoaded', function() {
             if (salaryHelp) salaryHelp.textContent = 'Salary in INR per annum for Full Time employment';
         }
     }
+
+    function updateFields() {
+        const checkboxes = document.querySelectorAll('input[name="employment_type"]');
+        let showRateCard = false;
+        let showSalaryInr = false;
+        
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                if (cb.value === 'Contract' || cb.value === 'Remote') {
+                    showRateCard = true;
+                }
+                if (cb.value === 'Full Time') {
+                    showSalaryInr = true;
+                }
+            }
+        });
+        
+        if (rateCardContainer) rateCardContainer.style.display = showRateCard ? 'block' : 'none';
+        if (salaryInrContainer) salaryInrContainer.style.display = showSalaryInr ? 'block' : 'none';
+        
+        updateQatarCurrency();
+    }
     
+    function makeMutuallyExclusive(name) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                if (this.checked) {
+                    checkboxes.forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+                updateFields();
+            });
+        });
+    }
+    
+    makeMutuallyExclusive('employment_type');
+    makeMutuallyExclusive('notice_period');
+    
+    function updateLTMFields() {
+        if (!clientSelect || !ltmContainer) return;
+        const selectedText = clientSelect.options[clientSelect.selectedIndex] ? clientSelect.options[clientSelect.selectedIndex].text.toLowerCase() : '';
+        if (selectedText.includes('ltm') || selectedText.includes('anshu')) {
+            ltmContainer.style.display = 'block';
+        } else {
+            ltmContainer.style.display = 'none';
+            // Clear choices
+            const radios = ltmContainer.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.checked = false);
+        }
+    }
+
     if (clientSelect) {
         clientSelect.addEventListener('change', function() {
             updateLTMFields();
             updateQatarCurrency();
         });
-        updateLTMFields();
-        updateQatarCurrency();
     }
     
+    updateLTMFields();
+    updateQatarCurrency();
     updateFields();
 });</script>
 {% endblock %}

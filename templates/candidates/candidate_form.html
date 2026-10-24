@@ -130,7 +130,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="id_resume" class="form-label">Resume (PDF Only)</label>
+                        <label for="id_resume" class="form-label">Resume (PDF, DOC, DOCX)</label>
                         {% if candidate.resume %}
                             <div class="mb-2 small">
                                 <i class="fa-solid fa-file-pdf text-danger me-1"></i>Current: <a href="{{ candidate.resume.url }}" target="_blank" class="text-info text-decoration-none">{{ candidate.resume.name }}</a>

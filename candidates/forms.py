@@ -61,14 +61,15 @@ class CandidateForm(forms.ModelForm):
             'is_on_hold': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'technical_stack': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
             'skills': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
-            'resume': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),
+            'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.fields['resume'].help_text = "Supported formats: PDF, DOC, DOCX (Max 10MB)"
         
         # Make gender a mandatory field
         choices = list(self.fields['gender'].choices)
@@ -127,14 +128,18 @@ class CandidateForm(forms.ModelForm):
                 raise forms.ValidationError("Unsupported image format. Allowed formats: JPG, JPEG, PNG, WEBP.")
         return photo
 
-    def _validate_pdf_only(self, file_obj, field_name):
+    def _validate_file(self, file_obj, field_name, allowed_extensions=None):
         if file_obj:
             if file_obj.size > 10 * 1024 * 1024:
                 raise forms.ValidationError(f"{field_name} file size should not exceed 10MB.")
             ext = file_obj.name.split('.')[-1].lower()
-            if ext != 'pdf':
-                raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
+            if allowed_extensions and ext not in allowed_extensions:
+                allowed_str = ', '.join([e.upper() for e in allowed_extensions])
+                raise forms.ValidationError(f"Unsupported format for {field_name}. Allowed formats: {allowed_str}.")
         return file_obj
+
+    def _validate_pdf_only(self, file_obj, field_name):
+        return self._validate_file(file_obj, field_name, allowed_extensions=['pdf'])
 
     def clean(self):
         cleaned_data = super().clean()
@@ -163,7 +168,7 @@ class CandidateForm(forms.ModelForm):
         return candidate
 
     def clean_resume(self):
-        return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')
+        return self._validate_file(self.cleaned_data.get('resume'), 'Resume', allowed_extensions=['pdf', 'doc', 'docx'])
 
     def clean_bgv_verification(self):
         return self._validate_pdf_only(self.cleaned_data.get('bgv_verification'), 'BGV Verification')

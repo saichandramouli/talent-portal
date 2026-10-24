@@ -72,12 +72,12 @@ class Candidate(models.Model):
         related_name='candidates'
     )
     
-    # Document Fields (restricted to PDF only)
+    # Document Fields (resume supports PDF, DOC, DOCX)
     resume = models.FileField(
         upload_to='resumes/',
         null=True,
         blank=True,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
     )
     bgv_verification = models.FileField(
         upload_to='bgv_verifications/',

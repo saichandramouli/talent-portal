@@ -135,7 +135,7 @@ class CorporateCandidate(models.Model):
         upload_to='corporate_candidates/resumes/',
         null=True,
         blank=True,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
     )
     bgv_verification = models.FileField(
         upload_to='corporate_candidates/bgv_verifications/',

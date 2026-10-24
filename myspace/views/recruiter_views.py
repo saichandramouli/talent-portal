@@ -154,6 +154,9 @@ def recruiter_candidate_list(request):
 @recruiter_required
 def recruiter_candidate_create(request):
     """Add a new Corporate Candidate."""
+    assigned_clients = CorporateClient.objects.filter(recruiter_assignments__recruiter=request.user)
+    is_qatar_recruiter = any(c.is_qatar_client for c in assigned_clients)
+
     if request.method == 'POST':
         form = CorporateCandidateForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
@@ -168,6 +171,7 @@ def recruiter_candidate_create(request):
         'form': form,
         'title': 'Add Corporate Candidate',
         'action': 'Add Candidate',
+        'is_qatar_recruiter': is_qatar_recruiter,
     })
 
 
@@ -176,6 +180,9 @@ def recruiter_candidate_create(request):
 def recruiter_candidate_edit(request, candidate_pk):
     """Edit a Corporate Candidate (only own candidates)."""
     candidate = get_object_or_404(CorporateCandidate, pk=candidate_pk, recruiter=request.user)
+    assigned_clients = CorporateClient.objects.filter(recruiter_assignments__recruiter=request.user)
+    is_qatar_recruiter = any(c.is_qatar_client for c in assigned_clients) or (candidate.client and candidate.client.is_qatar_client)
+
     if request.method == 'POST':
         form = CorporateCandidateForm(request.POST, request.FILES, instance=candidate, user=request.user)
         if form.is_valid():
@@ -189,6 +196,7 @@ def recruiter_candidate_edit(request, candidate_pk):
         'candidate': candidate,
         'title': 'Edit Corporate Candidate',
         'action': 'Save Changes',
+        'is_qatar_recruiter': is_qatar_recruiter,
     })
 
 

@@ -218,22 +218,39 @@ class CorporateCandidateForm(forms.ModelForm):
             'client': forms.Select(attrs={'class': 'form-select'}),
             'ltm_ripple_ats_check': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'profile_photo': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
-            'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'resume': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),
             'bgv_verification': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
             'evaluation_certificate': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user:
-            self.fields['client'].queryset = CorporateClient.objects.filter(
-                recruiter_assignments__recruiter=user
+        assigned_clients = CorporateClient.objects.none()
+        qatar_client = None
+
+        if self.user:
+            assigned_clients = CorporateClient.objects.filter(
+                recruiter_assignments__recruiter=self.user
             )
+            self.fields['client'].queryset = assigned_clients
+            qatar_client = next((c for c in assigned_clients if c.is_qatar_client), None)
+
+            if not self.instance or not self.instance.pk:
+                if assigned_clients.count() == 1:
+                    single_client = assigned_clients.first()
+                    self.initial['client'] = single_client.pk
+                    self.fields['client'].initial = single_client.pk
+                    self.fields['client'].empty_label = None
+                elif qatar_client:
+                    self.initial['client'] = qatar_client.pk
+                    self.fields['client'].initial = qatar_client.pk
+
         self.fields['servicenow_module'].label = "Module / Domain Specialization"
         self.fields['servicenow_module'].required = False
         self.fields['client'].required = True
         self.fields['email'].required = False
+        self.fields['resume'].help_text = "Supported formats: PDF, DOC, DOCX (Max 10MB)"
 
         # Make gender a mandatory field
         choices = list(self.fields['gender'].choices)
@@ -244,7 +261,20 @@ class CorporateCandidateForm(forms.ModelForm):
         if not self.instance or not self.instance.pk:
             self.fields['gender'].initial = ''
 
-        target_client = self.instance.client if (self.instance and self.instance.pk) else None
+        target_client = None
+        if self.instance and self.instance.pk and self.instance.client:
+            target_client = self.instance.client
+        elif self.initial.get('client'):
+            client_init = self.initial.get('client')
+            if isinstance(client_init, CorporateClient):
+                target_client = client_init
+            else:
+                target_client = CorporateClient.objects.filter(pk=client_init).first()
+        elif qatar_client:
+            target_client = qatar_client
+        elif self.user and assigned_clients.exists():
+            target_client = assigned_clients.first()
+
         if target_client and target_client.is_qatar_client:
             self.fields['rate_card'].label = "Rate Card (QAR / hr)"
             self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (QAR) per hour"
@@ -252,6 +282,13 @@ class CorporateCandidateForm(forms.ModelForm):
             self.fields['salary_inr'].label = "Salary (QAR / yr)"
             self.fields['salary_inr'].help_text = "Salary in Qatar Riyal (QAR) per annum for Full Time employment"
             self.fields['salary_inr'].widget.attrs['placeholder'] = "0.00 (QAR/yr)"
+        else:
+            self.fields['rate_card'].label = "Rate Card (USD / hr)"
+            self.fields['rate_card'].help_text = "Rate card in USD per hour"
+            self.fields['rate_card'].widget.attrs['placeholder'] = "0.00"
+            self.fields['salary_inr'].label = "Salary in INR (₹ / yr)"
+            self.fields['salary_inr'].help_text = "Salary in INR per annum for Full Time employment"
+            self.fields['salary_inr'].widget.attrs['placeholder'] = "0.00"
 
         if self.instance and self.instance.pk:
             if self.instance.employment_type:
@@ -259,14 +296,18 @@ class CorporateCandidateForm(forms.ModelForm):
             if self.instance.notice_period:
                 self.initial['notice_period'] = [x.strip() for x in self.instance.notice_period.split(',') if x.strip()]
 
-    def _validate_pdf_only(self, file_obj, field_name):
+    def _validate_file(self, file_obj, field_name, allowed_extensions=None):
         if file_obj:
             if file_obj.size > 10 * 1024 * 1024:
                 raise forms.ValidationError(f"{field_name} file size should not exceed 10MB.")
             ext = file_obj.name.split('.')[-1].lower()
-            if ext != 'pdf':
-                raise forms.ValidationError(f"Unsupported format for {field_name}. Only PDF files are allowed.")
+            if allowed_extensions and ext not in allowed_extensions:
+                allowed_str = ', '.join([e.upper() for e in allowed_extensions])
+                raise forms.ValidationError(f"Unsupported format for {field_name}. Allowed formats: {allowed_str}.")
         return file_obj
+
+    def _validate_pdf_only(self, file_obj, field_name):
+        return self._validate_file(file_obj, field_name, allowed_extensions=['pdf'])
 
     def clean(self):
         cleaned_data = super().clean()
@@ -274,7 +315,14 @@ class CorporateCandidateForm(forms.ModelForm):
         rate_card = cleaned_data.get('rate_card')
         salary_inr = cleaned_data.get('salary_inr')
         client = cleaned_data.get('client')
-        is_qatar = bool(client and client.is_qatar_client)
+        
+        is_qatar = False
+        if client and client.is_qatar_client:
+            is_qatar = True
+        elif self.user:
+            assigned = CorporateClient.objects.filter(recruiter_assignments__recruiter=self.user)
+            if any(c.is_qatar_client for c in assigned):
+                is_qatar = True
 
         if 'Full Time' in emp_types:
             if not salary_inr:
@@ -302,7 +350,7 @@ class CorporateCandidateForm(forms.ModelForm):
         return candidate
 
     def clean_resume(self):
-        return self._validate_pdf_only(self.cleaned_data.get('resume'), 'Resume')
+        return self._validate_file(self.cleaned_data.get('resume'), 'Resume', allowed_extensions=['pdf', 'doc', 'docx'])
 
     def clean_bgv_verification(self):
         return self._validate_pdf_only(self.cleaned_data.get('bgv_verification'), 'BGV Verification')
