@@ -276,9 +276,9 @@ class CorporateCandidateForm(forms.ModelForm):
             target_client = assigned_clients.first()
 
         if target_client and target_client.is_qatar_client:
-            self.fields['rate_card'].label = "Rate Card (QAR / hr)"
-            self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (QAR) per hour"
-            self.fields['rate_card'].widget.attrs['placeholder'] = "0.00 (QAR/hr)"
+            self.fields['rate_card'].label = "Rate Card (QAR / month)"
+            self.fields['rate_card'].help_text = "Rate card in Qatar Riyal (QAR) per month"
+            self.fields['rate_card'].widget.attrs['placeholder'] = "0.00 (QAR/month)"
             self.fields['salary_inr'].label = "Salary (QAR / yr)"
             self.fields['salary_inr'].help_text = "Salary in Qatar Riyal (QAR) per annum for Full Time employment"
             self.fields['salary_inr'].widget.attrs['placeholder'] = "0.00 (QAR/yr)"
@@ -333,7 +333,7 @@ class CorporateCandidateForm(forms.ModelForm):
         if 'Contract' in emp_types or 'Remote' in emp_types:
             if not rate_card:
                 if is_qatar:
-                    self.add_error('rate_card', 'Rate card in QAR per hour is required for Contract or Remote employment.')
+                    self.add_error('rate_card', 'Rate card in QAR per month is required for Contract or Remote employment.')
                 else:
                     self.add_error('rate_card', 'Rate card in USD per hour is required for Contract or Remote employment.')
 

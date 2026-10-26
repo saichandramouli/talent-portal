@@ -75,7 +75,7 @@
                             {% if 'Full Time' in cand.employment_type and cand.salary_inr %}
                                 QAR {{ cand.salary_qar|floatformat:0 }}/yr
                             {% elif cand.rate_card %}
-                                QAR {{ cand.rate_card_qar|floatformat:0 }}/hr
+                                QAR {{ cand.rate_card_qar|floatformat:0 }}/month
                             {% else %}
                                 N/A
                             {% endif %}

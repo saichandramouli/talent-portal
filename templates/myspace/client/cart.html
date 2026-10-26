@@ -127,7 +127,7 @@
                             {% if 'Full Time' in item.candidate.employment_type and item.candidate.salary_inr %}
                             QAR {{ item.candidate.salary_qar|floatformat:0 }}/yr
                             {% elif item.candidate.rate_card %}
-                            QAR {{ item.candidate.rate_card_qar|floatformat:0 }}/hr <span class="text-muted" style="font-size:10px;">(~${{ item.candidate.rate_card_usd|floatformat:0 }}/hr)</span>
+                            QAR {{ item.candidate.rate_card_qar|floatformat:0 }}/month <span class="text-muted" style="font-size:10px;">(~${{ item.candidate.rate_card_usd|floatformat:0 }}/month)</span>
                             {% else %}
                             N/A
                             {% endif %}

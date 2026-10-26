@@ -54,7 +54,7 @@
                             {% if 'Full Time' in candidate.employment_type and candidate.salary_inr %}
                                 <span style="color: #38bdf8; font-weight: 600;">QAR {{ candidate.salary_qar|floatformat:0 }}/yr</span>
                             {% elif candidate.rate_card %}
-                                <span style="color: #38bdf8; font-weight: 600;">QAR {{ candidate.rate_card_qar|floatformat:0 }}/hr</span> <span style="color: #94a3b8; font-size:10px;">(~${{ candidate.rate_card_usd|floatformat:0 }}/hr)</span>
+                                <span style="color: #38bdf8; font-weight: 600;">QAR {{ candidate.rate_card_qar|floatformat:0 }}/month</span> <span style="color: #94a3b8; font-size:10px;">(~${{ candidate.rate_card_usd|floatformat:0 }}/month)</span>
                             {% else %}
                                 N/A
                             {% endif %}

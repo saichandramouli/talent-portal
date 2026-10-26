@@ -104,6 +104,11 @@ def send_corporate_cart_notification(corporate_client, candidate, job, recruiter
     to their cart inside My Space.
     """
     subject = f"My Space – {corporate_client.company_name} shortlisted {candidate.full_name}"
+    if corporate_client.is_qatar_client:
+        rate_card_str = f"QAR {candidate.rate_card_qar}/month" if candidate.rate_card else "N/A"
+    else:
+        rate_card_str = f"${candidate.rate_card}/hr" if candidate.rate_card else "N/A"
+
     message = (
         f"Hello {recruiter.full_name},\n\n"
         f"A Corporate Client has added one of your candidates to their shortlist in My Space.\n\n"
@@ -118,7 +123,7 @@ def send_corporate_cart_notification(corporate_client, candidate, job, recruiter
         f"Name: {candidate.full_name}\n"
         f"Technology Stack: {candidate.technology_stack}\n"
         f"Experience: {candidate.total_experience}\n"
-        f"Rate Card: ${candidate.rate_card}/hr\n\n"
+        f"Rate Card: {rate_card_str}\n\n"
         f"Timestamp: {timezone.now().strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
         f"Please follow up with the client as soon as possible.\n\n"
         f"Thank you,\n"
